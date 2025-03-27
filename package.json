@@ -1,0 +1,24 @@
+{
+    "main": "expo-router/entry",
+    "version": "1.0.0",
+      "scripts": {
+      "dev": "expo start",
+      "dev_clear": "expo start --clear"
+    },
+    "dependencies": {
+      "expo": "~52.0.37",
+      "expo-router": "~4.0.7",
+      "firebase": "~11.0.2",
+      "mobx": "~6.13.5",
+      "mobx-react-lite": "~4.0.7",
+      "react": "~18.3.1",
+      "react-native": "~0.76.2",
+      "react-native-web": "~0.19.13"
+    },
+      "devDependencies": {
+      "@babel/core": "~7.26.9",
+      "babel-plugin-module-resolver": "~5.0.2"
+      },
+    "private": true
+  }
+  
