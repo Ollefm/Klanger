@@ -13,7 +13,8 @@
     "mobx-react-lite": "~4.0.7",
     "react": "~18.3.1",
     "react-native": "~0.76.2",
-    "react-native-web": "~0.19.13"
+    "react-native-web": "~0.19.13",
+    "expo-av": "~15.0.2"
   },
   "devDependencies": {
     "@babel/core": "~7.26.9",
