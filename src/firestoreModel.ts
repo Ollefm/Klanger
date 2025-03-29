@@ -13,6 +13,27 @@ global.setDoc = setDoc;
 
 const COLLECTION_NAME = "users";
 
-export function connectFirestore() {
-  console.log("Connected to Firestore");
-}
+export async function testFunction(userId: string) {
+    try {
+      const userDocRef = doc(db, COLLECTION_NAME, userId);
+      const userSnapshot = await getDoc(userDocRef);
+      if (userSnapshot.exists()) {
+        console.log("User data:", userSnapshot.data());
+        return userSnapshot.data();
+      } else {
+        console.log("No such document! Creating dummy user...");
+        const dummyData = {
+          name: "Test User",
+          email: "test@example.com",
+          createdAt: new Date().toISOString()
+        };
+        await setDoc(userDocRef, dummyData);
+        console.log("Dummy user created:", dummyData);
+        return dummyData;
+      }
+    } catch (error) {
+      console.error("Error fetching or creating user:", error);
+      throw error;
+    }
+  } 
+  
