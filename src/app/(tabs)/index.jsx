@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import { SafeAreaView, View, Text, Button, StyleSheet } from "react-native";
 import { Audio } from "expo-av";
 import { fetchData } from "../../api/api";
+import AppPrimaryButton from "../custom components/appPrimaryButton";
 
 export default function IndexPage() {
   const [sound, setSound] = useState(null);
@@ -59,9 +60,8 @@ export default function IndexPage() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text>Hello React Native!</Text>
-      <Button title="Play Sound" onPress={fetchAndPlaySound} />
+    <SafeAreaView style={styles.container}>
+      <AppPrimaryButton title="Play Sound" onPress={fetchAndPlaySound} />
       {sound && (
         <View style={{ marginTop: 20 }}>
           {isPlaying ? (
@@ -71,7 +71,7 @@ export default function IndexPage() {
           )}
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -81,5 +81,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+    backgroundColor: '#0D0D0D',
+    color:'white'
   },
 });
