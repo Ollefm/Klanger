@@ -1,9 +1,9 @@
-import {View, Text} from "react-native"
+import {SafeAreaView, View, Text} from "react-native"
 export function ProfileView(props) {
     return(
-        <View>
+        <SafeAreaView>
             <Text>Profile View</Text>
-        </View>
+        </SafeAreaView>
 
     )
 }

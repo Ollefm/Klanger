@@ -11,10 +11,11 @@ export default function AppPrimaryButton({ onPress, title }){
   const styles = StyleSheet.create({
     appButtonContainer: {
       elevation: 8,
-      backgroundColor: "yellow",
+      backgroundColor: "#FFD900",
       borderRadius: 99,
       paddingVertical: 15,
-      paddingHorizontal: 100
+      width: 340,
+      alignItems: 'center',
     },
     appButtonText: {
       fontSize: 18,
