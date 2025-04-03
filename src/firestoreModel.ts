@@ -1,6 +1,5 @@
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "./firebaseConfig";
-console.log("Firebase Config:", firebaseConfig);
 const app = initializeApp(firebaseConfig);
 
 import { getFirestore, doc, setDoc, getDoc} from "firebase/firestore";

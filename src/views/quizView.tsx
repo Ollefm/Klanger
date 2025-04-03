@@ -12,10 +12,15 @@ export function QuizView(props) {
     props.playSound();
   }
 
+  function stopSoundHandlerACB(){
+    props.stopSound();
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <AppPrimaryButton title="Start Game" onPress={setTrackId} />
       <AppPrimaryButton title="Play Sound" onPress={playSoundHandlerACB} />
+      <AppPrimaryButton title="Stop Sound" onPress={stopSoundHandlerACB} />
     </SafeAreaView>
   );
 }
