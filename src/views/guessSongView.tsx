@@ -1,6 +1,7 @@
 import { SafeAreaView, View, Text, StyleSheet, Button,Image } from "react-native";
 import PlayPreviewContainer from "../app/custom components/playPreviewContainer";
 import AppTextInput from "../app/custom components/appInput";
+import AppPrimaryButton from "../app/custom components/appPrimaryButton";
 
 
 export function GuessSong(props) {
@@ -15,7 +16,6 @@ export function GuessSong(props) {
   function stopSoundHandlerACB() {
     props.stopSound();
   }
-  console.log("Cover image URL:", props);
   return (
     <SafeAreaView style={styles.background} >
 
@@ -27,7 +27,7 @@ export function GuessSong(props) {
 
         <AppTextInput placeholder="Write your answer here..." value={props.answer || ""} onChangeText={""} secureTextEntry={undefined}/>
  
-        <Button title="Start Game" onPress={setTrackId} />
+        <AppPrimaryButton title="Start Game" onPress={setTrackId} />
         <View style={styles.container}>
           <PlayPreviewContainer onPress={playSoundHandlerACB} />
         </View>
@@ -41,26 +41,21 @@ const styles = StyleSheet.create({
   background:{
     flex: 1,
     backgroundColor: "#0D0D0D",
-    width: '100%',
-    height: '100%',
+    gap: 20,
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 30
+
   },
   container: {
     backgroundColor: "#333333",
-    margin: 10,
-    padding: 35,
+    padding: 30,
     borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 40,
-    opacity: 0.8,
+    opacity: 0.75,
   },
   coverImage:{
-    backgroundColor: "#fff",
+    backgroundColor: "#333333",
     height: 270,
     width: 270, 
     borderRadius: 20,
+    marginVertical: 40
   }
 })

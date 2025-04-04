@@ -1,7 +1,7 @@
-import { SafeAreaView, View, Text, StyleSheet, Button } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, Image } from "react-native";
 import AppPrimaryButton from "../app/custom components/appPrimaryButton";
-import { Audio } from "expo-av";
-import { fetchData } from "../api/api";
+import AppTextInput from "../app/custom components/appInput";
+import PlayPreviewContainer from "../app/custom components/playPreviewContainer";
 
 export function QuizView(props) {
   function setTrackId() {
@@ -12,25 +12,50 @@ export function QuizView(props) {
     props.playSound();
   }
 
-  function stopSoundHandlerACB(){
+  function stopSoundHandlerACB() {
     props.stopSound();
   }
-
+  
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.background}>
+      <Image
+        source={{ uri: props.model.coverImageUrl }}
+        style={styles.coverImage}
+        resizeMode="cover"
+      />
       <AppPrimaryButton title="Start Game" onPress={setTrackId} />
-      <AppPrimaryButton title="Play Sound" onPress={playSoundHandlerACB} />
+      <AppTextInput
+        placeholder="Write your answer here..."
+        value={props.answer || ""}
+        onChangeText={""}
+        secureTextEntry={undefined}
+      />
+
+      <View style={styles.container}>
+        <PlayPreviewContainer onPress={playSoundHandlerACB} />
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
     backgroundColor: "#0D0D0D",
-    padding: 10,
-    alignItems: 'center',
-    justifyContent:'center',
-    gap: 40
+    gap: 20,
+    alignItems: "center",
+  },
+  container: {
+    backgroundColor: "#333333",
+    padding: 30,
+    borderRadius: 16,
+    opacity: 0.75,
+    marginVertical: 'auto'
+  },
+  coverImage: {
+    backgroundColor: "#333333",
+    height: '35%',
+    width: '60%',
+    borderRadius: 20,
   },
 });
