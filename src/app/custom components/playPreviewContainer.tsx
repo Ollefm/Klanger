@@ -12,8 +12,8 @@ export default function PlayPreviewContainer({ onPress }) {
 
       <ProgressBar
         progress={50}
-        innerBackgroundColor="#718596"
-        outerBackgroundColor="#E2E9F0"
+        innerBackgroundColor="#E2E9F0"
+        outerBackgroundColor="#718596"
       />
     </View>
   );
@@ -22,9 +22,9 @@ export default function PlayPreviewContainer({ onPress }) {
 const styles = StyleSheet.create({
   previewContainer: {
     elevation: 8,
-    backgroundColor: "#FFD900",
     flexDirection: 'row', // ➜ makes children align in a row
     alignItems: 'center', // optional: vertically align items
+    opacity: 0.8,
   },
   playButton: {
     width: 50,
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
 
 const ProgressBar = ({
   progress,
-  height = 8,
+  height = 12,
   outerBackgroundColor,
   innerBackgroundColor,
   padded = true,
