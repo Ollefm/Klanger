@@ -41,8 +41,8 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     gap: 20,
-    justifyContent: "center", // Centers buttons vertically
-    alignItems: "center", // Centers buttons horizontally
+    justifyContent: "center", 
+    alignItems: "center", 
   },
 
 });

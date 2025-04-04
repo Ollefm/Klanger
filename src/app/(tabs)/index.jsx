@@ -40,8 +40,8 @@ export default function IndexPage(props) {
     },
     textView: {
       justifyContent: 'center',
-      alignItems: "center", // Center text horizontally
-      marginTop: 140, // Adjust spacing from the top
+      alignItems: "center", 
+      marginTop: 140, 
     },
     text: {
       color: "white",
@@ -50,9 +50,9 @@ export default function IndexPage(props) {
       textAlign: "center",
     },
     buttonContainer: {
-      flexGrow: 1, // Pushes this section down to center buttons
-      justifyContent: "center", // Centers buttons vertically
-      alignItems: "center", // Centers buttons horizontally
+      flexGrow: 1, 
+      justifyContent: "center", 
+      alignItems: "center", 
       gap: 20
     },
   });
