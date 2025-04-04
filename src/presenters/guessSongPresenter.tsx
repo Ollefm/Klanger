@@ -1,9 +1,18 @@
 import { observer } from "mobx-react-lite";
-import { QuizView } from "../views/quizView";
+import { GuessSong } from "../views/guessSongView";
 
 const classicalBanger = ["9968843", "6971327", "1038775132", "1904250027"];
 
-export const Quiz = observer(function QuizRender(props, startgame) {
+interface GuessSongPresenterProps {
+  model: {
+    coverImageUrl: string;
+    setCurrentTrackId: (id: string) => void;
+    playSound: () => Promise<any>;
+    stopSound: () => Promise<any>;
+  };
+}
+
+export const GuessSongPresenter = observer(function GuessSongRender(props: GuessSongPresenterProps) {
   function randomsong() {
     const randomIndex = Math.floor(Math.random() * classicalBanger.length);
     return classicalBanger[randomIndex];
@@ -21,8 +30,10 @@ export const Quiz = observer(function QuizRender(props, startgame) {
   function StopSoundHandler() {
     props.model.stopSound();
   }
+
+  console.log("props in the guessPresenter", props.model.coverImageUrl)
   return (
-    <QuizView
+    <GuessSong
       model={props.model}
       stopSound={StopSoundHandler}
       playSound={PlaySoundHandler}
