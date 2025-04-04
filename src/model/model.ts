@@ -7,6 +7,7 @@ export const model = {
   isAuthenticated: false,
   currentTrackID: null,
   currentTrackPromiseState: {},
+  coverImageUrl: null as string | null,
   playlist: [],
   personalHighScore: null,
   currentScore: null,
@@ -23,27 +24,36 @@ export const model = {
       return;
     }
 
-    try {
-      const data = await fetchData(`https://api.deezer.com/track/${this.currentTrackID}`);
-      console.log("data", data.name);
-      if (data.preview) {
-        if (this.sound) {
-          await this.sound.unloadAsync();
+    
+
+        try {
+            // Fetch track data from Deezer API
+            const data = await fetchData(`https://api.deezer.com/track/${this.currentTrackID}`);
+            
+            console.log("data", data.album.cover_medium)
+            
+            this.coverImageUrl = data.album.cover_medium;
+            if (data.preview) {
+                // Stop and unload previous sound if any
+                if (this.sound) {
+                    await this.sound.unloadAsync();
+                }
+
+                // Load and play new sound
+                const { sound } = await Audio.Sound.createAsync(
+                    { uri: data.preview },
+                    { shouldPlay: true }
+                );
+
+                this.sound = sound;
+            } else {
+                console.error("No preview URL available.");
+            }
+        } catch (error) {
+            console.error("Error playing sound:", error);
         }
+    },
 
-        const { sound } = await Audio.Sound.createAsync(
-          { uri: data.preview },
-          { shouldPlay: true }
-        );
-
-        this.sound = sound;
-      } else {
-        console.error("No preview URL available.");
-      }
-    } catch (error) {
-      console.error("Error playing sound:", error);
-    }
-  },
 
   async stopSound() {
     if (this.sound) {
