@@ -27,5 +27,6 @@ const styles = StyleSheet.create({
   input: {
     fontSize: 16,
     color: "white", 
+    width: "100%",
   },
 });

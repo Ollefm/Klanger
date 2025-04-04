@@ -18,20 +18,15 @@ export function GuessSong(props) {
   console.log("Cover image URL:", props);
   return (
     <SafeAreaView style={styles.background} >
-      <View>
-      
+
         <Image 
           source={{ uri: props.model.coverImageUrl }} 
           style = {styles.coverImage}
           resizeMode="cover" 
         />
-      
-      </View>
 
-      <View style ={styles.answer}>
         <AppTextInput placeholder="Write your answer here..." value={props.answer || ""} onChangeText={""} secureTextEntry={undefined}/>
-      </View>
-
+ 
         <Button title="Start Game" onPress={setTrackId} />
         <View style={styles.container}>
           <PlayPreviewContainer onPress={playSoundHandlerACB} />
@@ -47,20 +42,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#0D0D0D",
     width: '100%',
-    height: '100%'
-
-  },
-
-  answer:{
-    width: '100%',
-    marginLeft: 50,
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 30
   },
   container: {
-    
     backgroundColor: "#333333",
     margin: 10,
     padding: 35,
-    borderRadius: 30,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
     gap: 40,
@@ -70,11 +61,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     height: 270,
     width: 270, 
-    marginTop: 70,
-    marginLeft: 90,
-    marginBottom: 170,
     borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
   }
 })

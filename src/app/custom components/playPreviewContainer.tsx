@@ -27,17 +27,12 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   playButton: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
     backgroundColor: "#333",
     justifyContent: "center",
     alignItems: "center",
+    marginRight: 20,
   },
   playIcon: {
-    width: 0,
-    height: 0,
-    marginLeft: 4,
     borderTopWidth: 8,
     borderBottomWidth: 8,
     borderLeftWidth: 12,
@@ -76,7 +71,7 @@ interface ContainerProps {
 }
 
 const Container = styled.View<ContainerProps>`
-  width: 100%;
+  width: 90%;
   border-radius: 16px;
   align-items: flex-start;
   justify-content: center;
