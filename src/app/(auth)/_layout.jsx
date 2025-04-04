@@ -10,9 +10,9 @@ export default function AuthLayout() {
             fontWeight: 'bold' }, 
       }}
     >
-      <Stack.Screen name="index" options={{ headerShown: false, title: "Start"}} />
-      <Stack.Screen name="login" options={{ title: "Login" }} />
+      <Stack.Screen name="start" options={{ headerShown: false, title: "Start"}} />
       <Stack.Screen name="register" options={{ title: "Register" }} />
+      <Stack.Screen name="login" options={{ title: "Login" }} />
     </Stack>
   );
 }

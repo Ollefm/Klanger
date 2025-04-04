@@ -5,11 +5,7 @@ import { reactiveModel } from "../bootstrapping";
 export default observer(function Layout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      {reactiveModel.isAuthenticated ? (
         <Stack.Screen name="(tabs)" />
-      ) : (
-        <Stack.Screen name="(auth)" />
-      )}
     </Stack>
   );
 })
