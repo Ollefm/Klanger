@@ -10,6 +10,7 @@ export default function AppTextInput({ value, onChangeText, placeholder, secureT
         placeholder={placeholder}
         placeholderTextColor="#B0B0B0"
         secureTextEntry={secureTextEntry}
+        autoCapitalize="none"
       />
     </View>
   );

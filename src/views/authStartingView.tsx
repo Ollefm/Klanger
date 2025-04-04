@@ -1,7 +1,7 @@
-import { SafeAreaView, View, Text, Button, StyleSheet } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
-import AppPrimaryButton from "../custom components/appPrimaryButton";
-import AppSecondaryButton from "../custom components/appSecondaryButton";
+import AppPrimaryButton from "../app/custom components/appPrimaryButton";
+import AppSecondaryButton from "../app/custom components/appSecondaryButton";
 
 export default function AuthIndex() {
   const router = useRouter();

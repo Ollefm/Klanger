@@ -4,6 +4,7 @@ import { signInWithEmail, signUpWithEmail } from "../firestoreModel";
 
 export const model = {
   user: null,
+  userCredentials: {email : "", password: ""},
   isAuthenticated: false,
   currentTrackID: null,
   currentTrackPromiseState: {},
@@ -59,23 +60,36 @@ export const model = {
     }
   },
 
-  async registerAccount(email: string, password: string) {
+  setEmail(email:string){
+    this.userCredentials.email = email
+  },
+  setPassword(password:string){
+    this.userCredentials.password = password
+  },
+
+  async registerAccount() {
     try {
-      const userCredential = await signUpWithEmail(email, password);
-      this.user = userCredential.user;
+      const userCredential = await signUpWithEmail(this.userCredentials.email, this.userCredentials.password);
+      this.user = userCredential;
       console.log("User registered:", this.user);
+      this.isAuthenticated = true;
     } catch (error) {
       console.error("Registration failed:", error);
     }
   },
 
-  async login(email: string, password: string) {
+  async login() {
     try {
-      const userCredential = await signInWithEmail(email, password);
-      this.user = userCredential.user;
+      const userCredential = await signInWithEmail(this.userCredentials.email, this.userCredentials.password);
+      this.user = userCredential;
       console.log("User logged in:", this.user);
+      this.isAuthenticated = true;
     } catch (error) {
       console.error("Login failed:", error);
+    }finally{
+      this.userCredentials.email = ""
+      this.userCredentials.password = ""
+
     }
   }
 };
