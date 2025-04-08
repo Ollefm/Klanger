@@ -45,30 +45,28 @@ export function SuggestionsView(props) {
       background: {
         flex: 1,
         backgroundColor: "#0D0D0D",
-        alignItems: "center"
+        alignItems: "center",
+        
       },
       container: {
-        backgroundColor: "#333333",
         padding: 10,
         borderRadius: 16,
         opacity: 0.75,
         margin: 5,
         justifyContent: 'space-evenly',
-        alignItems: 'center'
-      },
-      coverImage: {
-        backgroundColor: "#333333",
-        height: '35%',
-        width: '60%',
-        borderRadius: 20,
+        maxWidth: '50%',
       },
       header: {
         color: "white",
         fontSize: 24,
         fontWeight: 700,
         textAlign: "left",
+        alignSelf:'baseline',
+        margin: 15,
       },
       text:{
         color:"white",
+        fontWeight: 600,
+        marginVertical: 10
       }
     });
