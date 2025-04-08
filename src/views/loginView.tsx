@@ -16,6 +16,10 @@ export default function LoginView(props) {
   function handleLogin(e){
     props.handleLogin(e)
   };
+
+  function handleSkipLogin(e){
+    router.navigate("(tabs)");
+  };
   
   function setEmailCB(e){
     props.setEmail(e)
@@ -31,6 +35,7 @@ export default function LoginView(props) {
         <AppTextInput placeholder="Email" value={props.email || ""} onChangeText={setEmailCB} secureTextEntry={undefined}/>
         <AppTextInput placeholder="Password" secureTextEntry value={props.password || "" } onChangeText={setPasswordCB} />
         <AppPrimaryButton title="Login" onPress={handleLogin} />
+        <AppPrimaryButton title="Skip Login" onPress={handleSkipLogin} />
         </View>
         </SafeAreaView>
       );
