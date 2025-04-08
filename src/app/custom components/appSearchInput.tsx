@@ -4,7 +4,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 export default function AppSearchInput({ value, onChangeText, placeholder }) {
   return (
     <View style={styles.inputContainer}>
-      <Ionicons name={"search"} color={'#B0B0B0'} size={22} style={{paddingHorizontal:5}}/>
+      <Ionicons name={"search"} color={'#B0B0B0'} size={20} style={{paddingHorizontal:5}}/>
       <TextInput
         style={styles.input}
         value={value}
@@ -20,14 +20,15 @@ export default function AppSearchInput({ value, onChangeText, placeholder }) {
 const styles = StyleSheet.create({
   inputContainer: {
     backgroundColor: "#303030",
-    borderRadius: 16, 
-    paddingHorizontal: 15,
-    paddingVertical: 18,
-    width: 340,
-    flexDirection:'row'
+    borderRadius: 12, 
+    paddingHorizontal: 10,
+    paddingVertical: 15,
+    flexDirection:'row',
+    marginHorizontal: 25,
+    marginVertical: 15
   },
   input: {
-    fontSize: 16,
+    fontSize: 14,
     color: "white", 
     width: "100%",
   },

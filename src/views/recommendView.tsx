@@ -18,16 +18,6 @@ export function RecommendView(props) {
         backgroundColor: "#0D0D0D",
         alignItems: "center",
       },
-      coverImage: {
-        backgroundColor: "#333333",
-        height: '35%',
-        width: '60%',
-        borderRadius: 20,
-      },
-      header: {
-        color: "white",
-        fontSize: 24,
-        fontWeight: 700,
-        textAlign: "left",
-      },
+
+  
     });

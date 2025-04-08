@@ -61,7 +61,7 @@ export function SuggestionsView(props) {
         fontSize: 24,
         fontWeight: 700,
         textAlign: "left",
-        alignSelf:'baseline',
+        alignSelf:'flex-start',
         margin: 15,
       },
       text:{
