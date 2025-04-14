@@ -27,12 +27,18 @@ and wait for all of the dependencies to be installed
 ## What the group still plans to do 
 
 * Implement persistence
-* Profile view with information such as quiz score, liked songs
-* Recommended view that displays song recommendations 
-* Quiz leaderboard
-* Function to “like” songs and save them in a list  
-* Quiz - score system
+* Further improve Quiz
+  - quizzes in different music genres
+  - score system
+  - leaderboard
+*Functional Profile view 
+  - Personal quiz score, personal list with liked songs (Well separated persisted data, per authenticated user)
+* Functional Recommended view
+ - Personal song recommendations (create added value to users)
+* Ability to “like” songs and save them in a list (create added value to users)
 * Good visibility of system status (suspense view)
+
+
 
 ## Your project file structure (short description/purpose of each file)
 
