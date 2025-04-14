@@ -6,11 +6,15 @@
 
 1. Go to: https://stackblitz.com/edit/vitejs-vite-16my6ncc 
 
-and wait for all of the dependencies to be installed
+2. Wait for all of the dependencies to be installed until you see a qr code in the stackblitz terminal
 
-2. Download the `Expo Go` from the App Store or Google Play. 
+if the install fails, press ctrl + c in the stackblitz terminal and run `npm install && npm run dev` agian
 
-3. Scan the qr-code from the terminal. 
+3. Download the `Expo Go` from the App Store or Google Play. 
+
+4. Scan the qr-code from the stackblitz terminal
+
+5. Open the application in `Expo Go` on your phone (don't use the preview)
 
 ## What the group has accomplished so far
 
