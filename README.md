@@ -4,16 +4,17 @@ Klanger is a music-quiz app. The users can play a quiz game where they hear prev
 # Instructions for Mid-Project Review 
 
 ## Test the React Native application 
+The application is hosted on stackblitz (see the link below). If you encounter any problems on for example, safari, try changing the web browser to chrome.
 
 1. Go to: https://stackblitz.com/edit/vitejs-vite-16my6ncc 
 
 2. Wait for all of the dependencies to be installed until you see a qr code in the stackblitz terminal
 
-if the install fails, press ctrl + c in the stackblitz terminal and run `npm install && npm run dev` again
+if the install fails, press ctrl + c in the stackblitz terminal and run `npm install && npm run dev` again or reload the page
 
-3. Download the `Expo Go` from the App Store or Google Play. 
+3. Download the `Expo Go` from the App Store or Google Play on your phone. 
 
-4. Scan the qr-code from the stackblitz terminal
+4. Scan the qr-code from the stackblitz terminal with your phones camera app
 
 5. Open the application in `Expo Go` on your phone (don't use the stackblitz preview)
 
