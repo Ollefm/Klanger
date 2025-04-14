@@ -31,7 +31,7 @@ and wait for all of the dependencies to be installed
   - quizzes in different music genres
   - score system
   - leaderboard
-*Functional Profile view 
+* Functional Profile view 
   - Personal quiz score, personal list with liked songs (Well separated persisted data, per authenticated user)
 * Functional Recommended view
  - Personal song recommendations (create added value to users)
