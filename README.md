@@ -1,4 +1,5 @@
 # Klanger
+Klanger is a music-quiz app. The users can play a quiz game where they hear previews of songs and then guess the name the songs. Users will get a score based on their quiz performance which can then be viewed in a global leaderboard. Another feature will be to get song recommendations based on an inputed song or artist. Songs will be previewed and if the user likes a song they will be able to save it for later in a personal list.
 
 # Instructions for Mid-Project Review 
 
