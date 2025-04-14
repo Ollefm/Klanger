@@ -2,7 +2,7 @@
 
 # Instructions for Mid-Project Review 
 
-## Test the native application 
+## Test the React Native application 
 
 1. Go to: https://stackblitz.com/edit/vitejs-vite-16my6ncc 
 
