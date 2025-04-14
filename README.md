@@ -8,13 +8,13 @@
 
 2. Wait for all of the dependencies to be installed until you see a qr code in the stackblitz terminal
 
-if the install fails, press ctrl + c in the stackblitz terminal and run `npm install && npm run dev` agian
+if the install fails, press ctrl + c in the stackblitz terminal and run `npm install && npm run dev` again
 
 3. Download the `Expo Go` from the App Store or Google Play. 
 
 4. Scan the qr-code from the stackblitz terminal
 
-5. Open the application in `Expo Go` on your phone (don't use the preview)
+5. Open the application in `Expo Go` on your phone (don't use the stackblitz preview)
 
 ## What the group has accomplished so far
 
