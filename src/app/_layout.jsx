@@ -3,10 +3,15 @@ import { observer } from "mobx-react-lite";
 import { reactiveModel } from "../bootstrapping";
 
 export default observer(function Layout() {
-  console.log(reactiveModel.isAuthenticated)
+  const isLoggedIn = reactiveModel.isAuthenticated;
+
   return (
     <Stack screenOptions={{ headerShown: false }}>
-         <Stack.Screen name="(auth)" />
-     </Stack>
+      {isLoggedIn ? (
+        <Stack.Screen name="(tabs)" />
+      ) : (
+        <Stack.Screen name="(auth)" />
+      )}
+    </Stack>
   );
-})
+});

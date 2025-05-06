@@ -1,10 +1,23 @@
 import { fetchData } from "../api/api";
 import { Audio } from "expo-av";
-import { signInWithEmail, signUpWithEmail } from "../firestoreModel";
+import { signInWithEmail, signUpWithEmail, searchUsersByUsername } from "../firestoreModel";
+import { SignUpData, AppUser } from "../types/user";
 
 export const model = {
-  user: null,
-  userCredentials: {email : "", password: ""},
+  user: {
+    uid: "",
+  email: "",
+  username: "",
+  createdAt: {},
+  } as AppUser,
+  users: [] as AppUser[],
+
+  userCredentials: {
+    email: "",
+    password: "",
+    username: "",
+  } as SignUpData,
+  userSearch: "" as string,
   isAuthenticated: false,
   currentTrackID: null,
   currentTrackPromiseState: {},
@@ -24,8 +37,7 @@ export const model = {
       console.error("No track ID set.");
       return;
     }
-  
-    
+
     if (this.sound) {
       try {
         await this.sound.stopAsync();
@@ -37,13 +49,14 @@ export const model = {
       }
       return;
     }
-  
-    
+
     try {
-      const data = await fetchData(`https://api.deezer.com/track/${this.currentTrackID}`);
+      const data = await fetchData(
+        `https://api.deezer.com/track/${this.currentTrackID}`
+      );
       this.coverImageUrl = data.album.cover_medium;
       console.log("Cover image:", this.coverImageUrl);
-  
+
       if (data.preview) {
         const { sound } = await Audio.Sound.createAsync(
           { uri: data.preview },
@@ -59,36 +72,56 @@ export const model = {
     }
   },
 
-  setEmail(email:string){
-    this.userCredentials.email = email
+  setEmail(email: string) {
+    this.userCredentials.email = email;
   },
-  setPassword(password:string){
-    this.userCredentials.password = password
+  setPassword(password: string) {
+    this.userCredentials.password = password;
+  },
+  setUsername(username : string){
+    this.userCredentials.username = username;
+  },
+
+  setUserSearchQuery(query : string){
+    this.userSearch = query
   },
 
   async registerAccount() {
     try {
-      const userCredential = await signUpWithEmail(this.userCredentials.email, this.userCredentials.password);
-      this.user = userCredential;
-      console.log("User registered:", this.user);
-      this.isAuthenticated = true;
+      await signUpWithEmail(
+        this.userCredentials
+      );
     } catch (error) {
       console.error("Registration failed:", error);
+    }finally {
+      this.userCredentials.email = "";
+      this.userCredentials.password = "";
     }
   },
 
   async login() {
     try {
-      const userCredential = await signInWithEmail(this.userCredentials.email, this.userCredentials.password);
-      this.user = userCredential;
+      const user = await signInWithEmail(
+        this.userCredentials.email,
+        this.userCredentials.password
+      );
+      this.user = user;
       console.log("User logged in:", this.user);
       this.isAuthenticated = true;
     } catch (error) {
       console.error("Login failed:", error);
-    }finally{
-      this.userCredentials.email = ""
-      this.userCredentials.password = ""
-
+    } finally {
+      this.userCredentials.email = "";
+      this.userCredentials.password = "";
     }
-  }
+  },
+
+  async getUsers(){
+    try{
+      const users = await searchUsersByUsername(this.userSearch)
+      this.users = users
+    }catch(error){
+      console.error("get users failed: ", error)
+    }
+  },
 };

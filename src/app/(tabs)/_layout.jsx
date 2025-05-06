@@ -1,26 +1,25 @@
-import { Text } from "react-native";
 import { Tabs } from "expo-router";
 import { observer } from "mobx-react-lite";
-import Ionicons from '@expo/vector-icons/Ionicons';
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default observer(function RootLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: 'white',
+        tabBarActiveTintColor: "white",
         headerStyle: {
-          backgroundColor: '#0D0D0D',
+          backgroundColor: "#0D0D0D",
         },
-        headerTitleAlign: 'left',
-        headerTitleStyle:{
+        headerTitleAlign: "left",
+        headerTitleStyle: {
           fontSize: 32,
-          fontWeight: 'bold'
+          fontWeight: "bold",
         },
         headerShadowVisible: false,
-        headerTintColor: '#fff',
+        headerTintColor: "#fff",
         tabBarStyle: {
-          backgroundColor: '#1C1C1C',
-          position: 'absolute',
+          backgroundColor: "#1C1C1C",
+          position: "absolute",
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
           borderTopWidth: 0,
@@ -33,17 +32,25 @@ export default observer(function RootLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'home' : 'home-outline'} color={color} size={24} />
+            <Ionicons
+              name={focused ? "home" : "home-outline"}
+              color={color}
+              size={24}
+            />
           ),
         }}
       ></Tabs.Screen>
 
       <Tabs.Screen
-        name="quiz"
+        name="searchUsers"
         options={{
-          title: "Quiz",
+          title: "Search",
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'musical-notes' : 'musical-notes-outline'} color={color} size={24} />
+            <Ionicons
+              name={focused ? "search" : "search-outline"}
+              color={color}
+              size={24}
+            />
           ),
         }}
       ></Tabs.Screen>
@@ -53,7 +60,11 @@ export default observer(function RootLayout() {
         options={{
           title: "Leaderboard",
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'stats-chart' : 'stats-chart-outline'} color={color} size={24} />
+            <Ionicons
+              name={focused ? "stats-chart" : "stats-chart-outline"}
+              color={color}
+              size={24}
+            />
           ),
         }}
       ></Tabs.Screen>
@@ -63,7 +74,11 @@ export default observer(function RootLayout() {
         options={{
           title: "Profile",
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'person' : 'person-outline'} color={color} size={24} />
+            <Ionicons
+              name={focused ? "person" : "person-outline"}
+              color={color}
+              size={24}
+            />
           ),
         }}
       ></Tabs.Screen>

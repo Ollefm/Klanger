@@ -17,19 +17,25 @@ export default function RegisterView(props) {
         props.handleRegister(e)
       };
       
-      function setEmailCB(e){
-        props.setEmail(e)
+      function setEmailCB(email : string){
+        props.setEmail(email)
+      }
+
+      function setUsernameCB(username : string){
+        console.log(username)
+        props.setUsername(username)
       }
     
-      function setPasswordCB(e){
-        props.setPassword(e)
+      function setPasswordCB(password : string){
+        props.setPassword(password)
       }
   return (
     <SafeAreaView style={styles.container}>
     <View style={styles.buttonContainer}>  
-    <AppTextInput placeholder="Email" value={props.email || ""} onChangeText={setEmailCB} secureTextEntry={undefined} />
+    <AppTextInput placeholder="Email" value={props.email || ""} onChangeText={setEmailCB} secureTextEntry={false} />
+    <AppTextInput placeholder="Username" secureTextEntry={false} value={props.username || ""} onChangeText={setUsernameCB} />
       <AppTextInput placeholder="Password" secureTextEntry value={props.password || ""} onChangeText={setPasswordCB} />
-      <AppPrimaryButton title="Register" onPress={handleRegister} />
+      <AppPrimaryButton title="Register" onPress={handleRegister}/>
     </View>
     </SafeAreaView>
   );

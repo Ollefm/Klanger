@@ -19,9 +19,9 @@ export default function AppTextInput({ value, onChangeText, placeholder, secureT
 const styles = StyleSheet.create({
   inputContainer: {
     backgroundColor: "#303030", // Dark gray background
-    borderRadius: 16, 
+    borderRadius: 12, 
     paddingHorizontal: 15,
-    paddingVertical: 18,
+    paddingVertical: 15,
     width: 340,
   },
   input: {

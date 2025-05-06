@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite"
-import { reactiveModel } from "../../bootstrapping"
+import { reactiveModel } from "../../bootstrapping";
 import Home from "../../presenters/homePresenter";
 
 export default observer(() => {

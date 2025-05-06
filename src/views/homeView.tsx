@@ -5,12 +5,12 @@ import AppPrimaryButton from "../app/custom components/appPrimaryButton";
 export default function IndexPage(props) {
   const router = useRouter();
   
-  function goToQuizCB() {
-    router.navigate("/quiz");
+  function goToSinglePlayerCB() {
+    router.navigate("/searchUsers");
   }
 
-  function goToRecommendationsCB() {
-    router.navigate("recommend");
+  function goToMultiplayerCB() {
+    router.navigate("/searchUsers");
   }
   return (
     <SafeAreaView style={styles.container}>
@@ -18,12 +18,12 @@ export default function IndexPage(props) {
         <Text style={styles.text}>New game</Text>
           <AppPrimaryButton
             title="Single player"
-            onPress={goToRecommendationsCB}
+            onPress={goToSinglePlayerCB}
           />
           <Text style={{ color: "gray", fontSize: 20, fontWeight: 500 }}>
             or
           </Text>
-          <AppPrimaryButton title="Multiplayer" onPress={goToQuizCB} />
+          <AppPrimaryButton title="Multiplayer" onPress={goToMultiplayerCB} />
         </View>
     </SafeAreaView>
   );
