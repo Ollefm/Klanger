@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import RegisterView from "../views/registerView";
+import RegisterView from "../views/authViews/registerView";
 export default observer(function RegisterRender(props) {
   function handleRegisterACB() {
     props.model.registerAccount();

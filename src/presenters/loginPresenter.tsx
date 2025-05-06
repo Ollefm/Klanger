@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import LoginView from "../views/loginView";
+import LoginView from "../views/authViews/loginView";
 
 export default observer(function LoginRender(props) {
   function handleLoginACB() {

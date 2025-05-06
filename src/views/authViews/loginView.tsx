@@ -1,6 +1,6 @@
 import { SafeAreaView, View, StyleSheet } from "react-native";
-import AppPrimaryButton from "../app/custom components/appPrimaryButton";
-import AppTextInput from "../app/custom components/appInput";
+import AppPrimaryButton from "../../app/custom components/appPrimaryButton";
+import AppTextInput from "../../app/custom components/appInput";
 import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 

@@ -1,9 +1,8 @@
 import { observer } from "mobx-react-lite"
+
 import { reactiveModel } from "../../bootstrapping"
-import Home from "../../presenters/homePresenter";
+import Leaderboard from "../../presenters/leaderboardPresenter"
 
 export default observer(() => {
- return <Home model = {reactiveModel}></Home>
-});
-
-
+  return <Leaderboard model={reactiveModel} />
+})

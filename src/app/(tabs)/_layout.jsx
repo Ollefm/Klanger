@@ -24,7 +24,7 @@ export default observer(function RootLayout() {
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
           borderTopWidth: 0,
-          paddingTop: 8,
+          paddingTop: 12,
         },
       }}
     >
@@ -49,11 +49,11 @@ export default observer(function RootLayout() {
       ></Tabs.Screen>
 
       <Tabs.Screen
-        name="recommend"
+        name="leaderboard"
         options={{
-          title: "Recommend",
+          title: "Leaderboard",
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? 'sparkles' : 'sparkles-outline'} color={color} size={24} />
+            <Ionicons name={focused ? 'stats-chart' : 'stats-chart-outline'} color={color} size={24} />
           ),
         }}
       ></Tabs.Screen>
