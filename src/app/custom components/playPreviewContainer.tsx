@@ -2,7 +2,7 @@ import { StyleSheet, TouchableOpacity, Text, View, Button } from "react-native";
 import styled from "styled-components/native";
 
 
-export default function PlayPreviewContainer({ onPress, time }) {
+export default function PlayPreviewContainer({ onPress,progress}) {
   return (
     <View
       style={styles.previewContainer}>
@@ -11,7 +11,7 @@ export default function PlayPreviewContainer({ onPress, time }) {
       </TouchableOpacity>
 
       <ProgressBar
-        progress={time}
+        progress={progress}
         innerBackgroundColor="white"
         outerBackgroundColor="#595959"
       />

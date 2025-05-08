@@ -6,9 +6,9 @@ import { SignUpData, AppUser } from "../types/user";
 export const model = {
   user: {
     uid: "",
-  email: "",
-  username: "",
-  createdAt: {},
+    email: "",
+    username: "",
+    createdAt: {},
   } as AppUser,
   users: [] as AppUser[],
 
@@ -26,10 +26,44 @@ export const model = {
   personalHighScore: null,
   currentScore: null,
   sound: null as Audio.Sound | null,
+  timer: null as NodeJS.Timeout | null,
+  elapsedSeconds: 0,
+
 
   setCurrentTrackId(trackId: string) {
     console.log(trackId);
     this.currentTrackID = trackId;
+  },
+
+  setToggleTimer(onProgressUpdate: (percent: number) => void) {
+    if (this.timer) {
+      // stop
+      clearInterval(this.timer);
+      this.timer = null;
+      
+              
+      return;
+    }
+  
+    // start
+    this.elapsedSeconds = 0;
+    onProgressUpdate(0);
+  
+    this.timer = setInterval(() => {
+      this.elapsedSeconds += 1;
+  
+      // map 0…30 s to 50…100%
+      const raw = (this.elapsedSeconds / 30) * 100;
+      const percent = Math.min(100, Math.round(raw));
+  
+      onProgressUpdate(percent);
+  
+      // once we hit 30 s, auto–stop
+      if (this.elapsedSeconds >= 30) {
+        clearInterval(this.timer!);
+        this.timer = null;
+      }
+    }, 1000);
   },
 
   async playSound() {
@@ -39,9 +73,10 @@ export const model = {
     }
 
     if (this.sound) {
+
       try {
-        await this.sound.stopAsync();
-        await this.sound.unloadAsync();
+        await this.sound.pauseAsync();
+        
         this.sound = null;
         console.log("Sound stopped.");
       } catch (error) {
@@ -63,6 +98,8 @@ export const model = {
           { shouldPlay: true }
         );
         this.sound = sound;
+        
+
         console.log("Sound started.");
       } else {
         console.error("No preview URL available.");
@@ -78,11 +115,11 @@ export const model = {
   setPassword(password: string) {
     this.userCredentials.password = password;
   },
-  setUsername(username : string){
+  setUsername(username: string) {
     this.userCredentials.username = username;
   },
 
-  setUserSearchQuery(query : string){
+  setUserSearchQuery(query: string) {
     this.userSearch = query
   },
 
@@ -93,7 +130,7 @@ export const model = {
       );
     } catch (error) {
       console.error("Registration failed:", error);
-    }finally {
+    } finally {
       this.userCredentials.email = "";
       this.userCredentials.password = "";
     }
@@ -116,11 +153,11 @@ export const model = {
     }
   },
 
-  async getUsers(){
-    try{
+  async getUsers() {
+    try {
       const users = await searchUsersByUsername(this.userSearch)
       this.users = users
-    }catch(error){
+    } catch (error) {
       console.error("get users failed: ", error)
     }
   },
