@@ -1,4 +1,4 @@
-import { SafeAreaView, View, StyleSheet } from "react-native";
+import { SafeAreaView, View, StyleSheet, Text } from "react-native";
 import AppPrimaryButton from "../../app/custom components/appPrimaryButton";
 import AppTextInput from "../../app/custom components/appInput";
 import { useEffect, useState } from "react";
@@ -34,6 +34,7 @@ export default function LoginView(props) {
         <View style={styles.buttonContainer}>
         <AppTextInput placeholder="Email" value={props.email || ""} onChangeText={setEmailCB} secureTextEntry={undefined}/>
         <AppTextInput placeholder="Password" secureTextEntry value={props.password || "" } onChangeText={setPasswordCB} />
+        {props.promiseState.error && <Text style={styles.errorText}>{props.promiseState.error}</Text>}
         <AppPrimaryButton title="Login" onPress={handleLogin} />
         <AppPrimaryButton title="Skip Login" onPress={handleSkipLogin} />
         </View>
@@ -55,5 +56,8 @@ const styles = StyleSheet.create({
     justifyContent: "center", 
     alignItems: "center", 
   },
+  errorText:{
+    color: "#ED4337"
+  }
 
 });

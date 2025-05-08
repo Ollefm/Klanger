@@ -19,8 +19,8 @@ import {
   signInWithPopup,
   signInWithCredential,
 } from "firebase/auth";
-import firebaseConfig from "./firestoreModels/firebaseConfig";
-import { AppUser, SignUpData } from "./types/user";
+import firebaseConfig from "./firebaseConfig";
+import { AppUser, SignUpData } from "../types/user";
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -30,40 +30,40 @@ const COLLECTION_NAME_USERS = "users";
 
 // Function to sign up with email & password
 export async function signUpWithEmail({
-  email,
-  password,
-  username,
-}: SignUpData) {
-  try {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    const user = userCredential.user;
+    email,
+    password,
+    username,
+  }: SignUpData) {
+    try {
+      // 1. Check if username is already taken
+      const usersRef = collection(db, "users");
+      const q = query(usersRef, where("username", "==", username));
+      const snapshot = await getDocs(q);
+  
+      if (!snapshot.empty) {
+        throw new Error("Username is already taken.");
+      }
 
-    // 1. Check if username is already taken
-    const usersRef = collection(db, "users");
-    const q = query(usersRef, where("username", "==", username));
-    const snapshot = await getDocs(q);
-
-    if (!snapshot.empty) {
-      throw new Error("Username is already taken.");
+      if(username.length < 3){
+        throw new Error("You must provide a username with a minimum of 3 characters.")
+      }
+  
+      // 2. Create user in Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+  
+      // 3. Save user to Firestore
+      await setDoc(doc(db, COLLECTION_NAME_USERS, user.uid), {
+        uid: user.uid,
+        email: user.email,
+        username: username,
+        createdAt: new Date(),
+      });
+  
+    } catch (error : any) {  
+      throw error;
     }
-    // Save user to Firestore
-    await setDoc(doc(db, COLLECTION_NAME_USERS, user.uid), {
-      uid: user.uid,
-      email: user.email,
-      username: username,
-      createdAt: new Date(),
-    });
-
-    signInWithEmail(email, password);
-  } catch (error) {
-    console.error("Sign-up error:", error.message);
-    throw error;
   }
-}
 
 // Function to sign in with email & password
 export async function signInWithEmail(
@@ -81,7 +81,7 @@ export async function signInWithEmail(
     const userDoc = await getDoc(doc(db, "users", user.uid));
     if (userDoc.exists()) {
       const userData = userDoc.data();
-      
+
       const appUser: AppUser = {
         uid: user.uid,
         email: user.email ?? "",
@@ -94,7 +94,6 @@ export async function signInWithEmail(
       throw new Error("User data not found in Firestore.");
     }
   } catch (error: any) {
-    console.error("Sign-in error:", error.message);
     throw error;
   }
 }

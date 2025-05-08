@@ -3,24 +3,28 @@ import LoginView from "../views/authViews/loginView";
 
 export default observer(function LoginRender(props) {
   function handleLoginACB() {
-    props.model.login();
+    props.userModel.login();
   }
   function setPasswordCB(password) {
-    props.model.setPassword(password);
+    props.userModel.setPassword(password);
   }
   function setEmailCB(email) {
     console.log(email)
-    props.model.setEmail(email);
+    props.userModel.setEmail(email);
   }
   return (
     <LoginView
-      email = {props.model.userCredentials.email}
-      password = {props.model.userCredentials.password}  
-      user={props.model.userCredentials}
+    promiseState={{
+      isLoading: props.userModel.loginAndRegistrationPromiseState.isLoading,
+      error: props.userModel.loginAndRegistrationPromiseState.error,
+    }}
+      email = {props.userModel.userCredentials.email}
+      password = {props.userModel.userCredentials.password}  
+      user={props.userModel.userCredentials}
       handleLogin={handleLoginACB}
       setEmail={setEmailCB}
       setPassword={setPasswordCB}
-      isAuthenticated = {props.model.isAuthenticated}
+      isAuthenticated = {props.userModel.isAuthenticated}
     />
   );
 });

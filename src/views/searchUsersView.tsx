@@ -1,21 +1,28 @@
-import { SafeAreaView, View, Text, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import AppTextInput from "../app/custom components/appInput";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { Image } from "expo-image"
 
 export default function SearchUsersView(props) {
-
-  console.log(props.users)
-  function handleAddFriend (user){
+  function handleChallengeUser(user) {
+    props.challengeUser(user)
     console.log(`Add friend: ${user}`);
-  };
-
-  function handleSearch(){
-    props.doUserSeach()
   }
 
-  function setSearchText(query : string){
-    console.log(query)
-    props.setSearchText(query)
+  function handleSearch() {
+    props.doUserSeach();
+  }
+
+  function setSearchText(query: string) {
+    console.log(query);
+    props.setSearchText(query);
   }
 
   return (
@@ -30,22 +37,43 @@ export default function SearchUsersView(props) {
         <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
           <Text style={styles.searchButtonText}>Search</Text>
         </TouchableOpacity>
-        <FlatList
-          data={props.users}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.userItem}>
-              <View style={styles.userInfo}>
-                <Ionicons name="person-outline" size={20} color="#ffffff" style={styles.userIcon} />
-                <Text style={styles.userName}>{item.username}</Text>
+        {props.promiseState.isLoading ? (
+          <View>
+            <Image
+              source={{ uri: "https://brfenergi.se/iprog/loading.gif" }}
+              style={{ width: 50, height: 50 }}
+            />
+          </View>
+        ) : (
+          <FlatList
+            data={props.users}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.userItem}>
+                <View style={styles.userInfo}>
+                  <Ionicons
+                    name="person-outline"
+                    size={20}
+                    color="#ffffff"
+                    style={styles.userIcon}
+                  />
+                  <Text style={styles.userName}>{item.username}</Text>
+                </View>
+                <TouchableOpacity
+                  style={styles.addButton}
+                  onPress={() => handleChallengeUser(item)}
+                >
+                  <Ionicons
+                    name="musical-notes-outline"
+                    size={18}
+                    color="#ffffff"
+                  />
+                  <Text style={styles.addButtonText}>Challenge</Text>
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity style={styles.addButton} onPress={() => handleAddFriend(item)}>
-                <Ionicons name="person-add-outline" size={18} color="#ffffff" />
-                <Text style={styles.addButtonText}>Add</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        />
+            )}
+          />
+        )}
       </View>
     </SafeAreaView>
   );

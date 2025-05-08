@@ -2,23 +2,29 @@ import { observer } from "mobx-react-lite";
 import SearchUsersView from "../views/searchUsersView";
 
 export default observer(function SearchUsers(props) {
+  
+  console.log(props.userModel)
   function handleUserSearchACB() {
-    props.model.getUsers();
+    props.userModel.getUsers();
   }
 
   function handleSearchTextCB(q : string){
-    props.model.setUserSearchQuery(q)
+    props.userModel.setUserSearchQuery(q)
   }
 
-
+  function handleChallengeUserACB(user){
+    props.userModel.challengeUser(user);
+  }
 
   return (
     <SearchUsersView
-      model = {props.model}
-      searchQuery = {props.model.userSearch}  
+      challengeUser = {handleChallengeUserACB}
+      promiseState = {props.userModel.userSearchPromiseState}
+      model = {props.userModel}
+      searchQuery = {props.userModel.userSearch}  
       doUserSeach={handleUserSearchACB}
       setSearchText = {handleSearchTextCB}
-      users={props.model.users}
+      users={props.userModel.userSearchPromiseState.data}
     />
   );
 });
