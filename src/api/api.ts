@@ -1,7 +1,6 @@
 export async function fetchData(url: string): Promise<any> {
     try {
       const response = await fetch(url);
-      
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }

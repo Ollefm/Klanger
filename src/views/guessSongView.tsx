@@ -4,6 +4,7 @@ import PlayPreviewContainer from "../app/custom components/playPreviewContainer"
 import AppTextInput from "../app/custom components/appInput";
 import AppPrimaryButton from "../app/custom components/appPrimaryButton";
 import { BlurView } from "expo-blur";
+import { observer } from "mobx-react-lite";
 
 export function GuessSong(props) {
   const [answer, setAnswer] = useState(""); 
@@ -29,13 +30,13 @@ export function GuessSong(props) {
     }
   }
 
-console.log("in View",setTrackId)
+
   return (
     <SafeAreaView style={styles.background} >
 
       <View style={styles.coverImageContainer}>
         <Image
-          source={{ uri: props.model.coverImageUrl }}
+          source={{ uri: props.coverImage }}
           style={styles.coverImage}
           resizeMode="cover"
         />

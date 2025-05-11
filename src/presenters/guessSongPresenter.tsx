@@ -34,6 +34,7 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
   function currentTrackIdHandlerACB() {
     const song = randomsong();
     props.model.setCurrentTrackId(song);
+
   }
 
   function PlaySoundHandler() {
@@ -43,17 +44,17 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
 
   return (
     <>
-    {(isPlaying && (
-      <CountDokuView isPlaying={isPlaying} setIsPlaying={setIsPlaying}/>
+      {(isPlaying && (
+        <CountDokuView isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
       )) || (
-        
-        <GuessSong
-        model={props.model}
-          playSound={PlaySoundHandler}
-        setTrack={currentTrackIdHandlerACB}
-          progress={progress}
-    />
-      )}
-      </>
+          <GuessSong
+            coverImage={props.model.coverImageUrl}
+            playSound={PlaySoundHandler}
+            setTrack={currentTrackIdHandlerACB}
+            progress={progress}
+
+          />
+        )}
+    </>
   );
 });
