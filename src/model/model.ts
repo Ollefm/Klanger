@@ -180,56 +180,5 @@ export const model = {
     }
   },
 
-  setEmail(email: string) {
-    this.userCredentials.email = email;
-  },
-  setPassword(password: string) {
-    this.userCredentials.password = password;
-  },
-  setUsername(username: string) {
-    this.userCredentials.username = username;
-  },
 
-  setUserSearchQuery(query: string) {
-    this.userSearch = query
-  },
-
-  async registerAccount() {
-    try {
-      await signUpWithEmail(
-        this.userCredentials
-      );
-    } catch (error) {
-      console.error("Registration failed:", error);
-    } finally {
-      this.userCredentials.email = "";
-      this.userCredentials.password = "";
-    }
-  },
-
-  async login() {
-    try {
-      const user = await signInWithEmail(
-        this.userCredentials.email,
-        this.userCredentials.password
-      );
-      this.user = user;
-      console.log("User logged in:", this.user);
-      this.isAuthenticated = true;
-    } catch (error) {
-      console.error("Login failed:", error);
-    } finally {
-      this.userCredentials.email = "";
-      this.userCredentials.password = "";
-    }
-  },
-
-  async getUsers() {
-    try {
-      const users = await searchUsersByUsername(this.userSearch)
-      this.users = users
-    } catch (error) {
-      console.error("get users failed: ", error)
-    }
-  },
 };
