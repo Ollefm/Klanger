@@ -1,63 +1,83 @@
-import { SafeAreaView, View, StyleSheet, Text } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  StyleSheet,
+  Text,
+  ActivityIndicator,
+} from "react-native";
 import AppPrimaryButton from "../../app/custom components/appPrimaryButton";
 import AppTextInput from "../../app/custom components/appInput";
 import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 
 export default function LoginView(props) {
-    const router = useRouter();
+  const router = useRouter();
 
-    useEffect(() => {
-      if (props.isAuthenticated) {
-        router.navigate("(tabs)");
-      }
-    }, [props.isAuthenticated]);
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
 
-  function handleLogin(e){
-    props.handleLogin(e)
-  };
+  function handleLogin() {
+    props.handleLogin(email, password);
+  }
 
-  function handleSkipLogin(e){
+  function handleSkipLogin(e) {
     router.navigate("(tabs)");
-  };
-  
-  function setEmailCB(e){
-    props.setEmail(e)
   }
 
-  function setPasswordCB(e){
-    props.setPassword(e)
-  }
-
-    return (
-        <SafeAreaView style={styles.container}>
-        <View style={styles.buttonContainer}>
-        <AppTextInput placeholder="Email" value={props.email || ""} onChangeText={setEmailCB} secureTextEntry={undefined}/>
-        <AppTextInput placeholder="Password" secureTextEntry value={props.password || "" } onChangeText={setPasswordCB} />
-        {props.promiseState.error && <Text style={styles.errorText}>{props.promiseState.error}</Text>}
-        <AppPrimaryButton title="Login" onPress={handleLogin} />
-        <AppPrimaryButton title="Skip Login" onPress={handleSkipLogin} />
-        </View>
-        </SafeAreaView>
-      );
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.buttonContainer}>
+        <Text style={styles.infoText}>Your email</Text>
+        <AppTextInput
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          secureTextEntry={undefined}
+        />
+        <Text style={styles.infoText}>Password</Text>
+        <AppTextInput
+          placeholder="Password"
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
+        {props.promiseState.error && (
+          <Text style={styles.errorText}>{props.promiseState.error}</Text>
+        )}
+        {props.promiseState.isLoading ? (
+          <ActivityIndicator></ActivityIndicator>
+        ) : <View style={styles.buttonWrapper}>
+            <AppPrimaryButton title="Login" onPress={handleLogin} />
+            <AppPrimaryButton title="Skip Login" onPress={handleSkipLogin} />
+          </View>}
+      </View>
+    </SafeAreaView>
+  );
 }
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#0D0D0D",
     padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center",
   },
   buttonContainer: {
-    gap: 20,
-    justifyContent: "center", 
-    alignItems: "center", 
+    gap: 10,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  errorText:{
-    color: "#ED4337"
-  }
-
+  buttonWrapper: {
+    marginTop: 20,
+    gap: 20,
+  },
+  errorText: {
+    color: "#ED4337",
+  },
+  infoText: {
+    fontWeight: "bold",
+    alignSelf: "flex-start",
+    color: "white",
+  },
 });

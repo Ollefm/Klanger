@@ -24,9 +24,6 @@ import firebaseConfig from "./firebaseConfig";
 import { AppUser, SignUpData } from "../types/user";
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
 const COLLECTION_NAME_CHALLENGES = "challenges";
 
 export async function challengeUser(fromUid : string, toUid : string) {
@@ -51,4 +48,4 @@ export async function getChallenges(userId: string) {
   
     const snapshot = await getDocs(q);
     return snapshot;
-  }
+}

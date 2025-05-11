@@ -1,6 +1,12 @@
-import { Stack } from "expo-router";
+import { Stack, Redirect } from "expo-router";
+import { observer } from "mobx-react-lite";
+import { reactiveUserModel } from "../../bootstrapping";
 
-export default function AuthLayout() {
+export default observer(function AuthLayout() {
+  const user = reactiveUserModel.user
+  if (user) {
+    return <Redirect href="/(tabs)" />;
+  }
   return (
     <Stack
       screenOptions={{
@@ -15,4 +21,4 @@ export default function AuthLayout() {
       <Stack.Screen name="login" options={{ title: "Login" }} />
     </Stack>
   );
-}
+})

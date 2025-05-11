@@ -1,17 +1,11 @@
-import { Stack } from "expo-router";
+import { Stack, Slot } from "expo-router";
 import { observer } from "mobx-react-lite";
-import { reactiveModel } from "../bootstrapping";
 
-export default observer(function Layout() {
-  const isLoggedIn = reactiveModel.isAuthenticated;
+export default observer(function RootLayout() {
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      {isLoggedIn ? (
-        <Stack.Screen name="(tabs)" />
-      ) : (
-        <Stack.Screen name="(auth)" />
-      )}
+      <Slot></Slot>
     </Stack>
   );
 });

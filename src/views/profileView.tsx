@@ -1,12 +1,18 @@
 import {SafeAreaView, View, Text, StyleSheet} from "react-native"
+import AppSecondaryButton from "../app/custom components/appSecondaryButton";
 import AppProfileBar from "../app/custom components/appProfileBar";
 export function ProfileView(props) {
+
+  function handleSignoutACB(){
+    props.signOut()
+  }
     return (
             <SafeAreaView style={styles.background}>
                 <AppProfileBar username={props.username}/>
                 <Text style={styles.header}>Quiz score: 9000</Text>
                 <Text style={styles.header}>Place on leader board: 1</Text>
                 <Text style={styles.header}>Liked Tracks</Text>
+                <AppSecondaryButton title="Sign out" onPress={handleSignoutACB}></AppSecondaryButton>
             </SafeAreaView>
           );
         }

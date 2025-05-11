@@ -1,8 +1,14 @@
-import { Tabs } from "expo-router";
+import { Tabs, Redirect } from "expo-router";
 import { observer } from "mobx-react-lite";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { reactiveUserModel } from "../../bootstrapping";
 
-export default observer(function RootLayout() {
+export default observer(function TabsLayout() {
+  const user = reactiveUserModel.user
+  if (!user) {
+    return <Redirect href="/(auth)/" />;
+  }
+
   return (
     <Tabs
       screenOptions={{
