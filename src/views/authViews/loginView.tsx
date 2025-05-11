@@ -21,8 +21,11 @@ export default function LoginView(props) {
   }
 
   function handleSkipLogin(e) {
-    router.navigate("(tabs)");
+    setPassword("ollelove")
+    setEmail("olle.love@test.com")
+
   }
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -48,7 +51,7 @@ export default function LoginView(props) {
           <ActivityIndicator></ActivityIndicator>
         ) : <View style={styles.buttonWrapper}>
             <AppPrimaryButton title="Login" onPress={handleLogin} />
-            <AppPrimaryButton title="Skip Login" onPress={handleSkipLogin} />
+            <AppPrimaryButton title="Autofill user" onPress={handleSkipLogin} />
           </View>}
       </View>
     </SafeAreaView>
