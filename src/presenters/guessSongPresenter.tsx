@@ -12,12 +12,18 @@ interface GuessSongPresenterProps {
     setCurrentTrackId: (id: string) => void;
     playSound: () => Promise<any>;
     setToggleTimer: (onProgressUpdate: (percent: number) => void) => void;
+    setUserGuess: (userGuess: string) => void;
+    userGuess: string;
+    compareAnswer;
   };
 }
 
 export const GuessSongPresenter = observer(function GuessSongRender(props: GuessSongPresenterProps) {
   const [progress, setProgress] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true)
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isCorrect, setIsCorrect] = useState(false);
+  const [songTitle, setSongTitle] = useState("");
+  const [showResult, setShowResult] = useState(false);
 
   function randomsong() {
     const randomIndex = Math.floor(Math.random() * classicalBanger.length);
@@ -42,6 +48,27 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
     handleToggleTimer();
   }
 
+  function handleUserGuessACB(userGuess) {
+    props.model.setUserGuess(userGuess);
+  }
+
+  // Compare answer function
+  function handleUserGuessSubmitACB() {
+    // Get current guess from model
+    const currentGuess = props.model.userGuess;
+
+    // Compare answer and get result object
+    const result = props.model.compareAnswer(currentGuess);
+
+    // Set state based on result
+    setIsCorrect(result.isCorrect);
+    setSongTitle(result.songTitle);
+    setShowResult(true);
+
+    // Return result if needed elsewhere
+    return result;
+  }
+
   return (
     <>
       {(isPlaying && (
@@ -52,7 +79,12 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
             playSound={PlaySoundHandler}
             setTrack={currentTrackIdHandlerACB}
             progress={progress}
-
+            model={props.model}
+            userGuess={handleUserGuessACB}
+            handleUserGuessSubmit={handleUserGuessSubmitACB}
+            isCorrect={isCorrect}
+            songTitle={songTitle}
+            showResult={showResult}
           />
         )}
     </>

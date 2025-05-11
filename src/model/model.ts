@@ -39,6 +39,7 @@ export const model = {
   playlist: [],
   personalHighScore: null,
   currentScore: null,
+  userGuess: "" as string,
   sound: null as Audio.Sound | null,
   timer: null as NodeJS.Timeout | null,
   elapsedSeconds: 0,
@@ -66,7 +67,10 @@ export const model = {
     }
   },
 
-  
+  setUserGuess(userGuess:string){
+    this.userGuess = userGuess;
+    console.log("userGuess", userGuess)
+  },
 
 
   setCurrentTrackId(trackId: string) {
@@ -119,18 +123,30 @@ export const model = {
     }, 1000);
   },
 
- compareAnswer(userGuess: string): boolean {
-    if (!this.currentTrackData || !userGuess) {
-      return false;
-    }
-    
-    // Normalize both strings for comparison
-    const normalizedGuess = userGuess.trim().toLowerCase();
-    const normalizedTitle = this.currentTrackData.title.trim().toLowerCase();
-    
-    // Simple exact match
-    return normalizedGuess === normalizedTitle;
-  },
+ compareAnswer(userGuess: string): { isCorrect: boolean, songTitle: string } {
+  if (!this.currentTrackData || !userGuess) {
+    return { isCorrect: false, songTitle: "" };
+  }
+      
+  // Normalize both strings for comparison
+  const normalizedGuess = userGuess.trim().toLowerCase();
+  const normalizedTitle = this.currentTrackData.title.trim().toLowerCase();
+  
+  // Get the original song title (not normalized)
+  const originalTitle = this.currentTrackData.title;
+  
+  console.log("Comparing:", normalizedGuess, "with:", normalizedTitle);
+  const isCorrect = normalizedGuess === normalizedTitle;
+  
+  console.log("Answer comparison result:", isCorrect);
+  console.log("Correct song title:", originalTitle);
+  
+  // Return both the result and the song title
+  return {
+    isCorrect: isCorrect,
+    songTitle: originalTitle
+  };
+},
 
 
   async playSound() {
