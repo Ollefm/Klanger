@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite";
 import { GuessSong } from "../views/guessSongView";
 import { CountDokuView } from "../views/authViews/countDokuView";
 
-const classicalBanger = ["9968843", "6971327", "1038775132", "1904250027", "3135556", "2801558052"];
+const classicalBanger = ["9968843", "6971327", "1038775132", "1904250027", "3135556", "2801558052","630827242","350107641","44112901"];
 
 
 interface GuessSongPresenterProps {
