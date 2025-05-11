@@ -3,6 +3,6 @@ import { ProfileView } from "../views/profileView"
 export const Profile = observer(function ProfileRender(props) {
     console.log(props.model.user)
     return (
-        <ProfileView username={props.model.user.username}/>
+        <ProfileView user={props.model.user}/>
     )
 })

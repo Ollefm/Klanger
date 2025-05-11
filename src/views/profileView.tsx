@@ -3,10 +3,9 @@ import AppProfileBar from "../app/custom components/appProfileBar";
 export function ProfileView(props) {
     return (
             <SafeAreaView style={styles.background}>
-                <AppProfileBar username={props.username}/>
-                <Text style={styles.header}>Quiz score: 9000</Text>
-                <Text style={styles.header}>Place on leader board: 1</Text>
-                <Text style={styles.header}>Liked Tracks</Text>
+              <View style = {styles.Container}>
+                <AppProfileBar username={props.user.username} email={props.user.email}/>
+              </View>
             </SafeAreaView>
           );
         }
@@ -14,7 +13,15 @@ export function ProfileView(props) {
         const styles = StyleSheet.create({
           background: {
             backgroundColor: "#0D0D0D",
-            flex:1
+            flex:1,
+            alignItems:"center"
+          },
+          Container: {
+            borderRadius: 16,
+            paddingHorizontal: 15,
+            paddingVertical: 18,
+            width: "95%",
+            backgroundColor:"#1C1C1C"
           },
           coverImage: {
             backgroundColor: "#333333",

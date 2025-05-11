@@ -23,7 +23,7 @@ export default observer(function RootLayout() {
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
           borderTopWidth: 0,
-          paddingTop: 12,
+          paddingTop: 4,
         },
       }}
     >
