@@ -1,6 +1,6 @@
 import { SafeAreaView, View, Text, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
-import AppPrimaryButton from "../..//app/custom components/appPrimaryButton";
+import AppPrimaryButton from "../../app/custom components/appPrimaryButton";
 import AppSecondaryButton from "../../app/custom components/appSecondaryButton";
 
 export default function AuthIndex() {
@@ -10,25 +10,19 @@ export default function AuthIndex() {
     <SafeAreaView style={styles.container}>
       <View style={styles.textView}>
         <Text style={styles.logo}>Klanger</Text>
-        <Text
-          style={{
-            color: "white",
-            fontSize: 20,
-            fontWeight: 700,
-            textAlign: "center",
-          }}
-        >
-          Play music guesser or get song recommendations
+        <Text style={styles.subtitle}>
+          How well do you really know your music?
         </Text>
       </View>
+
       <View style={styles.buttonContainer}>
         <AppPrimaryButton
-          title="Log In"
-          onPress={() => router.push("/(auth)/login")}
-        />
-        <AppSecondaryButton
           title="Register"
           onPress={() => router.push("/(auth)/register")}
+        />
+        <AppSecondaryButton
+          title="Log In"
+          onPress={() => router.push("/(auth)/login")}
         />
         <Text style={styles.deezerText}>Powered by Deezer API</Text>
       </View>
@@ -36,33 +30,40 @@ export default function AuthIndex() {
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0D0D0D",
-    padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  logo: {
-    color: "#FFD900",
-    fontSize: 32,
-    fontWeight: 700,
-    textAlign: "center",
+    backgroundColor: "black",
+    padding: 20,
+    justifyContent: "space-between", 
   },
   textView: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center", // Center text horizontally
-    gap: 50,
+    alignItems: "center",
+    gap: 20,
+  },
+  logo: {
+    color: "#4896DB",
+    fontSize: 36,
+    fontWeight: "700",
+    textAlign: "center",
+  },
+  subtitle: {
+    color: "white",
+    fontSize: 40,
+    fontWeight: "700",
+    textAlign: "center",
+  },
+  buttonContainer: {
+    alignItems: "center",
+    gap: 15,
+    marginBottom: 30, 
   },
   deezerText: {
     color: "#B4B4B4",
-  },
-  buttonContainer: {
-    flexGrow: 1, // Pushes this section down to center buttons
-    justifyContent: "center", // Centers buttons vertically
-    alignItems: "center", // Centers buttons horizontally
-    gap: 20,
+    fontSize: 12,
+    marginTop: 10,
   },
 });

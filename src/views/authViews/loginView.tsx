@@ -26,7 +26,6 @@ export default function LoginView(props) {
 
   }
 
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.buttonContainer}>
@@ -44,15 +43,15 @@ export default function LoginView(props) {
           value={password}
           onChangeText={setPassword}
         />
-        {props.promiseState.error && (
-          <Text style={styles.errorText}>{props.promiseState.error}</Text>
-        )}
         {props.promiseState.isLoading ? (
           <ActivityIndicator></ActivityIndicator>
         ) : <View style={styles.buttonWrapper}>
             <AppPrimaryButton title="Login" onPress={handleLogin} />
             <AppPrimaryButton title="Autofill user" onPress={handleSkipLogin} />
           </View>}
+          {props.promiseState.error && (
+          <Text style={styles.errorText}>{props.promiseState.error}</Text>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -61,7 +60,7 @@ export default function LoginView(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0D0D0D",
+    backgroundColor: "black",
     padding: 10,
     justifyContent: "center",
     alignItems: "center",
@@ -76,6 +75,9 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   errorText: {
+    marginTop: 15,
+    fontSize: 12,
+    fontWeight: 700,
     color: "#ED4337",
   },
   infoText: {

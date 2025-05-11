@@ -1,6 +1,7 @@
 import { SafeAreaView, View, Text, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import AppPrimaryButton from "../app/custom components/appPrimaryButton";
+import AppSecondaryButton from "../app/custom components/appSecondaryButton";
 
 export default function IndexPage(props) {
   const router = useRouter();
@@ -17,13 +18,14 @@ export default function IndexPage(props) {
         <View style={styles.buttonContainer}>
         <Text style={styles.text}>New game</Text>
           <AppPrimaryButton
-            title="Single player"
-            onPress={goToSinglePlayerCB}
+            title="Multiplayer"
+            onPress={goToMultiplayerCB}
           />
-          <Text style={{ color: "gray", fontSize: 20, fontWeight: 500 }}>
+          <Text style={{ color: "gray", fontSize: 20, fontWeight: 400 }}>
             or
           </Text>
-          <AppPrimaryButton title="Multiplayer" onPress={goToMultiplayerCB} />
+          <AppSecondaryButton  title="Single player"
+            onPress={goToSinglePlayerCB}/>
         </View>
     </SafeAreaView>
   );
@@ -31,7 +33,7 @@ export default function IndexPage(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0D0D0D",
+    backgroundColor: "black",
     padding: 10,
   },
   text: {

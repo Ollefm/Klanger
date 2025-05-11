@@ -4,7 +4,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { reactiveUserModel } from "../../bootstrapping";
 
 export default observer(function TabsLayout() {
-  const user = reactiveUserModel.user
+  const user = reactiveUserModel.user;
   if (!user) {
     return <Redirect href="/(auth)/" />;
   }
@@ -14,7 +14,7 @@ export default observer(function TabsLayout() {
       screenOptions={{
         tabBarActiveTintColor: "white",
         headerStyle: {
-          backgroundColor: "#0D0D0D",
+          backgroundColor: "black",
         },
         headerTitleAlign: "left",
         headerTitleStyle: {
@@ -24,12 +24,14 @@ export default observer(function TabsLayout() {
         headerShadowVisible: false,
         headerTintColor: "#fff",
         tabBarStyle: {
-          backgroundColor: "#1C1C1C",
+          backgroundColor: "transparent",
           position: "absolute",
-          borderTopLeftRadius: 20,
-          borderTopRightRadius: 20,
           borderTopWidth: 0,
-          paddingTop: 4,
+          bottom:0,
+          paddingBottom: 16,
+        },
+        tabBarLabelStyle: {
+          marginTop: 4,
         },
       }}
     >
@@ -41,7 +43,7 @@ export default observer(function TabsLayout() {
             <Ionicons
               name={focused ? "home" : "home-outline"}
               color={color}
-              size={24}
+              size={28}
             />
           ),
         }}
@@ -55,7 +57,7 @@ export default observer(function TabsLayout() {
             <Ionicons
               name={focused ? "search" : "search-outline"}
               color={color}
-              size={24}
+              size={28}
             />
           ),
         }}
@@ -69,7 +71,7 @@ export default observer(function TabsLayout() {
             <Ionicons
               name={focused ? "stats-chart" : "stats-chart-outline"}
               color={color}
-              size={24}
+              size={28}
             />
           ),
         }}
@@ -83,7 +85,7 @@ export default observer(function TabsLayout() {
             <Ionicons
               name={focused ? "person" : "person-outline"}
               color={color}
-              size={24}
+              size={28}
             />
           ),
         }}

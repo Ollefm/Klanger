@@ -18,15 +18,18 @@ export default function AppTextInput({ value, onChangeText, placeholder, secureT
 
 const styles = StyleSheet.create({
   inputContainer: {
-    backgroundColor: "#303030", // Dark gray background
-    borderRadius: 12, 
+    backgroundColor: "transparent", // Dark gray background
+    borderWidth: 0.5,
+    borderColor: "white",
+    borderRadius: 16, 
     paddingHorizontal: 15,
-    paddingVertical: 15,
     width: 340,
+    height: 55,
   },
   input: {
     fontSize: 16,
     color: "white", 
     width: "100%",
+    height: "100%",
   },
 });

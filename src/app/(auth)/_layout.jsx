@@ -10,7 +10,7 @@ export default observer(function AuthLayout() {
   return (
     <Stack
       screenOptions={{
-        headerStyle: { backgroundColor: "#0D0D0D" }, 
+        headerStyle: { backgroundColor: "black" }, 
         headerTintColor: "white", 
         headerTitleStyle: { fontSize: 28,
             fontWeight: 'bold' }, 
