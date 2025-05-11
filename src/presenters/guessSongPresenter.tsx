@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { observer } from "mobx-react-lite";
 import { GuessSong } from "../views/guessSongView";
+import { CountDokuView } from "../views/authViews/countDokuView";
 
 const classicalBanger = ["9968843", "6971327", "1038775132", "1904250027", "3135556", "2801558052"];
+
 
 interface GuessSongPresenterProps {
   model: {
@@ -15,6 +17,8 @@ interface GuessSongPresenterProps {
 
 export const GuessSongPresenter = observer(function GuessSongRender(props: GuessSongPresenterProps) {
   const [progress, setProgress] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true)
+
   function randomsong() {
     const randomIndex = Math.floor(Math.random() * classicalBanger.length);
     return classicalBanger[randomIndex];
@@ -38,11 +42,18 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
   }
 
   return (
-    <GuessSong
-      model={props.model}
-      playSound={PlaySoundHandler}
-      setTrack={currentTrackIdHandlerACB}
-      progress={progress}
+    <>
+    {(isPlaying && (
+      <CountDokuView isPlaying={isPlaying} setIsPlaying={setIsPlaying}/>
+      )) || (
+        
+        <GuessSong
+        model={props.model}
+          playSound={PlaySoundHandler}
+        setTrack={currentTrackIdHandlerACB}
+          progress={progress}
     />
+      )}
+      </>
   );
 });
