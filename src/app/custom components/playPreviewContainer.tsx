@@ -1,18 +1,31 @@
+import { useState } from "react";
 import { StyleSheet, TouchableOpacity, Text, View, Button } from "react-native";
 import styled from "styled-components/native";
+import AntDesign from '@expo/vector-icons/AntDesign';
 
+export default function PlayPreviewContainer({ onPress, progress, disabled = false }) {
+  const [playPause, setPlayPause] = useState<boolean>(false);
 
-export default function PlayPreviewContainer({ onPress }) {
+  const handlePlayPress = () => {
+    if (!disabled) {
+      setPlayPause(!playPause)
+      onPress();
+    }
+  }
   return (
     <View
       style={styles.previewContainer}>
-      <TouchableOpacity onPress={onPress} style={styles.playButton}>
-        <View style={styles.playIcon} />
+      <TouchableOpacity onPress={handlePlayPress} style={styles.playButton} disabled={disabled}>
+        {playPause ? (
+          <AntDesign name="pausecircle" size={24} color={disabled ? "gray" : "white"} />
+        ) : (
+          <AntDesign name="playcircleo" size={24} color={disabled ? "gray" : "white"} />
+        )}
       </TouchableOpacity>
 
       <ProgressBar
-        progress={50}
-        innerBackgroundColor="white"
+        progress={progress}
+        innerBackgroundColor={disabled ? "gray" : "white"}
         outerBackgroundColor="#595959"
       />
     </View>
