@@ -29,7 +29,7 @@ export default observer(function TabsLayout() {
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
           borderTopWidth: 0,
-          paddingTop: 12,
+          paddingTop: 4,
         },
       }}
     >

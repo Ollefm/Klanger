@@ -6,6 +6,6 @@ export const Profile = observer(function ProfileRender(props) {
     props.userModel.signOut()
   }
     return (
-        <ProfileView signOut = {handleSignoutACB} username={props.userModel.userData.username}/>
+        <ProfileView signOut = {handleSignoutACB} username={props.userModel.userData.username} email = {props.userModel.userData.email}/>
     )
 })
