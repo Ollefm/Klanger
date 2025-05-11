@@ -37,9 +37,6 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
     handleToggleTimer();
   }
 
-  
-
-  console.log("progress Presenter guess", progress)
   return (
     <GuessSong
       model={props.model}

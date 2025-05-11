@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { SafeAreaView, View, Text, StyleSheet, Button, Image } from "react-native";
 import PlayPreviewContainer from "../app/custom components/playPreviewContainer";
 import AppTextInput from "../app/custom components/appInput";
@@ -5,8 +6,11 @@ import AppPrimaryButton from "../app/custom components/appPrimaryButton";
 import { BlurView } from "expo-blur";
 
 export function GuessSong(props) {
+  const [answer, setAnswer] = useState(""); 
+   const [hasTrack, setHasTrack] = useState(false); // Add this state
   function setTrackId() {
     props.setTrack();
+    setHasTrack(true); // Set to true when track is set
   }
 
   function playSoundHandlerACB() {
@@ -18,7 +22,14 @@ export function GuessSong(props) {
     props.stopSound();
   }
 
+  function handleAnswerChange(text) {
+    setAnswer(text);
+    if (props.onAnswerChange) {
+      props.onAnswerChange(text);
+    }
+  }
 
+console.log("in View",setTrackId)
   return (
     <SafeAreaView style={styles.background} >
 
@@ -36,13 +47,13 @@ export function GuessSong(props) {
         />
       </View>
 
-      <AppTextInput placeholder="Write your answer here..." value={props.answer || ""} onChangeText={""} secureTextEntry={undefined} />
+      <AppTextInput placeholder="Write your answer here..." value={answer} onChangeText={handleAnswerChange} secureTextEntry={undefined} />
 
-      <AppPrimaryButton title="Start Game" onPress={setTrackId} />
+      
       <View style={styles.container}>
-        <PlayPreviewContainer onPress={playSoundHandlerACB} progress={props.progress} />
+        <PlayPreviewContainer onPress={playSoundHandlerACB} progress={props.progress} disabled={!hasTrack}/>
       </View>
-
+      <AppPrimaryButton title="Next song" onPress={setTrackId} />
 
     </SafeAreaView>
   )

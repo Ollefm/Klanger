@@ -36,6 +36,10 @@ export const model = {
   },
 
   setToggleTimer(onProgressUpdate: (percent: number) => void) {
+    if(!this.currentTrackID){
+      return
+    }
+
     if (this.timer) {
       // stop
       clearInterval(this.timer);
