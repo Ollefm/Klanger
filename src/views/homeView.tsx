@@ -7,11 +7,11 @@ export default function IndexPage(props) {
   const router = useRouter();
   
   function goToSinglePlayerCB() {
-    router.navigate("/searchUsers");
+    router.navigate("/(home)/guessSong");
   }
 
   function goToMultiplayerCB() {
-    router.navigate("/searchUsers");
+    router.navigate("/(home)/searchUsers");
   }
   return (
     <SafeAreaView style={styles.container}>
