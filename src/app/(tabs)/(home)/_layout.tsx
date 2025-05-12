@@ -13,7 +13,7 @@ export default observer(function HomeLayout() {
     >
         
       <Stack.Screen name="index" options={{ headerShown: false, title: "Home"}} />
-      <Stack.Screen name="searchUsers" options={{ title: "Search opponents" }} />
+      <Stack.Screen name="searchUsers" options={{ title: "" }} />
       <Stack.Screen name="guessSong" options={{ title: "Play time" }} />
     </Stack>
   );

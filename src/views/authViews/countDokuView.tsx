@@ -21,7 +21,7 @@ export function CountDokuView(props) {
 
 const styles = StyleSheet.create({
   background: {
-    backgroundColor: "#0D0D0D",
+    backgroundColor: "black",
     flex: 1,
     alignItems:"center"
   },

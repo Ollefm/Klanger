@@ -2,7 +2,6 @@ import { SafeAreaView, View, Text, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import AppPrimaryButton from "../app/custom components/appPrimaryButton";
 import AppSecondaryButton from "../app/custom components/appSecondaryButton";
-
 export default function IndexPage(props) {
   const router = useRouter();
   
