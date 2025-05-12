@@ -1,6 +1,5 @@
 import { fetchData } from "../api/api";
 import { Audio } from "expo-av";
-import { signInWithEmail, signUpWithEmail, searchUsersByUsername } from "../firestoreModel";
 import { SignUpData, AppUser } from "../types/user";
 import { runInAction } from "mobx"; // Add this import
 

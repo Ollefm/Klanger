@@ -20,7 +20,7 @@ import {
   signInWithPopup,
   signInWithCredential,
 } from "firebase/auth";
-import firebaseConfig from "./firebaseConfig";
+import firebaseConfig from "../firebaseConfig";
 import { AppUser, SignUpData } from "../types/user";
 
 // Initialize Firebase

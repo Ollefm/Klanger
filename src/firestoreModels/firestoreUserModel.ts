@@ -16,7 +16,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { AppUser } from "../types/user";
-import { db, auth } from "./firebaseConfig";
+import { db, auth } from "../firebaseConfig";
 
 const COLLECTION_NAME_USERS = "users";
 const readySemaphore = false;

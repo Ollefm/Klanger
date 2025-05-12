@@ -52,4 +52,4 @@ expo-env.d.ts
 #emacs:
 **/*~
 src/apiConfig.js
-src/firestoreModels/firebaseConfig.ts
+src/firebaseConfig.ts
