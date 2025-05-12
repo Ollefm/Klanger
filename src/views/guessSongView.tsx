@@ -40,12 +40,12 @@ export function GuessSong(props) {
           style={styles.coverImage}
           resizeMode="cover"
         />
-
+      {!props.showResult && (
         <BlurView
           intensity={70}
           style={StyleSheet.absoluteFill}
 
-        />
+        />)}
       </View>
 
       {props.showResult && (
@@ -71,7 +71,11 @@ export function GuessSong(props) {
           )
         ]}
       >
-        <AppTextInput placeholder="Write your assumption here" value={props.userGuess || ""} onChangeText={setUserGuessType} secureTextEntry={undefined} />
+        <AppTextInput placeholder="Write your assumption here"
+          value={props.userGuess || ""}
+          onChangeText={setUserGuessType}
+          secureTextEntry={undefined} />
+
         <TouchableOpacity onPress={handleUserGuessSubmit}>
           <Feather name="send" size={24} color="white" />
         </TouchableOpacity>
@@ -131,12 +135,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 2,         // Add border width
     borderColor: 'transparent', // Default transparent border
-    padding: 5,   
+    padding: 5,
   },
   correctBorder: {
     borderColor: '#4CAF50',  // Green border for correct answers
   },
-  
+
   incorrectBorder: {
     borderColor: '#F44336',  // Red border for incorrect answers
   },

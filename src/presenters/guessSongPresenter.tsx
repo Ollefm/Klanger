@@ -40,7 +40,9 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
   function currentTrackIdHandlerACB() {
     const song = randomsong();
     props.model.setCurrentTrackId(song);
-
+    if(showResult){
+      setShowResult(!showResult)
+    }
   }
 
   function PlaySoundHandler() {
