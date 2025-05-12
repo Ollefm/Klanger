@@ -4,6 +4,8 @@ import { challengeUser } from "../firestoreModels/firebaseGameModel";
 import { runInAction } from "mobx"; // Add this import
 import { TrackData } from "../types/user";
 
+const classicalBanger = ["9968843", "10375665","6971327", "1038775132", "1904250027", "3135556", "2801558052","630827242","350107641","44112901"];
+
 export const quizModel = {
   currentTrackData: null as TrackData | null,
   currentTrackID: null,
@@ -16,6 +18,8 @@ export const quizModel = {
   sound: null as Audio.Sound | null,
   timer: null as NodeJS.Timeout | null,
   elapsedSeconds: 0,
+
+  
 
   async fetchTrackData(trackId?: string) {
       // Use provided trackId or the currently set one
@@ -39,6 +43,14 @@ export const quizModel = {
         return null;
       }
     },
+
+
+    /** Choosing song couple of functions */
+
+    randomsong() {
+    const randomIndex = Math.floor(Math.random() * classicalBanger.length);
+    return classicalBanger[randomIndex];
+  },
   
     setUserGuess(userGuess:string){
       this.userGuess = userGuess;
@@ -46,13 +58,16 @@ export const quizModel = {
     },
   
   
-    setCurrentTrackId(trackId: string) {
-      console.log(trackId);
-      runInAction(() => {
-        this.currentTrackID = trackId;
-      });
-      return this.fetchTrackData(trackId);
-    },
+      setCurrentTrackId(trackId?: string) {
+    const songId = trackId || this.randomsong();
+    console.log("Setting track ID:", songId);
+    
+    runInAction(() => {
+      this.currentTrackID = songId;
+    });
+    
+    return this.fetchTrackData(songId);
+  },
   
     setToggleTimer(onProgressUpdate: (percent: number) => void) {
       if (!this.currentTrackID) {

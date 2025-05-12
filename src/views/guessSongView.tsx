@@ -103,6 +103,7 @@ const styles = StyleSheet.create({
     padding: 30,
     borderRadius: 16,
     opacity: 0.75,
+    margin: 10,
   },
   coverImageContainer: {
     marginVertical: 40,

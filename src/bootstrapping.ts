@@ -7,8 +7,8 @@ configure({enforceActions:"never"})
 
 export const reactiveUserModel = observable(userModel)
 export const reactiveModelQuizModel = observable(quizModel)
+reactiveModelQuizModel.setCurrentTrackId()
 
-reactiveModelQuizModel.setCurrentTrackId("9968843")
 
 connectToPersistence(reactiveUserModel, reaction);
 
