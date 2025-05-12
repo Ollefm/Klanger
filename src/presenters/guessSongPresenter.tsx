@@ -7,7 +7,7 @@ const classicalBanger = ["9968843", "6971327", "1038775132", "1904250027", "3135
 
 
 interface GuessSongPresenterProps {
-  model: {
+  quizModel: {
     coverImageUrl: string;
     setCurrentTrackId: (id: string) => void;
     playSound: () => Promise<any>;
@@ -25,6 +25,7 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
   const [songTitle, setSongTitle] = useState("");
   const [showResult, setShowResult] = useState(false);
 
+  
   function randomsong() {
     const randomIndex = Math.floor(Math.random() * classicalBanger.length);
     return classicalBanger[randomIndex];
@@ -32,35 +33,35 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
 
   function handleToggleTimer() {
     // Pass the callback to update progress in the UI
-    props.model.setToggleTimer((percent) => {
+    props.quizModel.setToggleTimer((percent) => {
       setProgress(percent);
     });
   }
 
   function currentTrackIdHandlerACB() {
     const song = randomsong();
-    props.model.setCurrentTrackId(song);
+    props.quizModel.setCurrentTrackId(song);
     if(showResult){
       setShowResult(!showResult)
     }
   }
 
   function PlaySoundHandler() {
-    props.model.playSound();
+    props.quizModel.playSound();
     handleToggleTimer();
   }
 
   function handleUserGuessACB(userGuess) {
-    props.model.setUserGuess(userGuess);
+    props.quizModel.setUserGuess(userGuess);
   }
 
   // Compare answer function
   function handleUserGuessSubmitACB() {
-    // Get current guess from model
-    const currentGuess = props.model.userGuess;
+    // Get current guess from quizModel
+    const currentGuess = props.quizModel.userGuess;
 
     // Compare answer and get result object
-    const result = props.model.compareAnswer(currentGuess);
+    const result = props.quizModel.compareAnswer(currentGuess);
 
     // Set state based on result
     setIsCorrect(result.isCorrect);
@@ -77,11 +78,11 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
         <CountDokuView isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
       )) || (
           <GuessSong
-            coverImage={props.model.coverImageUrl}
+            coverImage={props.quizModel.coverImageUrl}
             playSound={PlaySoundHandler}
             setTrack={currentTrackIdHandlerACB}
             progress={progress}
-            model={props.model}
+            quizModel={props.quizModel}
             userGuess={handleUserGuessACB}
             handleUserGuessSubmit={handleUserGuessSubmitACB}
             isCorrect={isCorrect}
