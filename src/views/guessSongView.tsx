@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { SafeAreaView, View, Text, StyleSheet, Button, Image } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, Button, Image, TouchableOpacity } from "react-native";
 import PlayPreviewContainer from "../app/custom components/playPreviewContainer";
 import AppTextInput from "../app/custom components/appInput";
 import AppPrimaryButton from "../app/custom components/appPrimaryButton";
 import { BlurView } from "expo-blur";
-import { observer } from "mobx-react-lite";
+import Feather from '@expo/vector-icons/Feather';
 
 export function GuessSong(props) {
-  const [answer, setAnswer] = useState(""); 
-   const [hasTrack, setHasTrack] = useState(false); // Add this state
+
+  const [hasTrack, setHasTrack] = useState(false); // Add this state
+
   function setTrackId() {
     props.setTrack();
     setHasTrack(true); // Set to true when track is set
@@ -19,16 +20,15 @@ export function GuessSong(props) {
     props.playSound();
   }
 
-  function stopSoundHandlerACB() {
-    props.stopSound();
+  function setUserGuessType(e) {
+    props.userGuess(e);
   }
 
-  function handleAnswerChange(text) {
-    setAnswer(text);
-    if (props.onAnswerChange) {
-      props.onAnswerChange(text);
-    }
+  function handleUserGuessSubmit() {
+    props.handleUserGuessSubmit();
   }
+
+
 
 
   return (
@@ -40,7 +40,7 @@ export function GuessSong(props) {
           style={styles.coverImage}
           resizeMode="cover"
         />
-        
+
         <BlurView
           intensity={70}
           style={StyleSheet.absoluteFill}
@@ -48,11 +48,37 @@ export function GuessSong(props) {
         />
       </View>
 
-      <AppTextInput placeholder="Write your answer here..." value={answer} onChangeText={handleAnswerChange} secureTextEntry={undefined} />
+      {props.showResult && (
+        <View style={styles.resultContainer}>
+          <Text style={styles.resultStatusText}>
+            {props.isCorrect ? "Correct!" : "Not quite!"}
+          </Text>
+          {!props.isCorrect && (
+            <Text style={styles.feedbackText}>
+              The song was: "{props.songTitle}"
+            </Text>
+          )}
+        </View>
+      )}
 
-      
+      <View
+        style={[
+          styles.guessContainer,
+          props.showResult && (
+            props.isCorrect
+              ? styles.correctBorder
+              : styles.incorrectBorder
+          )
+        ]}
+      >
+        <AppTextInput placeholder="Write your assumption here" value={props.userGuess || ""} onChangeText={setUserGuessType} secureTextEntry={undefined} />
+        <TouchableOpacity onPress={handleUserGuessSubmit}>
+          <Feather name="send" size={24} color="white" />
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.container}>
-        <PlayPreviewContainer onPress={playSoundHandlerACB} progress={props.progress} disabled={!hasTrack}/>
+        <PlayPreviewContainer onPress={playSoundHandlerACB} progress={props.progress} disabled={!hasTrack} />
       </View>
       <AppPrimaryButton title="Next song" onPress={setTrackId} />
 
@@ -88,5 +114,38 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginVertical: 40,
 
-  }
+  },
+  resultStatusText: {
+    color: 'white'
+  },
+  feedbackText: {
+    color: 'white',
+    fontSize: 16,
+    textAlign: 'center',
+    marginVertical: 10,
+  },
+  guessContainer: {
+    flexDirection: 'row',  // Arrange items horizontally
+    alignItems: 'center',
+    gap: 10,
+    borderRadius: 20,
+    borderWidth: 2,         // Add border width
+    borderColor: 'transparent', // Default transparent border
+    padding: 5,   
+  },
+  correctBorder: {
+    borderColor: '#4CAF50',  // Green border for correct answers
+  },
+  
+  incorrectBorder: {
+    borderColor: '#F44336',  // Red border for incorrect answers
+  },
+  resultContainer: {
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    padding: 15,
+    borderRadius: 10,
+    marginHorizontal: 20,
+    marginBottom: 10,
+    alignItems: 'center',
+  },
 })
