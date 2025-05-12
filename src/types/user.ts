@@ -10,3 +10,15 @@ export type SignUpData = {
   password: string;
   username: string;
 };
+
+export type TrackData = {
+  id: string;
+  title: string;
+  preview: string;
+  album?: {
+    cover_medium?: string;
+  };
+  artist?: {
+    name?: string;
+  };
+}

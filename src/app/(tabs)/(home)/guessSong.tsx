@@ -4,7 +4,7 @@ import { GuessSongPresenter } from "../../../presenters/guessSongPresenter"
 
 export default observer(() =>  {
   return (
-  <GuessSongPresenter model = {reactiveModel}/>
+  <GuessSongPresenter quizModel = {reactiveModelQuizModel}/>
 )
 
 })

@@ -3,7 +3,6 @@ import SearchUsersView from "../views/searchUsersView";
 
 export default observer(function SearchUsers(props) {
   
-  console.log(props.userModel)
   function handleUserSearchACB() {
     props.userModel.getUsers();
   }
