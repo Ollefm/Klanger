@@ -81,10 +81,10 @@ export function GuessSong(props) {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.container}>
+
         <PlayPreviewContainer onPress={playSoundHandlerACB} progress={props.progress} disabled={!hasTrack} />
-      </View>
-      <AppPrimaryButton title="Next song" onPress={setTrackId} />
+
+      <AppPrimaryButton title="Check Answer" onPress={setTrackId} />
 
     </SafeAreaView>
   )
@@ -102,7 +102,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#333333",
     padding: 30,
     borderRadius: 16,
-    opacity: 0.75,
     margin: 10,
   },
   coverImageContainer: {

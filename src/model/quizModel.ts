@@ -17,7 +17,11 @@ export const quizModel = {
   userGuess: "" as string,
   sound: null as Audio.Sound | null,
   timer: null as NodeJS.Timeout | null,
-  elapsedSeconds: 0,
+  elapsedSeconds: 0,  
+  currentRound: 0,
+  correctGuesses: 0,
+  maxRounds: 5,
+  gameOver: false,
 
 
 
@@ -44,6 +48,120 @@ export const quizModel = {
     }
   },
 
+  initGame() {
+    runInAction(() => {
+      this.currentRound = 0;
+      this.correctGuesses = 0;
+      this.currentScore = 0;
+      this.gameOver = false;
+    });
+    
+    console.log("in Init Game",this.currentRound)
+    // Start first round
+    return this.nextRound();
+  },
+  
+  // Move to next round
+  nextRound() {
+    if (this.currentRound >= this.maxRounds) {
+      runInAction(() => {
+        this.gameOver = true;
+      });
+      return { gameOver: true, score: this.currentScore };
+    }
+    
+    runInAction(() => {
+      this.currentRound += 1;
+    });
+    
+    console.log(`Starting round ${this.currentRound} of ${this.maxRounds}`);
+    return this.setCurrentTrackId();
+  },
+  
+  // Update to handle game progression
+  setCurrentTrackId() {
+    // Check if we've reached max rounds
+    if (this.gameOver || this.currentRound >= this.maxRounds) {
+      console.log("Game over! Maximum rounds reached.");
+      runInAction(() => {
+        this.gameOver = true;
+      });
+      return null;
+    }
+    
+    // If this is the first track and currentRound is 0, set it to 1
+    if (this.currentRound === 0) {
+      runInAction(() => {
+        this.currentRound = 1;
+      });
+    }
+    
+    const songId = this.randomsong();
+    console.log(`Round ${this.currentRound}: Setting track ID: ${songId}`);
+    
+    runInAction(() => {
+      this.currentTrackID = songId;
+    });
+    
+    return this.fetchTrackData(songId);
+  },
+  
+  // Update compareAnswer to track correct guesses
+  compareAnswer(userGuess: string): { isCorrect: boolean, songTitle: string, gameStatus: { round: number, score: number, isGameOver: boolean } } {
+    if (!this.currentTrackData || !userGuess) {
+      return { 
+        isCorrect: false, 
+        songTitle: "",
+        gameStatus: { 
+          round: this.currentRound, 
+          score: this.currentScore,
+          isGameOver: this.gameOver
+        } 
+      };
+    }
+    
+    // Normalize both strings for comparison
+    const normalizedGuess = userGuess.trim().toLowerCase();
+    const normalizedTitle = this.currentTrackData.title.trim().toLowerCase();
+    
+    // Get the original song title (not normalized)
+    const originalTitle = this.currentTrackData.title;
+    
+    console.log("Comparing:", normalizedGuess, "with:", normalizedTitle);
+    const isCorrect = normalizedGuess === normalizedTitle;
+    
+    // Update score and correct guesses if answer is correct
+    if (isCorrect) {
+      runInAction(() => {
+        this.correctGuesses += 1;
+        this.currentScore += 100;  // Award 100 points per correct guess
+      });
+    }
+    
+    console.log("Answer comparison result:", isCorrect);
+    console.log("Correct song title:", originalTitle);
+    console.log(`Round: ${this.currentRound}/${this.maxRounds}, Score: ${this.currentScore}`);
+    
+    // Check if this was the last round
+    const isLastRound = this.currentRound >= this.maxRounds;
+    if (isLastRound) {
+      runInAction(() => {
+        this.gameOver = true;
+      });
+    }
+    
+    // Return both the result and game status info
+    return {
+      isCorrect: isCorrect,
+      songTitle: originalTitle,
+      gameStatus: {
+        round: this.currentRound,
+        score: this.currentScore,
+        isGameOver: isLastRound || this.gameOver
+      }
+    };
+  },
+
 
   /** Choosing song couple of functions */
 
@@ -58,16 +176,7 @@ export const quizModel = {
   },
 
 
-  setCurrentTrackId(trackId?: string) {
-    const songId = trackId || this.randomsong();
-    console.log("Setting track ID:", songId);
-
-    runInAction(() => {
-      this.currentTrackID = songId;
-    });
-
-    return this.fetchTrackData(songId);
-  },
+ 
 
   setToggleTimer(onProgressUpdate: (percent: number) => void) {
     if (!this.currentTrackID) {
@@ -111,30 +220,7 @@ export const quizModel = {
     }, 1000);
   },
 
-  compareAnswer(userGuess: string): { isCorrect: boolean, songTitle: string } {
-    if (!this.currentTrackData || !userGuess) {
-      return { isCorrect: false, songTitle: "" };
-    }
 
-    // Normalize both strings for comparison
-    const normalizedGuess = userGuess.trim().toLowerCase();
-    const normalizedTitle = this.currentTrackData.title.trim().toLowerCase();
-
-    // Get the original song title (not normalized)
-    const originalTitle = this.currentTrackData.title;
-
-    console.log("Comparing:", normalizedGuess, "with:", normalizedTitle);
-    const isCorrect = normalizedGuess === normalizedTitle;
-
-    console.log("Answer comparison result:", isCorrect);
-    console.log("Correct song title:", originalTitle);
-
-    // Return both the result and the song title
-    return {
-      isCorrect: isCorrect,
-      songTitle: originalTitle
-    };
-  },
 
 
   async playSound() {

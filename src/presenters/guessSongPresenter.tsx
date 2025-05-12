@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { GuessSong } from "../views/guessSongView";
 import { CountDokuView } from "../views/authViews/countDokuView";
-
+import { useRouter } from "expo-router";
 
 interface GuessSongPresenterProps {
   quizModel: {
+    initGame,
     coverImageUrl: string;
     setCurrentTrackId;
     playSound: () => Promise<any>;
@@ -13,6 +14,7 @@ interface GuessSongPresenterProps {
     setUserGuess: (userGuess: string) => void;
     userGuess: string;
     compareAnswer;
+    nextRound,
   };
 }
 
@@ -22,8 +24,12 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
   const [isCorrect, setIsCorrect] = useState(false);
   const [songTitle, setSongTitle] = useState("");
   const [showResult, setShowResult] = useState(false);
-
   
+  const router = useRouter();
+
+  useEffect(() => {
+    props.quizModel.initGame();
+  }, []);
   
 
   function handleToggleTimer() {
@@ -39,6 +45,24 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
     if(showResult){
       setShowResult(!showResult)
     }
+
+    handleNextSong();
+  }
+
+   function handleNextSong() {
+    // Go to next round
+    const result = props.quizModel.nextRound();
+    
+    // If game is over, show game over screen
+    if (result && result.gameOver) {
+      
+      return;
+    }
+    
+    // Reset UI state for new round
+    setShowResult(false);
+    setIsCorrect(false);
+    setSongTitle("");
   }
 
   function PlaySoundHandler() {
@@ -62,9 +86,13 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
     setIsCorrect(result.isCorrect);
     setSongTitle(result.songTitle);
     setShowResult(true);
-
-    // Return result if needed elsewhere
+    console.log(result.gameStatus.isGameOver)
+    if (result.gameStatus.isGameOver) {
+      router.navigate("/(home)/gameOver")
+    }
+    
     return result;
+  
   }
 
   return (
