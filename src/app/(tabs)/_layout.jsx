@@ -4,6 +4,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { reactiveUserModel } from "../../bootstrapping";
 
 export default observer(function TabsLayout() {
+  const unreadNotifications = reactiveUserModel.notifications?.unreadCount ?? 0;
   const user = reactiveUserModel.user;
   if (!user) {
     return <Redirect href="/(auth)/" />;
@@ -43,20 +44,6 @@ export default observer(function TabsLayout() {
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? "home" : "home-outline"}
-              color={color}
-              size={28}
-            />
-          ),
-        }}
-      ></Tabs.Screen>
-
-      <Tabs.Screen
-        name="searchUsers"
-        options={{
-          title: "Search",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "search" : "search-outline"}
               color={color}
               size={28}
             />

@@ -1,11 +1,11 @@
-import { challengeUser } from "../firestoreModels/firebaseGameModel";
+import { challengeUser, getChallengeIdsForCurrentUser } from "../services/firebaseGameModel";
 import { User as FirebaseUser, signOut } from "firebase/auth"; // Firebase Auth User type
 import {
   signInWithEmail,
   signUpWithEmail,
   searchUsersByUsername,
   signOutUser
-} from "../firestoreModels/firestoreUserModel";
+} from "../services/firestoreUserModel";
 import { SignUpData, AppUser } from "../types/user";
 import { getUserFriendlyAuthErrorMessage } from "../utils/utils";
 
@@ -22,11 +22,26 @@ export const userModel = {
     data: [] as AppUser[] | null[],
     error: null,
   } as Object,
+  challenges: {},
+  challengeUserState : {
+    isSuccessful: false,
+    loading: false,
+    error: null as Error | null,
+  },
+  challengedUsersId : [],
 
   setUserSearchQuery(query: string): void {
     this.userSearch = query;
   },
-
+/*
+ async setChallengedUserIds(){
+  try{
+    this.challengedUsersId = await getChallengeIdsForCurrentUser(this.user.uid)
+  }catch(error){
+    console.error("Error when setting challengedUsers: ", error)
+  }  
+  },
+*/
   async registerAccount(email: string, username: string, password: string) {
     this.loginAndRegistrationPromiseState.isLoading = true;
     try {
@@ -69,6 +84,7 @@ export const userModel = {
       const users = await searchUsersByUsername(this.userSearch);
       this.userSearchPromiseState.data = users;
       this.userSearchPromiseState.error = null;
+      this.challengedUsersId = await getChallengeIdsForCurrentUser(this.user.uid)
     } catch (error) {
       this.userSearchPromiseState.error = error;
       console.error("getUsers failed:", error);
@@ -77,14 +93,22 @@ export const userModel = {
     }
   },
 
-  async challengeUser(toUser: any) {
-    const toUserid = toUser.uid;
-    try {
-      await challengeUser(this.user.uid, toUserid);
-    } catch (error) {
-      console.error(error);
-    }
-  },
+async challengeUser(toUser: { uid: string }) {
+  const toUserId = toUser.uid;
+  this.challengeUserState.loading = true;
+  this.challengeUserState.isSuccessful = false;
+  this.challengeUserState.error = null;
+
+  try {
+    await challengeUser(this.user.uid, toUserId);
+    this.challengeUserState.isSuccessful = true;
+  } catch (error) {
+    this.challengeUserState.error = error;
+    console.error("Challenge failed:", error);
+  } finally {
+    this.challengeUserState.loading = false;
+  }
+},
   // WHEN A USER LOGS OUT
   reset() {
     this.user = undefined;

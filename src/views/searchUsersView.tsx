@@ -11,6 +11,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Image } from "expo-image";
 
 export default function SearchUsersView(props) {
+  console.log(props.challengedUsers);
   function handleChallengeUser(user) {
     props.challengeUser(user);
     console.log(`Add friend: ${user}`);
@@ -38,6 +39,22 @@ export default function SearchUsersView(props) {
       >
         Find your opponent
       </Text>
+      {props.promiseChallengeState.isSuccessful && (
+        <Text
+          style={{
+            color: "white",
+            paddingHorizontal: 20,
+            paddingVertical: 10,
+            fontWeight: 700,
+            fontSize: 20,
+          }}
+        >
+          Succesfully added user
+        </Text>
+      )}
+      {props.promiseChallengeState.error && (
+        <Text>props.promiseState.error</Text>
+      )}
       <View style={styles.searchContainer}>
         <AppTextInput
           value={props.searchQuery}
@@ -63,30 +80,41 @@ export default function SearchUsersView(props) {
           contentContainerStyle={{ paddingBottom: 20 }}
           data={props.users}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.userItem}>
-              <View style={styles.userInfo}>
-                <Ionicons
-                  name="person-outline"
-                  size={20}
-                  color="#ffffff"
-                  style={styles.userIcon}
-                />
-                <Text style={styles.userName}>{item.username}</Text>
+          renderItem={({ item }) => {
+            const alreadyChallenged = props.challengedUsers?.includes(
+              item.uid
+            );
+            return (
+              <View style={styles.userItem}>
+                <View style={styles.userInfo}>
+                  <Ionicons
+                    name="person-outline"
+                    size={20}
+                    color="#ffffff"
+                    style={styles.userIcon}
+                  />
+                  <Text style={styles.userName}>{item.username}</Text>
+                </View>
+                <TouchableOpacity
+                  style={[
+                    styles.addButton,
+                    alreadyChallenged && { backgroundColor: "transparent", borderWidth: 1, borderColor: "white" }, // change style if needed
+                  ]}
+                  onPress={() => handleChallengeUser(item)}
+                  disabled={alreadyChallenged}
+                >
+                  <Ionicons
+                    name="musical-notes-outline"
+                    size={18}
+                    color="#ffffff"
+                  />
+                  <Text style={styles.addButtonText}>
+                    {alreadyChallenged ? "pending" : "Challenge"}
+                  </Text>
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity
-                style={styles.addButton}
-                onPress={() => handleChallengeUser(item)}
-              >
-                <Ionicons
-                  name="musical-notes-outline"
-                  size={18}
-                  color="#ffffff"
-                />
-                <Text style={styles.addButtonText}>Challenge</Text>
-              </TouchableOpacity>
-            </View>
-          )}
+            );
+          }}
         />
       )}
     </SafeAreaView>

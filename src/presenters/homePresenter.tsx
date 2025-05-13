@@ -4,6 +4,7 @@ import HomeView from "../views/homeView";
 export default observer(function HomeRender(props) {
 
   return (
-    <HomeView/>
+    <HomeView  challenges = {props.userModel.challenges}/>
+ 
   );
 });

@@ -1,6 +1,6 @@
 import { fetchData } from "../api/api";
 import { Audio } from "expo-av";
-import { challengeUser } from "../firestoreModels/firebaseGameModel";
+import { challengeUser } from "../services/firebaseGameModel";
 import { runInAction } from "mobx"; // Add this import
 import { TrackData } from "../types/user";
 

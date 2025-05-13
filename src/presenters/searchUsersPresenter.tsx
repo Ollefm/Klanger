@@ -17,6 +17,11 @@ export default observer(function SearchUsers(props) {
 
   return (
     <SearchUsersView
+     promiseChallengeState={{
+      loading: props.userModel.challengeUserState.loading,
+      isSuccessful: props.userModel.challengeUserState.isSuccessful,
+      error: props.userModel.challengeUserState.error,
+    }}
       challengeUser = {handleChallengeUserACB}
       promiseState = {props.userModel.userSearchPromiseState}
       model = {props.userModel}
@@ -24,6 +29,7 @@ export default observer(function SearchUsers(props) {
       doUserSeach={handleUserSearchACB}
       setSearchText = {handleSearchTextCB}
       users={props.userModel.userSearchPromiseState.data}
+      challengedUsers={props.userModel.challengedUsersId}
     />
   );
 });
