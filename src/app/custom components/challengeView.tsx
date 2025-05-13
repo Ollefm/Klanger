@@ -12,7 +12,7 @@ export default function ChallengeView(props){
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
     >
-    <Text style={styles.challengeText}>Challenge from: {item}</Text>
+    <Text style={styles.challengeText}>Challenge from: {item.fromUsername}</Text>
       <View style={styles.iconRow}>
         <TouchableOpacity style={styles.ButtonAccept}>
           <Text style={styles.challengeText}>Accept</Text>

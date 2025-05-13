@@ -3,8 +3,11 @@ import HomeView from "../views/homeView";
 
 export default observer(function HomeRender(props) {
 
+  function handleUpdateACB(){
+    props.userModel.listenForChallenges();
+  }
   return (
-    <HomeView  challenges = {props.userModel.challenges}/>
+    <HomeView  challenges = {props.userModel.challenges} update = {handleUpdateACB}/>
  
   );
 });

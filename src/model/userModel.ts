@@ -1,4 +1,4 @@
-import { challengeUser, getChallengeIdsForCurrentUser } from "../services/firebaseGameModel";
+import { challengeUser, getChallengeIdsForCurrentUser, listenForChallenges } from "../services/firebaseGameModel";
 import { User as FirebaseUser, signOut } from "firebase/auth"; // Firebase Auth User type
 import {
   signInWithEmail,
@@ -22,7 +22,7 @@ export const userModel = {
     data: [] as AppUser[] | null[],
     error: null,
   } as Object,
-  challenges: {},
+  challenges: [],
   challengeUserState : {
     isSuccessful: false,
     loading: false,
@@ -100,7 +100,7 @@ async challengeUser(toUser: { uid: string }) {
   this.challengeUserState.error = null;
 
   try {
-    await challengeUser(this.user.uid, toUserId);
+    await challengeUser(this.user.uid, toUserId, this.userData.username, toUser.username);
     this.challengeUserState.isSuccessful = true;
   } catch (error) {
     this.challengeUserState.error = error;
@@ -109,6 +109,14 @@ async challengeUser(toUser: { uid: string }) {
     this.challengeUserState.loading = false;
   }
 },
+
+async listenForChallenges(){
+  
+ this.challenges =  await listenForChallenges(this.user.uid)
+
+},
+
+async acceptChallenge(){},
   // WHEN A USER LOGS OUT
   reset() {
     this.user = undefined;

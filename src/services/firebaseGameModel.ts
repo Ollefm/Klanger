@@ -19,7 +19,7 @@ import { db, auth } from "../firebaseConfig";
 const COLLECTION_NAME_CHALLENGES = "challenges";
 const COLLECTION_NAME_USERS = "users";
 
-export async function challengeUser(fromUid : string, toUid : string) {
+export async function challengeUser(fromUid : string, toUid : string, fromUsername : string, toUsername : string) {
 
     const challengeRef = collection(db, COLLECTION_NAME_CHALLENGES);
 
@@ -27,6 +27,8 @@ export async function challengeUser(fromUid : string, toUid : string) {
        await addDoc(challengeRef, {
       from: fromUid,
       to: toUid,
+      fromUsername: fromUsername,
+      toUsername: toUsername,
       status: "pending",
     });
     }catch(error: any){
@@ -38,7 +40,7 @@ export async function challengeUser(fromUid : string, toUid : string) {
 export async function listenForChallenges(userId) {
   const q = query(
     collection(db, "challenges"),
-    where("toUserId", "==", userId),
+    where("to", "==", userId),
     where("status", "==", "pending")
   );
 
@@ -59,7 +61,6 @@ export async function listenForChallenges(userId) {
       ...challengeData
     });
   });
-
   return challenges;
 
 }
@@ -162,7 +163,7 @@ export async function getChallengeIdsForCurrentUser(userId){
     });
 
     return ids;
-    
+
   } catch (error) {
     console.error("Failed to fetch challenged user IDs:", error);
   }
