@@ -167,16 +167,14 @@ export const quizModel = {
   /** Choosing song couple of functions */
 
   randomsong() {
-    const randomIndex = Math.floor(Math.random() * classicalBanger.length);
-    return classicalBanger[randomIndex];
+    const randomIndex = Math.floor(Math.random() * rockBangers.length);
+    return rockBangers[randomIndex];
   },
 
   setUserGuess(userGuess: string) {
     this.userGuess = userGuess;
     console.log("userGuess", userGuess)
   },
-
-
 
 
   setToggleTimer(onProgressUpdate: (percent: number) => void) {
@@ -186,6 +184,7 @@ export const quizModel = {
 
     // Check if track has changed since last playback
     const trackChanged = this.lastPlayedTrackID !== this.currentTrackID;
+    console.log("lastPlayedTrackID", this.lastPlayedTrackID)
     if (trackChanged) {
       console.log("Track changed, resetting progress");
       runInAction(() => {
@@ -231,7 +230,19 @@ export const quizModel = {
     }, 100);
   },
 
-
+  async clearPlaySound(){
+    console.log("Track changed, stopping current playback");
+    if (this.sound) {
+        try {
+          await this.sound.stopAsync();
+          runInAction(() => {
+            this.sound = null;
+          });
+        } catch (error) {
+          console.error("Error stopping sound:", error);
+        }
+      }
+  },
 
 
   async playSound() {
@@ -242,17 +253,8 @@ export const quizModel = {
 
     // Track ID has changed since last play, reset everything
     if (this.lastPlayedTrackID !== this.currentTrackID) {
-      console.log("Track changed, stopping current playback");
-      if (this.sound) {
-        try {
-          await this.sound.stopAsync();
-          runInAction(() => {
-            this.sound = null;
-          });
-        } catch (error) {
-          console.error("Error stopping sound:", error);
-        }
-      }
+      
+      
     }
 
     // Update last played track ID

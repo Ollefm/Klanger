@@ -15,6 +15,7 @@ interface GuessSongPresenterProps {
     userGuess: string;
     compareAnswer;
     nextRound,
+    clearPlaySound: () => Promise<any>;
   };
 }
 
@@ -25,11 +26,13 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
   const [songTitle, setSongTitle] = useState("");
   const [showResult, setShowResult] = useState(false);
   
+  
   const router = useRouter();
 
   useEffect(() => {
     props.quizModel.initGame();
   }, []);
+
   
 
   function handleToggleTimer() {
@@ -45,7 +48,6 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
     if(showResult){
       setShowResult(!showResult)
     }
-
     handleNextSong();
   }
 
@@ -63,6 +65,9 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
     setShowResult(false);
     setIsCorrect(false);
     setSongTitle("");
+    setProgress(0);
+    handleToggleTimer();
+    props.quizModel.clearPlaySound();
   }
 
   function PlaySoundHandler() {
@@ -111,6 +116,7 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
             isCorrect={isCorrect}
             songTitle={songTitle}
             showResult={showResult}
+            
           />
         )}
     </>

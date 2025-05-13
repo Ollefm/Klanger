@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { SafeAreaView, View, Text, StyleSheet, Button, Image, TouchableOpacity } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, Modal, Image, TouchableOpacity } from "react-native";
 import PlayPreviewContainer from "../app/custom components/playPreviewContainer";
 import AppTextInput from "../app/custom components/appInput";
 import AppPrimaryButton from "../app/custom components/appPrimaryButton";
 import { BlurView } from "expo-blur";
-import Feather from '@expo/vector-icons/Feather';
 
 export function GuessSong(props) {
 
@@ -18,7 +17,9 @@ export function GuessSong(props) {
   function playSoundHandlerACB() {
 
     props.playSound();
+    
   }
+
 
   function setUserGuessType(e) {
     props.userGuess(e);
@@ -28,8 +29,10 @@ export function GuessSong(props) {
     props.handleUserGuessSubmit();
   }
 
-
-
+ function handleCloseModal() {
+    props.setShowResult && props.setShowResult(false);
+    setTrackId();
+  }
 
   return (
     <SafeAreaView style={styles.background} >
@@ -48,20 +51,43 @@ export function GuessSong(props) {
         />)}
       </View>
 
-      {props.showResult && (
-        <View style={styles.resultContainer}>
-          <Text style={styles.resultStatusText}>
-            {props.isCorrect ? "Correct!" : "Not quite!"}
-          </Text>
-          {!props.isCorrect && (
-            <Text style={styles.feedbackText}>
-              The song was: "{props.songTitle}"
+     <Modal
+        animationType="fade"
+        transparent={true}
+        visible={props.showResult || false}
+        onRequestClose={handleCloseModal}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={[
+              styles.resultStatusText,
+              props.isCorrect ? styles.correctText : styles.incorrectText
+            ]}>
+              {props.isCorrect ? "Correct!" : "Not quite!"}
             </Text>
-          )}
+            
+            {!props.isCorrect && (
+              <Text style={styles.feedbackText}>
+                The song was: "{props.songTitle}"
+              </Text>
+            )}
+            
+            <AppPrimaryButton 
+              title="Next Song" 
+              onPress={handleCloseModal} 
+            />
+          </View>
         </View>
-      )}
+      </Modal>
 
-      <View
+    
+
+
+        <PlayPreviewContainer 
+        onPress={playSoundHandlerACB}
+         progress={props.progress}
+        />
+          <View
         style={[
           styles.guessContainer,
           props.showResult && (
@@ -76,15 +102,10 @@ export function GuessSong(props) {
           onChangeText={setUserGuessType}
           secureTextEntry={undefined} />
 
-        <TouchableOpacity onPress={handleUserGuessSubmit}>
-          <Feather name="send" size={24} color="white" />
-        </TouchableOpacity>
+        
       </View>
 
-
-        <PlayPreviewContainer onPress={playSoundHandlerACB} progress={props.progress} disabled={!hasTrack} />
-
-      <AppPrimaryButton title="Check Answer" onPress={setTrackId} />
+      <AppPrimaryButton title="Check Answer" onPress={handleUserGuessSubmit} />
 
     </SafeAreaView>
   )
@@ -151,5 +172,26 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginBottom: 10,
     alignItems: 'center',
+  },
+   modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+   modalContent: {
+    backgroundColor: '#1A1A1A',
+    borderRadius: 20,
+    padding: 25,
+    alignItems: 'center',
+    elevation: 5,
+    width: '85%',
+    maxWidth: 340,
+  },
+    correctText: {
+    color: '#4CAF50',
+  },
+  incorrectText: {
+    color: '#F44336',
   },
 })
