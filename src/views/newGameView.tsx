@@ -2,24 +2,28 @@ import { SafeAreaView, View, Text, StyleSheet, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import AppPrimaryButton from "../app/custom components/appPrimaryButton";
 import AppSecondaryButton from "../app/custom components/appSecondaryButton";
-import ChallengeView from "../app/custom components/challengeView";
-import GamesView from "../app/custom components/gamesView";
-export default function IndexPage(props) {
+export default function NewGameView(props) {
   const router = useRouter();
   
-  function gotToNewGame() {
-    router.navigate("/(home)/newGame");
+  function goToSinglePlayerCB() {
+    router.navigate("/(home)/instructions");
   }
 
+  function goToMultiplayerCB() {
+    router.navigate("/(home)/searchUsers");
+  }
   return (
     <SafeAreaView style={styles.container}>
-      <ChallengeView challenges = {["iaywgdwiuad", "iauwdhauwidh"]}></ChallengeView>
-      <GamesView games = {["Korv", "korvmannen"]}></GamesView>
         <View style={styles.buttonContainer}>
           <AppPrimaryButton
-            title="New game"
-            onPress={gotToNewGame}
+            title="Multiplayer"
+            onPress={goToMultiplayerCB}
           />
+          <Text style={{ color: "gray", fontSize: 20, fontWeight: 400 }}>
+            or
+          </Text>
+          <AppSecondaryButton  title="Single player"
+            onPress={goToSinglePlayerCB}/>
         </View>
     </SafeAreaView>
   );
@@ -38,7 +42,9 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   buttonContainer: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    gap: 10,
   },
 });

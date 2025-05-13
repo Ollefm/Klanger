@@ -1,7 +1,7 @@
 import { observable, configure, reaction } from "mobx"
 import { userModel } from "./model/userModel";
 import { quizModel } from "./model/quizModel";
-import { connectToPersistence } from "./firestoreModels/firestoreUserModel"; // Persistence logic
+import { connectToPersistence } from "./services/firestoreUserModel"; // Persistence logic
 configure({enforceActions:"never"})
 // add a proper model object:
 

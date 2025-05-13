@@ -16,6 +16,7 @@ export default observer(function HomeLayout() {
       <Stack.Screen name="searchUsers" options={{ title: "" }} />
       <Stack.Screen name="instructions" options={{ title: "Instructions" }} />
       <Stack.Screen name="guessSong" options={{ title: "Play time" }} />
+      <Stack.Screen name="newGame" options={{title: "New Game"}}></Stack.Screen>
     </Stack>
   );
 })
