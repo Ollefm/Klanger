@@ -220,9 +220,20 @@ export const quizModel = {
 
       onProgressUpdate(percent);
 
-      // once we hit 30 s, auto–stop
       if (this.elapsedSeconds >= 30) {
         clearInterval(this.timer!);
+        if (this.sound) {
+          try {
+            this.sound.pauseAsync();
+            runInAction(() => {
+              this.sound = null;
+            });
+            console.log("Sound stopped.");
+          } catch (error) {
+            console.error("Error stopping sound:", error);
+          }
+          return;
+        }
         runInAction(() => {
           this.timer = null;
         });
@@ -230,18 +241,18 @@ export const quizModel = {
     }, 100);
   },
 
-  async clearPlaySound(){
+  async clearPlaySound() {
     console.log("Track changed, stopping current playback");
     if (this.sound) {
-        try {
-          await this.sound.stopAsync();
-          runInAction(() => {
-            this.sound = null;
-          });
-        } catch (error) {
-          console.error("Error stopping sound:", error);
-        }
+      try {
+        await this.sound.stopAsync();
+        runInAction(() => {
+          this.sound = null;
+        });
+      } catch (error) {
+        console.error("Error stopping sound:", error);
       }
+    }
   },
 
 
@@ -253,8 +264,8 @@ export const quizModel = {
 
     // Track ID has changed since last play, reset everything
     if (this.lastPlayedTrackID !== this.currentTrackID) {
-      
-      
+
+
     }
 
     // Update last played track ID
