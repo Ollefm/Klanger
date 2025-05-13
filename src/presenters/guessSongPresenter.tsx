@@ -1,20 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { GuessSong } from "../views/guessSongView";
 import { CountDokuView } from "../views/authViews/countDokuView";
-
-const classicalBanger = ["9968843", "6971327", "1038775132", "1904250027", "3135556", "2801558052","630827242","350107641","44112901"];
-
+import { useRouter } from "expo-router";
 
 interface GuessSongPresenterProps {
   quizModel: {
+    initGame,
     coverImageUrl: string;
-    setCurrentTrackId: (id: string) => void;
+    setCurrentTrackId;
     playSound: () => Promise<any>;
     setToggleTimer: (onProgressUpdate: (percent: number) => void) => void;
     setUserGuess: (userGuess: string) => void;
     userGuess: string;
     compareAnswer;
+    nextRound,
   };
 }
 
@@ -24,12 +24,13 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
   const [isCorrect, setIsCorrect] = useState(false);
   const [songTitle, setSongTitle] = useState("");
   const [showResult, setShowResult] = useState(false);
-
   
-  function randomsong() {
-    const randomIndex = Math.floor(Math.random() * classicalBanger.length);
-    return classicalBanger[randomIndex];
-  }
+  const router = useRouter();
+
+  useEffect(() => {
+    props.quizModel.initGame();
+  }, []);
+  
 
   function handleToggleTimer() {
     // Pass the callback to update progress in the UI
@@ -39,11 +40,29 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
   }
 
   function currentTrackIdHandlerACB() {
-    const song = randomsong();
-    props.quizModel.setCurrentTrackId(song);
+    
+    props.quizModel.setCurrentTrackId();
     if(showResult){
       setShowResult(!showResult)
     }
+
+    handleNextSong();
+  }
+
+   function handleNextSong() {
+    // Go to next round
+    const result = props.quizModel.nextRound();
+    
+    // If game is over, show game over screen
+    if (result && result.gameOver) {
+      
+      return;
+    }
+    
+    // Reset UI state for new round
+    setShowResult(false);
+    setIsCorrect(false);
+    setSongTitle("");
   }
 
   function PlaySoundHandler() {
@@ -67,9 +86,13 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
     setIsCorrect(result.isCorrect);
     setSongTitle(result.songTitle);
     setShowResult(true);
-
-    // Return result if needed elsewhere
+    console.log(result.gameStatus.isGameOver)
+    if (result.gameStatus.isGameOver) {
+      router.navigate("/(home)/gameOver")
+    }
+    
     return result;
+  
   }
 
   return (

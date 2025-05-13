@@ -1,33 +1,38 @@
 import { useState } from "react";
 import { StyleSheet, TouchableOpacity, Text, View, Button } from "react-native";
 import styled from "styled-components/native";
-import AntDesign from '@expo/vector-icons/AntDesign';
+import Ionicons from "@expo/vector-icons/Ionicons";
 
-export default function PlayPreviewContainer({ onPress, progress, disabled = false }) {
+export default function PlayPreviewContainer({ onPress, progress}) {
   const [playPause, setPlayPause] = useState<boolean>(false);
 
   const handlePlayPress = () => {
-    if (!disabled) {
       setPlayPause(!playPause)
       onPress();
-    }
   }
   return (
     <View
       style={styles.previewContainer}>
-      <TouchableOpacity onPress={handlePlayPress} style={styles.playButton} disabled={disabled}>
-        {playPause ? (
-          <AntDesign name="pausecircle" size={24} color={disabled ? "gray" : "white"} />
-        ) : (
-          <AntDesign name="playcircleo" size={24} color={disabled ? "gray" : "white"} />
-        )}
-      </TouchableOpacity>
-
       <ProgressBar
         progress={progress}
-        innerBackgroundColor={disabled ? "gray" : "white"}
+        innerBackgroundColor={"white"}
         outerBackgroundColor="#595959"
       />
+      <TouchableOpacity onPress={handlePlayPress} style={styles.playButton} >
+        {playPause ? (
+          <Ionicons
+            name="pause"
+            color="black"
+            size={28}
+          />
+        ) : (
+          <Ionicons
+            name="play"
+            color="black"
+            size={28}
+          />
+        )}
+      </TouchableOpacity>
     </View>
   );
 }
@@ -35,22 +40,17 @@ export default function PlayPreviewContainer({ onPress, progress, disabled = fal
 const styles = StyleSheet.create({
   previewContainer: {
     elevation: 8,
-    flexDirection: 'row', // ➜ makes children align in a row
+    flexDirection: 'column', // ➜ makes children align in a row
     alignItems: 'center', // optional: vertically align items
+    gap: 20,
+    width: 340
   },
   playButton: {
-    backgroundColor: "#333",
+    backgroundColor: "#FFFFFF",
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 20,
-  },
-  playIcon: {
-    borderTopWidth: 8,
-    borderBottomWidth: 8,
-    borderLeftWidth: 12,
-    borderTopColor: "transparent",
-    borderBottomColor: "transparent",
-    borderLeftColor: "#fff",
+    padding: 10,
+    borderRadius: 99
   },
 })
 

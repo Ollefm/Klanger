@@ -1,0 +1,113 @@
+import { SafeAreaView, View, Text, StyleSheet, ScrollView } from "react-native";
+import { useRouter } from "expo-router";
+import AppPrimaryButton from "../app/custom components/appPrimaryButton";
+
+export default function InstructionPage() {
+  const router = useRouter();
+  
+  function goToSinglePlayerCB() {
+    router.navigate("/(home)/guessSong");
+  }
+  
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <Text style={styles.title}>How to Play Klanger</Text>
+        
+        <View style={styles.rulesCard}>
+          <Text style={styles.sectionTitle}>Game Rules</Text>
+          
+          <View style={styles.ruleItem}>
+            <Text style={styles.bulletPoint}>•</Text>
+            <Text style={styles.ruleText}>Listen to song previews and guess the correct song title</Text>
+          </View>
+          
+          <View style={styles.ruleItem}>
+            <Text style={styles.bulletPoint}>•</Text>
+            <Text style={styles.ruleText}>Each game consists of 5 rounds</Text>
+          </View>
+          
+          <View style={styles.ruleItem}>
+            <Text style={styles.bulletPoint}>•</Text>
+            <Text style={styles.ruleText}>Type your guess in the text field and press send</Text>
+          </View>
+          
+          <View style={styles.ruleItem}>
+            <Text style={styles.bulletPoint}>•</Text>
+            <Text style={styles.ruleText}>Get points for each correct guess</Text>
+          </View>
+          
+          <View style={styles.ruleItem}>
+            <Text style={styles.bulletPoint}>•</Text>
+            <Text style={styles.ruleText}>Try to beat your high score!</Text>
+          </View>
+        </View>
+        
+        <View style={styles.buttonContainer}>
+          <Text style={styles.readyText}>Ready to play?</Text>
+          <AppPrimaryButton
+            title="Start Single Player"
+            onPress={goToSinglePlayerCB}
+          />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "black",
+  },
+  scrollContainer: {
+    padding: 20,
+    paddingTop: 40,
+  },
+  title: {
+    color: "white",
+    fontSize: 28,
+    fontWeight: "700",
+    textAlign: "center",
+    marginBottom: 30,
+  },
+  rulesCard: {
+    backgroundColor: "#121212",
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 30,
+  },
+  sectionTitle: {
+    color: "white",
+    fontSize: 22,
+    fontWeight: "600",
+    marginBottom: 20,
+  },
+  ruleItem: {
+    flexDirection: "row",
+    marginBottom: 15,
+    alignItems: "flex-start",
+  },
+  bulletPoint: {
+    color: "white",
+    fontSize: 18,
+    marginRight: 10,
+  },
+  ruleText: {
+    color: "white",
+    fontSize: 16,
+    flex: 1,
+    lineHeight: 22,
+  },
+  buttonContainer: {
+    alignItems: "center",
+    marginTop: 10,
+    marginBottom: 40,
+  },
+  readyText: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "600",
+    marginBottom: 20,
+  }
+});

@@ -6,7 +6,7 @@ export default function IndexPage(props) {
   const router = useRouter();
   
   function goToSinglePlayerCB() {
-    router.navigate("/(home)/guessSong");
+    router.navigate("/(home)/instructions");
   }
 
   function goToMultiplayerCB() {
