@@ -15,9 +15,7 @@ export function GuessSong(props) {
   }
 
   function playSoundHandlerACB() {
-
     props.playSound();
-    
   }
 
 
@@ -33,6 +31,8 @@ export function GuessSong(props) {
     props.setShowResult && props.setShowResult(false);
     setTrackId();
   }
+
+  
 
   return (
     <SafeAreaView style={styles.background} >
@@ -80,12 +80,13 @@ export function GuessSong(props) {
         </View>
       </Modal>
 
-    
+            
 
 
         <PlayPreviewContainer 
         onPress={playSoundHandlerACB}
          progress={props.progress}
+         playPause={props.playPause}
         />
           <View
         style={[
