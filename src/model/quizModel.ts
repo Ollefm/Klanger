@@ -5,7 +5,7 @@ import { runInAction } from "mobx"; // Add this import
 import { TrackData } from "../types/user";
 
 const classicalBanger = ["9968843", "10375665", "6971327", "1038775132", "1904250027", "3135556", "2801558052", "630827242", "350107641", "44112901"];
-
+const rockBangers = ["927200462", "730866", "518458092", "13791930", "985745702", "1483825282", "136334560", "2263033", "63480990", "7818900", "7675130",]
 
 export const quizModel = {
   currentTrackData: null as TrackData | null,
