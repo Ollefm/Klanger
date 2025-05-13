@@ -3,11 +3,10 @@ import { StyleSheet, TouchableOpacity, Text, View, Button } from "react-native";
 import styled from "styled-components/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-export default function PlayPreviewContainer({ onPress, progress}) {
-  const [playPause, setPlayPause] = useState<boolean>(false);
+export default function PlayPreviewContainer({ onPress, progress, playPause}) {
 
   const handlePlayPress = () => {
-      setPlayPause(!playPause)
+      
       onPress();
   }
   return (

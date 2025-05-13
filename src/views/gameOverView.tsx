@@ -10,7 +10,7 @@ export default function GameOverView(props){
     const router = useRouter();
 
     function goOnHomeCB() {
-    router.navigate("/(home)/index");
+    router.navigate("/");
     }
   return (
     <SafeAreaView style={styles.container}>

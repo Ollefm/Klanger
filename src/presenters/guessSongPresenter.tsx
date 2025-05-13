@@ -25,7 +25,7 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
   const [isCorrect, setIsCorrect] = useState(false);
   const [songTitle, setSongTitle] = useState("");
   const [showResult, setShowResult] = useState(false);
-  
+  const [playPause, setPlayPause] = useState<boolean>(false);
   
   const router = useRouter();
 
@@ -33,6 +33,10 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
     props.quizModel.initGame();
   }, []);
 
+  function playPauseCB(){
+    setPlayPause(!playPause)
+    console.log("playPause", playPause)
+  }
   
 
   function handleToggleTimer() {
@@ -66,13 +70,18 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
     setIsCorrect(false);
     setSongTitle("");
     setProgress(0);
-    handleToggleTimer();
+    
     props.quizModel.clearPlaySound();
+    if(playPause){
+      playPauseCB();
+      handleToggleTimer();
+    }
   }
 
   function PlaySoundHandler() {
     props.quizModel.playSound();
     handleToggleTimer();
+    playPauseCB();
   }
 
   function handleUserGuessACB(userGuess) {
@@ -116,7 +125,7 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
             isCorrect={isCorrect}
             songTitle={songTitle}
             showResult={showResult}
-            
+            playPause={playPause}
           />
         )}
     </>
