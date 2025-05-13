@@ -41,7 +41,7 @@ export const quizModel = {
         this.coverImageUrl = data.album?.cover_medium || null;
       });
       console.log("Track data fetched:", data.title);
-      console.log("Track Cover", data.album.cover_medium)
+      //console.log("Track Cover", data.album.cover_medium)
       return data;
     } catch (error) {
       console.error("Error fetching track data:", error);
@@ -308,7 +308,7 @@ export const quizModel = {
         this.sound = sound;
       });
 
-      console.log("Sound started.");
+      //console.log("Sound started.");
     } catch (error) {
       console.error("Error playing sound:", error);
     }
