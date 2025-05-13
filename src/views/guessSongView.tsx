@@ -106,7 +106,7 @@ export function GuessSong(props) {
         
       </View>
 
-      <AppPrimaryButton title="Check Answer" onPress={handleUserGuessSubmit} />
+      <AppPrimaryButton  title="Check Answer" onPress={handleUserGuessSubmit} />
 
     </SafeAreaView>
   )
@@ -187,7 +187,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 5,
     width: '85%',
-    maxWidth: 340,
+    maxWidth: 440,
+    gap: 15,
   },
     correctText: {
     color: '#4CAF50',

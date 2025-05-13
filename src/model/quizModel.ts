@@ -107,7 +107,6 @@ export const quizModel = {
     return this.fetchTrackData(songId);
   },
 
-  // Update compareAnswer to track correct guesses
   compareAnswer(userGuess: string): { isCorrect: boolean, songTitle: string, gameStatus: { round: number, score: number, isGameOver: boolean } } {
     if (!this.currentTrackData || !userGuess) {
       return {
@@ -121,15 +120,11 @@ export const quizModel = {
       };
     }
 
-    // Normalize both strings for comparison
-    const normalizedGuess = userGuess.trim().toLowerCase();
-    const normalizedTitle = this.currentTrackData.title.trim().toLowerCase();
-
-    // Get the original song title (not normalized)
+    // Get the original song title
     const originalTitle = this.currentTrackData.title;
 
-    console.log("Comparing:", normalizedGuess, "with:", normalizedTitle);
-    const isCorrect = normalizedGuess === normalizedTitle;
+    // Create a more lenient matching algorithm
+    const isCorrect = this.isLenientMatch(userGuess, originalTitle);
 
     // Update score and correct guesses if answer is correct
     if (isCorrect) {
@@ -151,7 +146,6 @@ export const quizModel = {
       });
     }
 
-    // Return both the result and game status info
     return {
       isCorrect: isCorrect,
       songTitle: originalTitle,
@@ -161,6 +155,50 @@ export const quizModel = {
         isGameOver: isLastRound || this.gameOver
       }
     };
+  },
+
+  // Add this new helper method to your quizModel
+  isLenientMatch(guess: string, title: string): boolean {
+    // Normalize both strings
+    const normalizedGuess = guess.trim().toLowerCase();
+    const normalizedTitle = title.trim().toLowerCase();
+
+    // Check for exact match first (current behavior)
+    if (normalizedGuess === normalizedTitle) {
+      return true;
+    }
+
+    // Remove punctuation and special characters
+    const cleanGuess = normalizedGuess.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+    const cleanTitle = normalizedTitle.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+
+    // Split into words
+    const guessWords = cleanGuess.split(/\s+/).filter(word => word.length > 1);
+    const titleWords = cleanTitle.split(/\s+/).filter(word => word.length > 1);
+
+    // Filter out common words that don't add meaning
+    const commonWords = ["the", "a", "an", "and", "or", "but", "of", "in", "on", "at", "to", "for"];
+    const importantGuessWords = guessWords.filter(word => !commonWords.includes(word));
+    const importantTitleWords = titleWords.filter(word => !commonWords.includes(word));
+
+    // Count how many important title words appear in the guess
+    let matchingWords = 0;
+    for (const titleWord of importantTitleWords) {
+      if (importantGuessWords.some(guessWord => guessWord.includes(titleWord) || titleWord.includes(guessWord))) {
+        matchingWords++;
+      }
+    }
+
+    // Calculate percentage of matching important words
+    const matchPercentage = matchingWords / importantTitleWords.length;
+
+    // Consider it correct if the user got at least 60% of important words
+    // You can adjust this threshold based on desired difficulty
+    const isMatch = matchPercentage >= 0.6;
+
+    console.log(`Match percentage: ${(matchPercentage * 100).toFixed(1)}% - Required: 60%`);
+
+    return isMatch;
   },
 
 
