@@ -6,6 +6,7 @@ import { TrackData } from "../types/user";
 
 const classicalBanger = ["9968843", "10375665", "6971327", "1038775132", "1904250027", "3135556", "2801558052", "630827242", "350107641", "44112901"];
 
+
 export const quizModel = {
   currentTrackData: null as TrackData | null,
   currentTrackID: null,
@@ -17,12 +18,12 @@ export const quizModel = {
   userGuess: "" as string,
   sound: null as Audio.Sound | null,
   timer: null as NodeJS.Timeout | null,
-  elapsedSeconds: 0,  
+  elapsedSeconds: 0,
   currentRound: 0,
   correctGuesses: 0,
   maxRounds: 5,
   gameOver: false,
-
+  lastPlayedTrackID: null,
 
 
   async fetchTrackData(trackId?: string) {
@@ -55,12 +56,12 @@ export const quizModel = {
       this.currentScore = 0;
       this.gameOver = false;
     });
-    
-    console.log("in Init Game",this.currentRound)
+
+    console.log("in Init Game", this.currentRound)
     // Start first round
     return this.nextRound();
   },
-  
+
   // Move to next round
   nextRound() {
     if (this.currentRound >= this.maxRounds) {
@@ -69,15 +70,15 @@ export const quizModel = {
       });
       return { gameOver: true, score: this.currentScore };
     }
-    
+
     runInAction(() => {
       this.currentRound += 1;
     });
-    
+
     console.log(`Starting round ${this.currentRound} of ${this.maxRounds}`);
     return this.setCurrentTrackId();
   },
-  
+
   // Update to handle game progression
   setCurrentTrackId() {
     // Check if we've reached max rounds
@@ -88,48 +89,48 @@ export const quizModel = {
       });
       return null;
     }
-    
+
     // If this is the first track and currentRound is 0, set it to 1
     if (this.currentRound === 0) {
       runInAction(() => {
         this.currentRound = 1;
       });
     }
-    
+
     const songId = this.randomsong();
     console.log(`Round ${this.currentRound}: Setting track ID: ${songId}`);
-    
+
     runInAction(() => {
       this.currentTrackID = songId;
     });
-    
+
     return this.fetchTrackData(songId);
   },
-  
+
   // Update compareAnswer to track correct guesses
   compareAnswer(userGuess: string): { isCorrect: boolean, songTitle: string, gameStatus: { round: number, score: number, isGameOver: boolean } } {
     if (!this.currentTrackData || !userGuess) {
-      return { 
-        isCorrect: false, 
+      return {
+        isCorrect: false,
         songTitle: "",
-        gameStatus: { 
-          round: this.currentRound, 
+        gameStatus: {
+          round: this.currentRound,
           score: this.currentScore,
           isGameOver: this.gameOver
-        } 
+        }
       };
     }
-    
+
     // Normalize both strings for comparison
     const normalizedGuess = userGuess.trim().toLowerCase();
     const normalizedTitle = this.currentTrackData.title.trim().toLowerCase();
-    
+
     // Get the original song title (not normalized)
     const originalTitle = this.currentTrackData.title;
-    
+
     console.log("Comparing:", normalizedGuess, "with:", normalizedTitle);
     const isCorrect = normalizedGuess === normalizedTitle;
-    
+
     // Update score and correct guesses if answer is correct
     if (isCorrect) {
       runInAction(() => {
@@ -137,11 +138,11 @@ export const quizModel = {
         this.currentScore += 100;  // Award 100 points per correct guess
       });
     }
-    
+
     console.log("Answer comparison result:", isCorrect);
     console.log("Correct song title:", originalTitle);
     console.log(`Round: ${this.currentRound}/${this.maxRounds}, Score: ${this.currentScore}`);
-    
+
     // Check if this was the last round
     const isLastRound = this.currentRound >= this.maxRounds;
     if (isLastRound) {
@@ -149,7 +150,7 @@ export const quizModel = {
         this.gameOver = true;
       });
     }
-    
+
     // Return both the result and game status info
     return {
       isCorrect: isCorrect,
@@ -176,13 +177,23 @@ export const quizModel = {
   },
 
 
- 
+
 
   setToggleTimer(onProgressUpdate: (percent: number) => void) {
     if (!this.currentTrackID) {
       return
     }
 
+    // Check if track has changed since last playback
+    const trackChanged = this.lastPlayedTrackID !== this.currentTrackID;
+    if (trackChanged) {
+      console.log("Track changed, resetting progress");
+      runInAction(() => {
+        this.elapsedSeconds = 0;
+        this.lastPlayedTrackID = this.currentTrackID;
+      });
+      onProgressUpdate(0);
+    }
     if (this.timer) {
       // stop
       clearInterval(this.timer);
@@ -201,12 +212,12 @@ export const quizModel = {
 
     this.timer = setInterval(() => {
       runInAction(() => {
-        this.elapsedSeconds += 1;
+        this.elapsedSeconds += 0.1;
       });
 
       // map 0…30 s to 50…100%
       const raw = (this.elapsedSeconds / 30) * 100;
-      const percent = Math.min(100, Math.round(raw));
+      const percent = Math.min(100, raw);
 
       onProgressUpdate(percent);
 
@@ -217,7 +228,7 @@ export const quizModel = {
           this.timer = null;
         });
       }
-    }, 1000);
+    }, 100);
   },
 
 
@@ -228,6 +239,26 @@ export const quizModel = {
       console.error("No track ID set.");
       return;
     }
+
+    // Track ID has changed since last play, reset everything
+    if (this.lastPlayedTrackID !== this.currentTrackID) {
+      console.log("Track changed, stopping current playback");
+      if (this.sound) {
+        try {
+          await this.sound.stopAsync();
+          runInAction(() => {
+            this.sound = null;
+          });
+        } catch (error) {
+          console.error("Error stopping sound:", error);
+        }
+      }
+    }
+
+    // Update last played track ID
+    runInAction(() => {
+      this.lastPlayedTrackID = this.currentTrackID;
+    });
 
     // Stop existing sound if playing
     if (this.sound) {
