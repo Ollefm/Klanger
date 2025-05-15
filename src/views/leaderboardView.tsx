@@ -1,5 +1,5 @@
 import { FlatList, SafeAreaView, View, Text, StyleSheet } from "react-native";
-import { LeaderBoard } from "../app/custom components/leaderBoard";
+import LeaderBoard from "../app/custom components/leaderBoard";
 export function LeaderboardView(props) {
 
   return (
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     borderRadius:8
   },
   background: {
-    backgroundColor: "#0D0D0D",
+    backgroundColor: "black",
     flex: 1,
     alignItems:"center"
   },

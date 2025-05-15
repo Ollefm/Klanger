@@ -1,4 +1,4 @@
-import { SafeAreaView, View, Text, StyleSheet } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, Image } from "react-native";
 import { useRouter } from "expo-router";
 import AppPrimaryButton from "../../app/custom components/appPrimaryButton";
 import AppSecondaryButton from "../../app/custom components/appSecondaryButton";
@@ -9,7 +9,11 @@ export default function AuthIndex() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.textView}>
-        <Text style={styles.logo}>Klanger</Text>
+        <Image
+          source={require("../../assets/KlangerLogo2.png")}
+          style={{height: 100, width: 300}}
+          resizeMode="contain"
+        />
         <Text style={styles.subtitle}>
           How well do you really know your music?
         </Text>

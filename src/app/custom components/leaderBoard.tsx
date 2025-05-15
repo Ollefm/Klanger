@@ -1,5 +1,5 @@
 import { FlatList, View, Text, StyleSheet } from "react-native";
-export function LeaderBoard(props) {
+export default function LeaderBoard(props) {
   
   var rank = 1
   return (
