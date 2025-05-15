@@ -211,7 +211,7 @@ export const quizModel = {
 
   setUserGuess(userGuess: string) {
     this.userGuess = userGuess;
-    console.log("userGuess", userGuess)
+    //console.log("userGuess", userGuess)
   },
 
 
@@ -222,9 +222,9 @@ export const quizModel = {
 
     // Check if track has changed since last playback
     const trackChanged = this.lastPlayedTrackID !== this.currentTrackID;
-    console.log("lastPlayedTrackID", this.lastPlayedTrackID)
+    //console.log("lastPlayedTrackID", this.lastPlayedTrackID)
     if (trackChanged) {
-      console.log("Track changed, resetting progress");
+      //console.log("Track changed, resetting progress");
       runInAction(() => {
         this.elapsedSeconds = 0;
         this.lastPlayedTrackID = this.currentTrackID;

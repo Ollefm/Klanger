@@ -6,9 +6,11 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 export default function PlayPreviewContainer({ onPress, progress, playPause}) {
 
   const handlePlayPress = () => {
-      
       onPress();
   }
+
+  const disablebutton = progress === 100;
+  
   return (
     <View
       style={styles.previewContainer}>
@@ -17,7 +19,10 @@ export default function PlayPreviewContainer({ onPress, progress, playPause}) {
         innerBackgroundColor={"white"}
         outerBackgroundColor="#595959"
       />
-      <TouchableOpacity onPress={handlePlayPress} style={styles.playButton} >
+      <TouchableOpacity onPress={handlePlayPress} 
+       style={[styles.playButton, disablebutton && styles.disabledButton]} 
+       disabled={disablebutton}
+      >
         {playPause ? (
           <Ionicons
             name="pause"
@@ -50,7 +55,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     borderRadius: 99
-  },
+  }, disabledButton: {
+    backgroundColor: "#F0F0F0",
+    opacity: 0.7
+  }
 })
 
 const ProgressBar = ({
