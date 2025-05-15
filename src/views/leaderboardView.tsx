@@ -1,17 +1,50 @@
-import { SafeAreaView, View, Text, StyleSheet } from "react-native";
-import AppProfileBar from "../app/custom components/appProfileBar";
+import { FlatList, SafeAreaView, View, Text, StyleSheet } from "react-native";
+import { LeaderBoard } from "../app/custom components/leaderBoard";
 export function LeaderboardView(props) {
+
   return (
     <SafeAreaView style={styles.background}>
-      <View style={styles.Container}>
-      <Text style={styles.header}>Classical</Text>
-      <Text style={styles.text}>Place on leader board: 1</Text>
-      </View>
+      <FlatList
+        data={props.leaderBoards.sort(descendingCB)}
+
+        renderItem={renderIngredientRowCB} 
+        ></FlatList>
     </SafeAreaView>
   );
+
+  function descendingCB(a, b) {
+    if (a.genre < b.genre) {
+      return -1;
+    }
+    if (a.genre > b.genre) {
+      return 1;
+    }
+    return 0;
+  }
+
+  function renderIngredientRowCB(element) {
+    const leaderBoard = element.item
+    return (
+      <View>
+        <LeaderBoard data={leaderBoard.data} title={leaderBoard.genre} />
+      </View>
+    )
+  }
 }
 
 const styles = StyleSheet.create({
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 8,
+  },
+  row2: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 8,
+    backgroundColor: "#2C2C2C",
+    borderRadius:8
+  },
   background: {
     backgroundColor: "#0D0D0D",
     flex: 1,
@@ -21,16 +54,23 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 24,
     fontWeight: 700,
-    textAlign: "left",
-    flexDirection: "row",
-    margin: 20,
+  },
+  headerContainer: {
+    paddingVertical: 5,
+    width: 340,
+    paddingHorizontal: 20
   },
   Container: {
+    paddingVertical: 10,
     borderRadius: 16,
-    paddingHorizontal: 15,
-    paddingVertical: 18,
-    width: "95%",
-    backgroundColor:"#1C1C1C"
+    width: 340,
+    paddingHorizontal: 20,
+    backgroundColor: "#1C1C1C",
+  },
+  line: {
+    paddingVertical: 1,
+    width: "100%",
+    backgroundColor: "lightgray",
   },
   info: {
     flexDirection: "column",
@@ -39,7 +79,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   text: {
-    fontSize: 14,
+    fontSize: 18,
     color: "lightgray",
     width: "100%",
   },
@@ -50,8 +90,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   name: {
-    fontWeight: "bold",
-    fontSize: 14,
+    fontSize: 18,
     color: "white",
   },
 });
