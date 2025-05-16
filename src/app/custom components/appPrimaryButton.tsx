@@ -18,12 +18,12 @@ export default function AppPrimaryButton({ onPress, title }) {
 
 const styles = StyleSheet.create({
   buttonWrapper: {
-    borderRadius: 16,
+    borderRadius: 12,
     overflow: "hidden",
   },
   appButtonContainer: {
-    paddingVertical: 15,
-    width: 340,
+    paddingVertical: 18,
+    width: 365,
     alignItems: "center",
     justifyContent: "center",
   },

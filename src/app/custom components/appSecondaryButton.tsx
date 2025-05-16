@@ -13,9 +13,9 @@ export default function AppSecondaryButton({ onPress, title }) {
 
 const styles = StyleSheet.create({
   appButtonContainer: {
-    paddingVertical: 15,
+    paddingVertical: 18,
     borderRadius: 16,
-    width: 340,
+    width: 365,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 0.5,

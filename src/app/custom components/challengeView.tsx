@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-export default function ChallengeView(props){
-
+export default function ChallengeView(props) {
   const renderItem = ({ item }) => (
-        <LinearGradient
-      colors={["#4c669f", "#3b5998", "#192f6a"]}
-      style={styles.challengeItem}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-    >
-    <Text style={styles.challengeText}>Challenge from: {item.fromUsername}</Text>
-      <View style={styles.iconRow}>
+    <View style={styles.challengeItem}>
+      <Text style={styles.challengeText}>{item.fromUsername}</Text>
+      
         <TouchableOpacity style={styles.ButtonAccept}>
           <Text style={styles.challengeText}>Accept</Text>
         </TouchableOpacity>
@@ -21,19 +21,19 @@ export default function ChallengeView(props){
         <TouchableOpacity style={styles.ButtonDecline}>
           <Text style={styles.challengeText}>Decline</Text>
         </TouchableOpacity>
-      </View>
-    </LinearGradient>
+      
+    </View>
   );
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Pending Challenges</Text>
-        <FlatList
-          data={props.challenges}
-          keyExtractor={(item) => item}
-          renderItem={renderItem}
-          contentContainerStyle={{ paddingBottom: 20 }}
-        />
+      <FlatList
+        data={props.challenges}
+        keyExtractor={(item) => item}
+        renderItem={renderItem}
+        contentContainerStyle={{ paddingBottom: 20 }}
+      />
     </View>
   );
 }
@@ -50,30 +50,32 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   challengeItem: {
-    padding: 12,
+    padding: 20,
     marginVertical: 8,
     borderRadius: 12,
+    backgroundColor: "#1A1A1A",
+    borderWidth: 0.5,
+    borderColor: "#5E5E5E",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center"
   },
   challengeText: {
     color: "white",
     fontSize: 16,
     fontWeight: 700,
   },
-  iconRow: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    gap: 24,
-  },
-  ButtonAccept:{
-    backgroundColor: "lightgreen",
+  ButtonAccept: {
+    backgroundColor: "#4896DB",
     paddingVertical: 8,
     paddingHorizontal: 18,
-    borderRadius: 8
+    borderRadius: 8,
   },
-  ButtonDecline:{
-   backgroundColor: "red",
+  ButtonDecline: {
+    borderWidth: 0.5,
+    borderColor: "white",
     paddingVertical: 8,
     paddingHorizontal: 18,
-    borderRadius: 8
-  }
+    borderRadius: 8,
+  },
 });

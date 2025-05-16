@@ -12,17 +12,12 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 export default function GamesView(props) {
   const renderItem = ({ item }) => (
     <TouchableOpacity>
-      <LinearGradient
-        colors={["#4c669f", "#3b5998", "#192f6a"]}
-        style={styles.challengeItem}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-      >
-        <View style={styles.iconRow}>
+      <View style={styles.gameItem}>
+      <View style={styles.iconRow}>
           <Text style={styles.challengeText}>Game against: {item}</Text>
           <Ionicons name="chevron-forward-outline" size={28} color="white" />
         </View>
-      </LinearGradient>
+      </View>  
     </TouchableOpacity>
   );
 
@@ -50,10 +45,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 12,
   },
-  challengeItem: {
-    padding: 16,
+  gameItem: {
+    padding: 18,
     marginVertical: 8,
-    borderRadius: 10,
+    borderRadius: 12,
+    backgroundColor: "#1A1A1A",
+    borderWidth: 0.5,
+    borderColor: "#5E5E5E"
   },
   challengeText: {
     color: "white",
