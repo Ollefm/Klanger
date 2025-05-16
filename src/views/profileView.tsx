@@ -14,7 +14,7 @@ export function ProfileView(props) {
           highestScore={props.userData.highestScore}
           gamesPlayed={props.gamesPlayed}
         ></AppProfileBar>
-        <View style={styles.Container}>
+        <View style={styles.Container2}>
           <View style={styles.row}>
             <View style={{ width: "50%" }}>
               <Text style={styles.text}>Username:</Text>
@@ -41,12 +41,12 @@ export function ProfileView(props) {
           </View>
         </View>
       </View>
-      <View style={{height:"50%"}}>
+      <View style={{height:"40%"}}>
 
       <View style={styles.headerContainer}>
         <Text style={styles.header}>Latest games</Text>
       </View>
-      <View style={styles.Container}></View>
+      <View style={styles.Container2}></View>
       </View>
       <AppSecondaryButton
         title="Sign out"
@@ -86,6 +86,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     backgroundColor: "#1C1C1C",
   },
+  Container2: {
+    width: 365,
+    padding: 18,
+    marginVertical: 8,
+    borderRadius: 12,
+    backgroundColor: "#1A1A1A",
+    borderWidth: 0.5,
+    borderColor: "#5E5E5E"
+  },
   info: {
     flexDirection: "column",
     alignItems: "center",
@@ -103,7 +112,7 @@ const styles = StyleSheet.create({
     backgroundColor: "lightgray",
   },
   text: {
-    fontSize: 14,
+    fontSize: 18,
     color: "white",
     width: "100%",
   },

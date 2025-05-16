@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: "#1A1A1A",
     borderWidth: 0.5,
+    width: 365,
     borderColor: "#5E5E5E",
     flexDirection: "row",
     justifyContent: "space-between",

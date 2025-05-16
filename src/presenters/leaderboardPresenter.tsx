@@ -24,7 +24,7 @@ export default observer(function Leaderboard(props) {
     ],
   };
 
-  const leaderBoards = [leaderBoard1, leaderBoard2];
+  const leaderBoards = [leaderBoard1];
 
-  return <LeaderboardView leaderBoards={leaderBoards} />;
+  return <LeaderboardView leaderBoard={leaderBoard1} />;
 });
