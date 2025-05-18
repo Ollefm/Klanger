@@ -8,16 +8,24 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useRouter } from "expo-router";
 
 export default function GamesView(props) {
+  const router = useRouter();
+
+  function handleGoToGame() {
+    router.navigate("/(home)/guessSong");
+  }
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={handleGoToGame}>
       <View style={styles.gameItem}>
-      <View style={styles.iconRow}>
-          <Text style={styles.challengeText}>Game against: {props.games.players[0].username}</Text>
+        <View style={styles.iconRow}>
+          <Text style={styles.challengeText}>
+            Game against: {props.games.players[0].username}
+          </Text>
           <Ionicons name="chevron-forward-outline" size={28} color="white" />
         </View>
-      </View>  
+      </View>
     </TouchableOpacity>
   );
 }
@@ -40,7 +48,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#1A1A1A",
     borderWidth: 0.5,
     width: 365,
-    borderColor: "#5E5E5E"
+    borderColor: "#5E5E5E",
   },
   challengeText: {
     color: "white",
