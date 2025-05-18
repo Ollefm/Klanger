@@ -7,16 +7,25 @@ import {
 } from "react-native";
 
 export default function ChallengeView(props) {
-  function handleAcceptACB(challenge){
+  function handleAcceptACB(challenge) {
     props.acceptChallenge(challenge)
   }
-  function handleDeclineACB(challenge){
+  function handleDeclineACB(challenge) {
     props.declineChallenge(challenge)
   }
 
-  const renderItem = ({ item }) => (
-    <View style={styles.challengeItem}>
-      <Text style={styles.challengeText}>{item.fromUsername}</Text>
+  console.log("challenge view checking item", props.succesChallenge)
+
+  const renderItem = ({ item }) => {
+    const isAccepted = item.id === props.succesChallenge;
+
+    return isAccepted ? (
+      <View style={styles.successContainer}>
+        <Text style={styles.challengeText}>Challenge Accepted!</Text>
+      </View>
+    ) : (
+      <View style={styles.challengeItem}>
+        <Text style={styles.challengeText}>{item.fromUsername}</Text>
         <TouchableOpacity style={styles.ButtonAccept} onPress={() => handleAcceptACB(item)}>
           <Text style={styles.challengeText}>Accept</Text>
         </TouchableOpacity>
@@ -24,9 +33,9 @@ export default function ChallengeView(props) {
         <TouchableOpacity style={styles.ButtonDecline} onPress={() => handleDeclineACB(item)}>
           <Text style={styles.challengeText}>Decline</Text>
         </TouchableOpacity>
-      
-    </View>
-  );
+      </View>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -63,6 +72,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center"
+  },
+  successContainer: {
+    padding: 20,
+    marginVertical: 8,
+    borderRadius: 12,
+    backgroundColor: "#28a745",
+    borderWidth: 0.5,
+    width: 365,
+    borderColor: "#5E5E5E",
+    alignItems: "center",
+    justifyContent: "center"
   },
   challengeText: {
     color: "white",

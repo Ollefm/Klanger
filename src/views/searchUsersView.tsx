@@ -11,7 +11,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Image } from "expo-image";
 
 export default function SearchUsersView(props) {
-  console.log(props.challengedUsers);
+  //console.log("searchView props", props.userData.uid);
   function handleChallengeUser(user) {
     props.challengeUser(user);
     console.log(`Add friend: ${user}`);
@@ -25,6 +25,8 @@ export default function SearchUsersView(props) {
     console.log(query);
     props.setSearchText(query);
   }
+
+  
 
   return (
     <SafeAreaView style={styles.background}>
@@ -81,9 +83,12 @@ export default function SearchUsersView(props) {
           data={props.users}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => {
-            const alreadyChallenged = props.challengedUsers?.includes(
-              item.uid
-            );
+            //console.log("Current item UID:", item.uid);
+            //console.log("Challenged Users array:", props.challengedUsers);
+
+            const isMyself = item.uid === props.userData.uid;
+            const alreadyChallenged = props.challengedUsers?.includes(item.uid);
+            console.log("alreadychallenged result", alreadyChallenged)
             return (
               <View style={styles.userItem}>
                 <View style={styles.userInfo}>
@@ -98,10 +103,10 @@ export default function SearchUsersView(props) {
                 <TouchableOpacity
                   style={[
                     styles.addButton,
-                    alreadyChallenged && { backgroundColor: "transparent", borderWidth: 1, borderColor: "white" }, // change style if needed
+                    (alreadyChallenged || isMyself) && { backgroundColor: "transparent", borderWidth: 1, borderColor: "white" },
                   ]}
                   onPress={() => handleChallengeUser(item)}
-                  disabled={alreadyChallenged}
+                  disabled={alreadyChallenged || isMyself}
                 >
                   <Ionicons
                     name="musical-notes-outline"
@@ -109,7 +114,7 @@ export default function SearchUsersView(props) {
                     color="#ffffff"
                   />
                   <Text style={styles.addButtonText}>
-                    {alreadyChallenged ? "pending" : "Challenge"}
+                    {isMyself ? "It's a me Mario" : alreadyChallenged ? "pending" : "Challenge"}
                   </Text>
                 </TouchableOpacity>
               </View>
