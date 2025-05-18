@@ -1,10 +1,10 @@
 import { observer } from "mobx-react-lite"
-import { reactiveModelQuizModel } from "../../../bootstrapping"
+import { reactiveModelQuizModel, reactiveUserModel } from "../../../bootstrapping"
 import { GuessSongPresenter } from "../../../presenters/guessSongPresenter"
 
 export default observer(() =>  {
   return (
-  <GuessSongPresenter quizModel = {reactiveModelQuizModel}/>
+  <GuessSongPresenter quizModel = {reactiveModelQuizModel} userModel = {reactiveUserModel}/>
 )
 
 })

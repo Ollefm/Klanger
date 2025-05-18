@@ -1,10 +1,10 @@
-import NewGameView from "../../../views/newGameView"
+import NewGame from "../../../presenters/newGamePresenter"
 import { observer } from "mobx-react-lite"
-import { reactiveUserModel } from "../../../bootstrapping"
+import { reactiveUserModel, reactiveModelQuizModel } from "../../../bootstrapping"
 
 export default observer(() =>  {
   return (
-  <NewGameView userModel = {reactiveUserModel}/>
+  <NewGame userModel = {reactiveUserModel} quizModel = {reactiveModelQuizModel}/>
 )
 
 })
