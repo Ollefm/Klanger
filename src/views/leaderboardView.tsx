@@ -4,8 +4,8 @@ export function LeaderboardView(props) {
   return (
     <SafeAreaView style={styles.background}>
       <LeaderBoard
-        data={props.leaderBoard.data}
-        title={props.leaderBoard.genre}
+        data={props.leaderBoardData}
+        title={props.title}
       />
       {/*       <FlatList
         data={props.leaderBoards.sort(descendingCB)}

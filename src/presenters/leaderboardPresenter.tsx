@@ -26,5 +26,5 @@ export default observer(function Leaderboard(props) {
 
   const leaderBoards = [leaderBoard1];
 
-  return <LeaderboardView leaderBoard={leaderBoard1} />;
+  return <LeaderboardView title={"Rock"} leaderBoardData={props.userModel.leaderboard} />;
 });

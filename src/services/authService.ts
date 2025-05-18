@@ -17,11 +17,14 @@ import {
 } from "firebase/auth";
 import { AppUser } from "../types/user";
 import { db, auth } from "../firebaseConfig";
+import { getLBData } from "./firestoreUserModel";
 
 const COLLECTION_NAME_USERS = "users";
+const COLLECTION_NAME_LEADERBOARD = "leaderboard";
 const readySemaphore = false;
 
 export function connectToPersistence(model, reactionFn) {
+
 
   async function handleUser(firebaseUser) {
     if (!firebaseUser) {
@@ -33,7 +36,25 @@ export function connectToPersistence(model, reactionFn) {
     
     try {
       const appUser = await getUserData(firebaseUser.uid);
+      //const UserLBData = await getUserLBData(firebaseUser.uid);
+      const LBData = await getLBData();
+      model.leaderboard = LBData;
+      const userLBData = LBData.find(findUserByIDCB);
+
+      function findUserByIDCB(user){
+        return user.uid === firebaseUser.uid;
+      }
+
+      if (userLBData) {
+        model.totalScore = userLBData.totalScore;
+        model.gamesPlayed = userLBData.gamesPlayed;
+      } else {
+        model.totalScore = 0;
+        model.gamesPlayed = 0;
+      }
+      
       model.userData = appUser;
+
     //  model.listenForChallenges() REMOVE THE COMMENT WHEN READY FOR DEPOLOY
     //  model.listenForGames() REMOVE THE COMMENT WHEN READY FOR DEPLOY
 
@@ -91,6 +112,12 @@ export async function signUpWithEmail(
       username: username,
       createdAt: new Date(),
     });
+    await setDoc(doc(db, COLLECTION_NAME_LEADERBOARD, user.uid), {
+      uid: user.uid,
+      username: username,
+      totalScore: 0,
+      gamesPlayed: 0,
+    });
   } catch (error: any) {
     throw error;
   }
@@ -121,6 +148,21 @@ export async function signOutUser() {
 export async function getUserData(userId) {
   try {
     const userDocRef = doc(db, COLLECTION_NAME_USERS, userId);
+    const userSnapshot = await getDoc(userDocRef);
+    if (userSnapshot.exists()) {
+      return userSnapshot.data();
+    } else {
+      console.log("User not found.");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    throw error;
+  }
+}
+export async function getUserLBData(userId) {
+  try {
+    const userDocRef = doc(db, COLLECTION_NAME_LEADERBOARD, userId);
     const userSnapshot = await getDoc(userDocRef);
     if (userSnapshot.exists()) {
       return userSnapshot.data();

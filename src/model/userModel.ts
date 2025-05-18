@@ -5,13 +5,16 @@ import {
   signUpWithEmail,
   signOutUser
 } from "../services/authService";
-import {searchUsersByUsername,} from "../services/firestoreUserModel"
+import {searchUsersByUsername, updateUserLBData, getLBData} from "../services/firestoreUserModel"
 import { SignUpData, AppUser } from "../types/user";
 import { getUserFriendlyAuthErrorMessage } from "../utils/utils";
+import leaderboard from "../app/(tabs)/leaderboard";
 
 export const userModel = {
   user: null as FirebaseUser | null,
   userData: null as AppUser | null,
+  totalScore: 0,
+  gamesPlayed: 0,
   challenges: [] as any[],
   games: [] as any[],
   loginAndRegistrationPromiseState: {
@@ -32,9 +35,37 @@ export const userModel = {
     error: null as Error | null,
   },
   gameId: "",
+  leaderboard: [] as any[],
+
+  async getLeaderBoard() {
+    try {
+      const leaderboardData = await getLBData();
+      console.log("Fetched leaderboard:", leaderboardData);
+      this.leaderboard = leaderboardData;
+    } catch (error) {
+      console.error("Failed to fetch leaderboard:", error);
+    }
+  },
 
   setUserSearchQuery(query: string): void {
     this.userSearch = query;
+  },
+
+  async updateUserLeaderBoardData(score: number) {
+    this.totalScore += score;
+    this.gamesPlayed += 1;
+    
+      try {
+      await updateUserLBData(
+        this.userData.uid,
+        this.userData.username,
+        this.totalScore,
+        this.gamesPlayed
+      );
+    }
+    catch (error) {
+      console.error("Error updating user data:", error);
+    }
   },
 
   async registerAccount(email: string, username: string, password: string) {
@@ -114,6 +145,7 @@ async listenForChallenges() {
       const challengeList = await firebaseGameService.fetchIncomingChallenges(this.user.uid);
       console.log("Fetched challenges:", challengeList);
       this.challenges = challengeList;
+      console.log("challengelist", challengeList)
     } catch (error) {
       console.error("Failed to fetch challenges:", error);
     }
@@ -125,11 +157,38 @@ async listenForGames() {
     try {
       const gameList = await firebaseGameService.fetchUserGames(this.user.uid);
       this.games = gameList;
-      console.log("this is games: ", this.games)
+       this.challengedUsersId = this.getOpponentIds();
+      console.log("Opponent IDs:", this.challengedUsersId);
     } catch (error) {
       console.error("Failed to fetch games:", error);
     }
   }
+},
+
+getOpponentIds() {
+  // Return empty array if no games or no user
+  if (!this.games.length || !this.user) {
+    return [];
+  }
+
+  // Create a Set to store unique opponent IDs
+  const opponentIds = new Set();
+
+  // Loop through all games
+  this.games.forEach(game => {
+    // Check if playerIds exist and is an array
+    if (game.playerIds && Array.isArray(game.playerIds)) {
+      // Add all player IDs except the current user's ID
+      game.playerIds.forEach(playerId => {
+        if (playerId !== this.user.uid) {
+          opponentIds.add(playerId);
+        }
+      });
+    }
+  });
+
+  // Convert Set to Array and return
+  return Array.from(opponentIds);
 },
 
   async acceptChallenge(challenge: any) {
@@ -138,8 +197,11 @@ async listenForGames() {
         challenge.id,
         this.user!.uid
       );
+
+      return true;
     } catch (error) {
       console.error("Error accepting challenge:", error);
+      return false;
     }
   },
 

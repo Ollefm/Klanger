@@ -1,5 +1,6 @@
 import { FlatList, View, Text, StyleSheet } from "react-native";
 export default function LeaderBoard(props) {
+  console.log("leaderboard", props.data);
   
   var rank = 1
   return (
@@ -21,13 +22,13 @@ export default function LeaderBoard(props) {
       </View>
       <View style={styles.line}></View>
       <FlatList
-            data={props.data.sort(descendingCB)}
+            data={props.data/* .sort(descendingCB) */}
             renderItem={renderIngredientRowCB}
           />
       </View>
     </View>
   );
-
+  /* 
   function descendingCB(a, b) {
     if (a.highScore > b.highScore) {
       return -1;
@@ -37,7 +38,7 @@ export default function LeaderBoard(props) {
     }
     return 0;
   }
-
+ */
   function renderIngredientRowCB(element) {
     const user = element.item
     return (
@@ -46,10 +47,10 @@ export default function LeaderBoard(props) {
           <Text style={styles.bold}>{rank++}</Text>
         </View>
         <View style={{width:"45%"}}>
-          <Text style={styles.name}>{user.userName}</Text>
+          <Text style={styles.name}>{user.username}</Text>
         </View>
         <View>
-          <Text style={styles.text}>{user.highScore}</Text>
+          <Text style={styles.text}>{user.totalScore}</Text>
         </View>
       </View>
     )

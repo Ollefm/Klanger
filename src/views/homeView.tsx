@@ -55,6 +55,7 @@ return (
             challenges={props.challenges}
             acceptChallenge={handleAcceptChallengeACB}
             declineChallenge={handleDeclineChallengeACB}
+            succesChallenge={props.lastAcceptedId}
           />
         </>
       }

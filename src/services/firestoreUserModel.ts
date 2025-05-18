@@ -2,6 +2,7 @@ import {
   doc,
   setDoc,
   getDoc,
+  updateDoc,
   query,
   where,
   collection,
@@ -10,10 +11,11 @@ import {
   limit,
 } from "firebase/firestore";
 
-import { AppUser } from "../types/user";
+import { AppUser, UserLBData } from "../types/user";
 import { db, auth } from "../firebaseConfig";
 
 const COLLECTION_NAME_USERS = "users";
+const COLLECTION_NAME_LEADERBOARD = "leaderboard";
 const readySemaphore = false;
 
 
@@ -33,6 +35,49 @@ export async function getUserData(userId) {
     throw error;
   }
 }
+
+export async function updateUserLBData(userId, username, score, gamesPlayed) {
+  try {
+    const userDocRef = doc(db, COLLECTION_NAME_LEADERBOARD, userId);
+    await setDoc(userDocRef, {
+      uid: userId,
+      username: username,
+      totalScore: score,
+      gamesPlayed: gamesPlayed,
+    },{ merge: true });
+  } catch (error) {
+    console.error("Error updating user data:", error);
+    throw error;
+  }
+}
+
+export async function getLBData() {
+  try {
+    const usersRef = collection(db, COLLECTION_NAME_LEADERBOARD);
+    const q = query(usersRef, orderBy("totalScore", "desc"), limit(10));
+    const querySnapshot = await getDocs(q);
+
+    const leaderboard: UserLBData[] = [];
+
+    querySnapshot.forEach((doc) => {
+      let userData = doc.data();
+      leaderboard.push({
+        uid: userData.uid,
+        username: userData.username || "",
+        totalScore: userData.totalScore,
+        gamesPlayed: userData.gamesPlayed,
+      });
+    });
+
+    return leaderboard;
+  } catch (error) {
+    console.error("Error fetching leaderboard data:", error);
+    throw error;
+  }
+  
+}
+
+    
 
 export async function searchUsersByUsername(username: string) {
   const usersRef = collection(db, COLLECTION_NAME_USERS);
@@ -61,6 +106,7 @@ export async function searchUsersByUsername(username: string) {
       email: userData.email ?? "",
       username: userData.username || "",
       createdAt: userData.createdAt,
+
     });
   });
 

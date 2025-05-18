@@ -5,6 +5,14 @@ export type AppUser = {
   createdAt: Date;
 };
 
+export type UserLBData = {
+  uid: string;
+  username: string;
+  totalScore: number;
+  gamesPlayed: number;
+};
+
+
 export type SignUpData = {
   email: string;
   password: string;

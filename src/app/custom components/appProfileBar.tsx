@@ -14,11 +14,11 @@ export default function AppProfileBar(props) {
               <Text style={styles.name}>{props.username}</Text>
               <View style={{ flexDirection: "row" }}>
                 <View style={styles.info}>
-                  <Text style={styles.bold}>{props.highestScore || "0"}</Text>
-                  <Text style={styles.text}>Highest score</Text>
+                  <Text style={styles.bold}>{props.totalScore}</Text>
+                  <Text style={styles.text}>Total score</Text>
                 </View>
                 <View style={styles.info}>
-                  <Text style={styles.bold}>{props.gamesPlayed || "0"}</Text>
+                  <Text style={styles.bold}>{props.gamesPlayed}</Text>
                   <Text style={styles.text}>games played</Text>
                 </View>
               </View>
