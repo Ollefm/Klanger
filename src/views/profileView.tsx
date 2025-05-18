@@ -2,11 +2,6 @@ import { SafeAreaView, View, Text, StyleSheet } from "react-native";
 import AppSecondaryButton from "../app/custom components/appSecondaryButton";
 import AppProfileBar from "../app/custom components/appProfileBar";
 export function ProfileView(props) {
-  console.log("profileivew",props.userData);
-  function handleSignoutACB() {
-    props.signOut();
-  }
->>>>>>> e28dbb9bc8ff36f9b918b0a593d279588f7542ab
   return (
     <SafeAreaView style={styles.background}>
       <View>
@@ -42,21 +37,13 @@ export function ProfileView(props) {
           </View>
         </View>
       </View>
-      <View style={{height:"20%"}}>
+      <View style={{height:"40%"}}>
 
       <View style={styles.headerContainer}>
         <Text style={styles.header}>Latest games</Text>
       </View>
       <View style={styles.Container2}></View>
       </View>
-      <AppSecondaryButton
-        title="Score+100"
-        onPress={handleScoreACB}
-        ></AppSecondaryButton>
-      <AppSecondaryButton
-        title="log"
-        onPress={logACB}
-        ></AppSecondaryButton>
  
       <AppSecondaryButton
         title="Sign out"
@@ -67,12 +54,7 @@ export function ProfileView(props) {
   function handleSignoutACB() {
     props.signOut();
   }
-  function handleScoreACB() {
-    props.addToTotalScore();
-  }
-  function logACB() {
-    console.log(props.userData);
-  }
+
 
 
 }

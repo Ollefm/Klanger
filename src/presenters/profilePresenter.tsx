@@ -4,6 +4,8 @@ type ProfileProps = {
   userModel: {
     signOut: () => void;
     userData: any;
+    totalScore: number;
+    gamesPlayed: number;
   };
 };
 
@@ -14,14 +16,10 @@ export const Profile = observer(function ProfileRender(props: ProfileProps) {
       score ={props.userModel.totalScore}
       gamesPlayed={props.userModel.gamesPlayed}
       userData={props.userModel.userData}
-      addToTotalScore={handleScoreACB}
     />
   );
   function handleSignoutACB() {
     props.userModel.signOut();
-  }
-  function handleScoreACB() {
-    props.userModel.updateUserLeaderBoardData(100);
   }
 
 });

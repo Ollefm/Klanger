@@ -5,16 +5,13 @@ import {
   signUpWithEmail,
   signOutUser
 } from "../services/authService";
-import {searchUsersByUsername, updateUserLBData, getLBData} from "../services/firestoreUserModel"
+import {searchUsersByUsername, getLBData, updateUserLBData} from "../services/firestoreUserModel"
 import { SignUpData, AppUser } from "../types/user";
 import { getUserFriendlyAuthErrorMessage } from "../utils/utils";
-import leaderboard from "../app/(tabs)/leaderboard";
 
 export const userModel = {
   user: null as FirebaseUser | null,
   userData: null as AppUser | null,
-  totalScore: 0,
-  gamesPlayed: 0,
   challenges: [] as any[],
   games: [] as any[],
   loginAndRegistrationPromiseState: {
@@ -35,8 +32,14 @@ export const userModel = {
     error: null as Error | null,
   },
   gameId: "",
-<<<<<<< HEAD
-  leaderboard: [] as any[],
+  clickedGame: {},
+  totalScore: 0,
+  gamesPlayed: 0,
+
+  
+  setClickedGame(game){
+    this.clickedGame = game
+  },
 
   async getLeaderBoard() {
     try {
@@ -47,12 +50,22 @@ export const userModel = {
       console.error("Failed to fetch leaderboard:", error);
     }
   },
-=======
-  clickedGame: {},
->>>>>>> 7f6823656451aa0a1fbfbe115a03046c849da0ce
 
-  setClickedGame(game){
-    this.clickedGame = game
+  async updateUserLeaderBoardData(score: number) {
+    this.totalScore += score;
+    this.gamesPlayed += 1;
+    
+      try {
+      await updateUserLBData(
+        this.userData.uid,
+        this.userData.username,
+        this.totalScore,
+        this.gamesPlayed
+      );
+    }
+    catch (error) {
+      console.error("Error updating user data:", error);
+    }
   },
 
  async setGame(correctGuesses: number, guessesSongsIDs: string[]) { 
@@ -91,23 +104,6 @@ export const userModel = {
   },
   setUserSearchQuery(query: string): void {
     this.userSearch = query;
-  },
-
-  async updateUserLeaderBoardData(score: number) {
-    this.totalScore += score;
-    this.gamesPlayed += 1;
-    
-      try {
-      await updateUserLBData(
-        this.userData.uid,
-        this.userData.username,
-        this.totalScore,
-        this.gamesPlayed
-      );
-    }
-    catch (error) {
-      console.error("Error updating user data:", error);
-    }
   },
 
   async registerAccount(email: string, username: string, password: string) {
