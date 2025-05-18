@@ -7,7 +7,20 @@ import {
 } from "react-native";
 import { useState } from "react";
 
-export default observer(function HomeRender(props) {
+type HomeRenderProps = {
+  userModel: {
+    challenges: any;
+    games: any;
+    user: any;
+    listenForGames: () => void;
+    listenForChallenges: () => void;
+    acceptChallenge: (challenge: any) => Promise<any>;
+    declineChallenge: (challenge: any) => void;
+  };
+};
+
+export default observer(function HomeRender(props: HomeRenderProps) {
+const [lastAcceptedId, setLastAcceptedId] = useState<string | null>(null);  
   
 
   function handleUpdateACB() {
@@ -16,8 +29,20 @@ export default observer(function HomeRender(props) {
 
   }
 
-  function handleAcceptChallengeACB(challenge) {
-    props.userModel.acceptChallenge(challenge);
+  async function handleAcceptChallengeACB(challenge) {
+     try {
+      await props.userModel.acceptChallenge(challenge);
+      
+      setLastAcceptedId(challenge.id);
+      
+      setTimeout(() => {
+        if (lastAcceptedId === challenge.id) {
+          setLastAcceptedId(null);
+        }
+      }, 3000);
+    } catch (error) {
+      console.error("Error accepting challenge:", error);
+    } 
   }
 
   function handleDeclineChallengeACB(challenge) {
@@ -48,6 +73,7 @@ export default observer(function HomeRender(props) {
         update={handleUpdateACB}
         acceptChallenge={handleAcceptChallengeACB}
         declineChallenge={handleDeclineChallengeACB}
+        succesChallenge={lastAcceptedId}
       />
 
   );

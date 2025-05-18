@@ -1,7 +1,13 @@
 import { observer } from "mobx-react-lite";
 import GameOverView from "../views/gameOverView";
 
-export const GameOverPresenter = observer(function GuessSongRender(props) {
+interface GameOverPresenterProps {
+  quizModel: {
+    correctGuesses: number;
+  };
+}
+
+export const GameOverPresenter = observer(function GuessSongRender(props: GameOverPresenterProps) {
 
   return (
     <GameOverView score={props.quizModel.correctGuesses} />

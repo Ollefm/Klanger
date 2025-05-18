@@ -17,11 +17,13 @@ export function GuessSong(props) {
 
   function handleUserGuessSubmit() {
     props.handleUserGuessSubmit();
+
   }
 
  function handleCloseModal() {
     props.setShowResult && props.setShowResult(false);
     props.nextSong();
+    
   }
 
   
@@ -178,8 +180,7 @@ const styles = StyleSheet.create({
     padding: 25,
     alignItems: 'center',
     elevation: 5,
-    width: '85%',
-    width: 380,
+    width: '85%', 
     gap: 15,
   },
     correctText: {
