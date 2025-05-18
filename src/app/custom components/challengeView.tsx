@@ -14,8 +14,6 @@ export default function ChallengeView(props) {
     props.declineChallenge(challenge)
   }
 
-  console.log("challenge view checking item", props.succesChallenge)
-
   const renderItem = ({ item }) => {
     const isAccepted = item.id === props.succesChallenge;
 
