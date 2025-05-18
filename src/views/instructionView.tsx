@@ -14,7 +14,7 @@ export default function InstructionPage() {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.title}>How to Play Klanger</Text>
         
-        <View style={styles.rulesCard}>
+        <View style={styles.Container2}>
           <Text style={styles.sectionTitle}>Game Rules</Text>
           
           <View style={styles.ruleItem}>
@@ -76,6 +76,15 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
     marginBottom: 30,
+  },
+  Container2: {
+    width: 365,
+    padding: 18,
+    marginVertical: 8,
+    borderRadius: 12,
+    backgroundColor: "#1A1A1A",
+    borderWidth: 0.5,
+    borderColor: "#5E5E5E"
   },
   sectionTitle: {
     color: "white",

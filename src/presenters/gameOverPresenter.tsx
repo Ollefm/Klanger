@@ -10,6 +10,6 @@ interface GameOverViewProps {
 export const GameOverPresenter = observer(function GuessSongRender(props: GameOverViewProps) {
 
   return (
-    <GameOverView props={props}/>
+    <GameOverView result={props}/>
   );
 });

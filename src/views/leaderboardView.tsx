@@ -1,18 +1,21 @@
 import { FlatList, SafeAreaView, View, Text, StyleSheet } from "react-native";
 import LeaderBoard from "../app/custom components/leaderBoard";
 export function LeaderboardView(props) {
-
   return (
     <SafeAreaView style={styles.background}>
-      <FlatList
+      <LeaderBoard
+        data={props.leaderBoard.data}
+        title={props.leaderBoard.genre}
+      />
+      {/*       <FlatList
         data={props.leaderBoards.sort(descendingCB)}
 
         renderItem={renderIngredientRowCB} 
-        ></FlatList>
+        ></FlatList> */}
     </SafeAreaView>
   );
 
-  function descendingCB(a, b) {
+  /* function descendingCB(a, b) {
     if (a.genre < b.genre) {
       return -1;
     }
@@ -29,7 +32,7 @@ export function LeaderboardView(props) {
         <LeaderBoard data={leaderBoard.data} title={leaderBoard.genre} />
       </View>
     )
-  }
+  } */
 }
 
 const styles = StyleSheet.create({
@@ -43,12 +46,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 8,
     backgroundColor: "#2C2C2C",
-    borderRadius:8
+    borderRadius: 8,
   },
   background: {
     backgroundColor: "black",
     flex: 1,
-    alignItems:"center"
+    alignItems: "center",
   },
   header: {
     color: "white",
@@ -58,7 +61,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     paddingVertical: 5,
     width: 340,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   Container: {
     paddingVertical: 10,

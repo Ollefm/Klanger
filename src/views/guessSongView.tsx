@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 5,
     width: '85%',
-    maxWidth: 440,
+    width: 380,
     gap: 15,
   },
     correctText: {

@@ -7,6 +7,8 @@ import { useRouter } from 'expo-router';
 
 export default function GameOverView(props){
 
+    console.log(props);
+
     const router = useRouter();
 
     function goOnHomeCB() {
@@ -17,15 +19,15 @@ export default function GameOverView(props){
       <View style={styles.content}>
         <Text style={styles.title}>Game Over!</Text>
         
-        <View style={styles.statsContainer}>
-          <Text style={styles.scoreText}>Final Score: {props.score}</Text>
+        <View style={styles.Container2}>
+          <Text style={styles.scoreText}>Final Score: {props.result.score}</Text>
           <Text style={styles.statsText}>
-            You got {props.correctGuesses} out of {props.totalRounds} songs correct!
+            You got {props.result.correctGuesses} out of {props.result.totalRounds} songs correct!
           </Text>
         </View>
         
         <AppPrimaryButton 
-          title="go Home" 
+          title="Back to Home" 
           onPress={goOnHomeCB} 
         />
       </View>
@@ -57,6 +59,17 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     marginBottom: 40,
+  },
+  Container2: {
+    width: 365,
+    padding: 18,
+    marginVertical: 8,
+    borderRadius: 12,
+    backgroundColor: "#1A1A1A",
+    borderWidth: 0.5,
+    borderColor: "#5E5E5E",
+    marginBottom: 40,
+    alignItems: 'center',
   },
   scoreText: {
     fontSize: 24,
