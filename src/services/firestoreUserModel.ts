@@ -42,7 +42,7 @@ export async function searchUsersByUsername(username: string) {
     where("username", ">=", username),
     where("username", "<=", username + "\uf8ff"),
     orderBy("username"),
-    limit(4) // Add the limit here
+    limit(4)
   );
 
   const querySnapshot = await getDocs(q);
