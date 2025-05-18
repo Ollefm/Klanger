@@ -3,38 +3,29 @@ import { StyleSheet, TouchableOpacity, Text, View, Button } from "react-native";
 import styled from "styled-components/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-export default function PlayPreviewContainer({ onPress, progress, playPause}) {
-
+export default function PlayPreviewContainer({ onPress, progress, playPause }) {
   const handlePlayPress = () => {
-      onPress();
-  }
+    onPress();
+  };
 
   const disablebutton = progress === 100;
-  
+
   return (
-    <View
-      style={styles.previewContainer}>
+    <View style={styles.previewContainer}>
       <ProgressBar
         progress={progress}
         innerBackgroundColor={"white"}
         outerBackgroundColor="#595959"
       />
-      <TouchableOpacity onPress={handlePlayPress} 
-       style={[styles.playButton, disablebutton && styles.disabledButton]} 
-       disabled={disablebutton}
+      <TouchableOpacity
+        onPress={handlePlayPress}
+        style={[styles.playButton, disablebutton && styles.disabledButton]}
+        disabled={disablebutton}
       >
         {playPause ? (
-          <Ionicons
-            name="pause"
-            color="black"
-            size={28}
-          />
+          <Ionicons name="pause" color="black" size={28} />
         ) : (
-          <Ionicons
-            name="play"
-            color="black"
-            size={28}
-          />
+          <Ionicons name="play" color="black" size={28} />
         )}
       </TouchableOpacity>
     </View>
@@ -44,26 +35,27 @@ export default function PlayPreviewContainer({ onPress, progress, playPause}) {
 const styles = StyleSheet.create({
   previewContainer: {
     elevation: 8,
-    flexDirection: 'column', // ➜ makes children align in a row
-    alignItems: 'center', // optional: vertically align items
+    flexDirection: "column", // ➜ makes children align in a row
+    alignItems: "center", // optional: vertically align items
     gap: 20,
-    width: 340
+    width: 340,
   },
   playButton: {
     backgroundColor: "#FFFFFF",
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
-    borderRadius: 99
-  }, disabledButton: {
+    borderRadius: 99,
+  },
+  disabledButton: {
     backgroundColor: "#F0F0F0",
-    opacity: 0.7
-  }
-})
+    opacity: 0.7,
+  },
+});
 
 const ProgressBar = ({
   progress,
-  height = 12,
+  height = 5,
   outerBackgroundColor,
   innerBackgroundColor,
   padded = true,
@@ -90,8 +82,8 @@ interface ContainerProps {
 }
 
 const Container = styled.View<ContainerProps>`
-  width: 90%;
-  border-radius: 16px;
+  width: 100%;
+  border-radius: 2px;
   align-items: flex-start;
   justify-content: center;
   height: ${(props) => props.height}px;

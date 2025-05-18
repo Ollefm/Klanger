@@ -16,13 +16,15 @@ export default function GamesView(props) {
   function handleGoToGame() {
     router.navigate("/(home)/guessSong");
   }
+const userNameIndex = props.games.players.findIndex(userid => userid.uid === props.user.uid);
+
   return (
-    <TouchableOpacity onPress={handleGoToGame}>
+    <TouchableOpacity onPress={handleGoToGame} disabled={props.games.currentTurn !== props.user.uid}>
       <View style={styles.gameItem}>
         <View style={styles.iconRow}>
           <View style={styles.textContainer}>
             <Text style={styles.challengeText}>
-              Game against: {props.games.players[0].username}
+              Game against: {props.games.players[userNameIndex].username || "unkown user"}
             </Text>
             {props.games.currentTurn === props.user.uid ? (
               <Text style={styles.turnText}>Your turn!</Text>

@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   },
     fixedButtonContainer: {
     position: "absolute",
-    bottom: 100,        
+    bottom: 20,        
     left: 10,
     right: 10,
     justifyContent: "center",

@@ -26,10 +26,6 @@ export default observer(function TabsLayout() {
         headerTintColor: "#fff",
         tabBarStyle: {
           backgroundColor: "black",
-          position: "absolute",
-          borderTopWidth: 0,
-          bottom:0,
-          paddingBottom: 16,
         },
         tabBarLabelStyle: {
           marginTop: 4,

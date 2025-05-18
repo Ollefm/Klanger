@@ -107,7 +107,6 @@ export const quizModel = {
     }
 
     // Create a more lenient matching algorithm
-    const originalTitle = this.currentTrackData.title;
     const isCorrect = isLenientMatch(
       this.userGuess,
       this.currentTrackData.title
@@ -118,7 +117,7 @@ export const quizModel = {
       this.correctGuesses += 1;
     }
     console.log("Answer comparison result:", isCorrect);
-    console.log("Correct song title:", originalTitle);
+    console.log("Correct song title:", this.currentTrackData.title);
     console.log(
       `Round: ${this.currentRound}/${MAXIMUM_ROUNDS}, Score: ${this.correctGuesses}`
     );
@@ -130,7 +129,7 @@ export const quizModel = {
     }
 
     this.isCorrect = isCorrect;
-    this.songTitle = originalTitle;
+    this.songTitle = this.currentTrackData.title;;
     this.gameOver = isLastRound || this.gameOver;
   },
 
@@ -209,7 +208,7 @@ export const quizModel = {
     }
   },
 
-  async playSound() {
+  async playSound(play : boolean) {
     if (!this.currentTrackID) {
       console.error("No track ID set.");
       return;
@@ -232,6 +231,7 @@ export const quizModel = {
       }
       return;
     }
+    
 
     try {
       // Ensure we have track data
@@ -259,4 +259,12 @@ export const quizModel = {
       console.error("Error playing sound:", error);
     }
   },
+  async playPause(play : boolean){
+    if(!play){
+      await this.sound.setStatusAsync({ shouldPlay: false });
+    }else{
+      await this.sound.setStatusAsync({ shouldPlay: true });
+    }
+    
+  }
 };

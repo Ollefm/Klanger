@@ -65,7 +65,7 @@ export function GuessSong(props) {
             )}
             
             <AppPrimaryButton 
-              title="Next Song" 
+              title= {props.gameOver ? "Ok!" : "Next Song"} 
               onPress={handleCloseModal} 
             />
           </View>
@@ -107,7 +107,7 @@ export function GuessSong(props) {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    backgroundColor: "#0D0D0D",
+    backgroundColor: "black",
     gap: 20,
     alignItems: 'center',
 
