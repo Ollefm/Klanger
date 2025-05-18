@@ -12,7 +12,7 @@ export function GuessSong(props) {
   }
 
   function setUserGuessType(e) {
-    props.userGuess(e);
+    props.userGuessEnter(e);
   }
 
   function handleUserGuessSubmit() {

@@ -12,3 +12,17 @@ export async function fetchData(url: string): Promise<any> {
       throw error;
     }
   }
+
+   export async function fetchTrackData(trackId?: string) {
+      // Use provided trackId or the currently set one
+      const id = trackId 
+      try {
+        const data = await fetchData(`https://api.deezer.com/track/${id}`);
+        console.log("Track data fetched:", data.title);
+        //console.log("Track Cover", data.album.cover_medium)
+        return data;
+      } catch (error) {
+        console.error("Error fetching track data:", error);
+        return null;
+      }
+  }

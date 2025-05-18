@@ -45,8 +45,6 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
 
 
    function handleNextSong() {
-    // Go to next round
-    props.quizModel.nextRound();
     
     // If game is over, show game over screen
     if (props.quizModel.gameOver) {
@@ -54,6 +52,9 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
        setShowResult(false);
       return;
     }
+
+    // Go to next round
+    props.quizModel.nextRound();
     
     // Reset UI state for new round
     setShowResult(false);
@@ -101,7 +102,8 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
             nextSong={handleNextSong}
             progress={progress}
             quizModel={props.quizModel}
-            userGuess={handleUserGuessACB}
+            userGuessEnter={handleUserGuessACB}
+            userGuess = {props.quizModel.userGuess}
             handleUserGuessSubmit={handleUserGuessSubmitACB}
             isCorrect={props.quizModel.isCorrect}
             songTitle={props.quizModel.songTitle}

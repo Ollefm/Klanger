@@ -1,8 +1,7 @@
-import { fetchData } from "../api/api";
+import { fetchData, fetchTrackData } from "../api/api";
 import { Audio } from "expo-av";
-import { challengeUser } from "../services/firebaseGameModel";
-import { runInAction } from "mobx"; // Add this import
 import { TrackData } from "../types/user";
+import { isLenientMatch } from "../utils/utils";
 
 const classicalBanger = [
   "9968843",
@@ -67,51 +66,37 @@ export const quizModel = {
     this.guessesSongsIDs = shuffledArray.slice(0, 5);
   },
 
-  async fetchTrackData(trackId?: string) {
-    // Use provided trackId or the currently set one
-    const id = trackId || this.currentTrackID;
- 
-    try {
-      const data = await fetchData(`https://api.deezer.com/track/${id}`);
-      runInAction(() => {
-        this.currentTrackID = id;
-        this.currentTrackData = data;
-        this.coverImageUrl = data.album?.cover_medium || null;
-      });
-      console.log("Track data fetched:", data.title);
-      //console.log("Track Cover", data.album.cover_medium)
-      return data;
-    } catch (error) {
-      console.error("Error fetching track data:", error);
-      return null;
-    }
-  },
-
   initGame() {
-  
-      this.currentRound = 0;
-      this.correctGuesses = 0;
-      this.currentScore = 0;
-      this.gameOver = false;
-      this.userGuess = "";
-      this.setGuessesSongsIDs();
- 
+    this.currentRound = 0;
+    this.correctGuesses = 0;
+    this.currentScore = 0;
+    this.gameOver = false;
+    this.userGuess = "";
+    this.setGuessesSongsIDs();
+
     console.log("in Init Game", this.currentRound);
     // Start first round
     this.nextRound();
   },
 
   // Move to next round
-  nextRound() {
+  async nextRound() {
     if (this.currentRound >= MAXIMUM_ROUNDS) {
       this.gameOver = true;
     }
-    this.currentRound += 1;
-    this.isCorrect = false;
-    this.songTitle = "";
-    this.userGuess = "";
-    console.log(this.guessesSongsIDs)
-    this.fetchTrackData(this.guessesSongsIDs[this.currentRound]);
+    const id = this.guessesSongsIDs[this.currentRound];
+    try {
+      const data = await fetchTrackData(id);
+      this.currentTrackID = id;
+      this.currentTrackData = data;
+      this.coverImageUrl = data.album?.cover_medium || null;
+      this.currentRound += 1;
+      this.isCorrect = false;
+      this.songTitle = "";
+      this.userGuess = "";
+    } catch (error) {
+      console.error("something When wrong when fetching track data: ", error);
+    }
   },
 
   compareAnswer() {
@@ -123,112 +108,30 @@ export const quizModel = {
 
     // Create a more lenient matching algorithm
     const originalTitle = this.currentTrackData.title;
-    const isCorrect = this.isLenientMatch();
+    const isCorrect = isLenientMatch(
+      this.userGuess,
+      this.currentTrackData.title
+    );
 
     // Update score and correct guesses if answer is correct
     if (isCorrect) {
-      runInAction(() => {
-        this.correctGuesses += 1;
-        this.currentScore += 100; // Award 100 points per correct guess
-      });
+      this.correctGuesses += 1;
     }
     console.log("Answer comparison result:", isCorrect);
     console.log("Correct song title:", originalTitle);
     console.log(
-      `Round: ${this.currentRound}/${MAXIMUM_ROUNDS}, Score: ${this.currentScore}`
+      `Round: ${this.currentRound}/${MAXIMUM_ROUNDS}, Score: ${this.correctGuesses}`
     );
 
     // Check if this was the last round
     const isLastRound = this.currentRound >= MAXIMUM_ROUNDS;
     if (isLastRound) {
-      runInAction(() => {
-        this.gameOver = true;
-      });
+      this.gameOver = true;
     }
 
-    (this.isCorrect = isCorrect),
-      (this.songTitle = originalTitle),
-      this.currentRound,
-      this.currentScore,
-      (this.gameOver = isLastRound || this.gameOver);
-  },
-
-  // Add this new helper method to your quizModel
-  isLenientMatch(): boolean {
-    // Normalize both strings
-    const normalizedGuess = this.userGuess.trim().toLowerCase();
-    const normalizedTitle = this.currentTrackData.title.trim().toLowerCase();
-
-    // Check for exact match first (current behavior)
-    if (normalizedGuess === normalizedTitle) {
-      return true;
-    }
-
-    // Remove punctuation and special characters
-    const cleanGuess = normalizedGuess.replace(
-      /[.,\/#!$%\^&\*;:{}=\-_`~()]/g,
-      ""
-    );
-    const cleanTitle = normalizedTitle.replace(
-      /[.,\/#!$%\^&\*;:{}=\-_`~()]/g,
-      ""
-    );
-
-    // Split into words
-    const guessWords = cleanGuess
-      .split(/\s+/)
-      .filter((word) => word.length > 1);
-    const titleWords = cleanTitle
-      .split(/\s+/)
-      .filter((word) => word.length > 1);
-
-    // Filter out common words that don't add meaning
-    const commonWords = [
-      "the",
-      "a",
-      "an",
-      "and",
-      "or",
-      "but",
-      "of",
-      "in",
-      "on",
-      "at",
-      "to",
-      "for",
-    ];
-    const importantGuessWords = guessWords.filter(
-      (word) => !commonWords.includes(word)
-    );
-    const importantTitleWords = titleWords.filter(
-      (word) => !commonWords.includes(word)
-    );
-
-    // Count how many important title words appear in the guess
-    let matchingWords = 0;
-    for (const titleWord of importantTitleWords) {
-      if (
-        importantGuessWords.some(
-          (guessWord) =>
-            guessWord.includes(titleWord) || titleWord.includes(guessWord)
-        )
-      ) {
-        matchingWords++;
-      }
-    }
-
-    // Calculate percentage of matching important words
-    const matchPercentage = matchingWords / importantTitleWords.length;
-
-    // Consider it correct if the user got at least 60% of important words
-    // You can adjust this threshold based on desired difficulty
-    const isMatch = matchPercentage >= 0.6;
-
-    console.log(
-      `Match percentage: ${(matchPercentage * 100).toFixed(1)}% - Required: 60%`
-    );
-
-    return isMatch;
+    this.isCorrect = isCorrect;
+    this.songTitle = originalTitle;
+    this.gameOver = isLastRound || this.gameOver;
   },
 
   setUserGuess(userGuess: string) {
@@ -245,33 +148,27 @@ export const quizModel = {
     const trackChanged = this.lastPlayedTrackID !== this.currentTrackID;
     //console.log("lastPlayedTrackID", this.lastPlayedTrackID)
     if (trackChanged) {
-      //console.log("Track changed, resetting progress");
-      runInAction(() => {
-        this.elapsedSeconds = 0;
-        this.lastPlayedTrackID = this.currentTrackID;
-      });
+      this.elapsedSeconds = 0;
+      this.lastPlayedTrackID = this.currentTrackID;
       onProgressUpdate(0);
     }
     if (this.timer) {
       // stop
       clearInterval(this.timer);
-      runInAction(() => {
-        this.timer = null;
-      });
+
+      this.timer = null;
 
       return;
     }
 
     // start
-    runInAction(() => {
-      this.elapsedSeconds = 0;
-    });
+
+    this.elapsedSeconds = 0;
+
     onProgressUpdate(0);
 
     this.timer = setInterval(() => {
-      runInAction(() => {
-        this.elapsedSeconds += 0.1;
-      });
+      this.elapsedSeconds += 0.1;
 
       // map 0…30 s to 50…100%
       const raw = (this.elapsedSeconds / 30) * 100;
@@ -284,18 +181,17 @@ export const quizModel = {
         if (this.sound) {
           try {
             this.sound.pauseAsync();
-            runInAction(() => {
-              this.sound = null;
-            });
+
+            this.sound = null;
+
             console.log("Sound stopped.");
           } catch (error) {
             console.error("Error stopping sound:", error);
           }
           return;
         }
-        runInAction(() => {
-          this.timer = null;
-        });
+
+        this.timer = null;
       }
     }, 100);
   },
@@ -305,9 +201,8 @@ export const quizModel = {
     if (this.sound) {
       try {
         await this.sound.stopAsync();
-        runInAction(() => {
-          this.sound = null;
-        });
+
+        this.sound = null;
       } catch (error) {
         console.error("Error stopping sound:", error);
       }
@@ -320,22 +215,17 @@ export const quizModel = {
       return;
     }
 
-    // Track ID has changed since last play, reset everything
-    if (this.lastPlayedTrackID !== this.currentTrackID) {
-    }
-
     // Update last played track ID
-    runInAction(() => {
-      this.lastPlayedTrackID = this.currentTrackID;
-    });
+
+    this.lastPlayedTrackID = this.currentTrackID;
 
     // Stop existing sound if playing
     if (this.sound) {
       try {
-        await this.sound.pauseAsync();
-        runInAction(() => {
-          this.sound = null;
-        });
+        await this.sound.stopAsync();
+
+        this.sound = null;
+
         console.log("Sound stopped.");
       } catch (error) {
         console.error("Error stopping sound:", error);
@@ -345,8 +235,12 @@ export const quizModel = {
 
     try {
       // Ensure we have track data
+      const id = this.guessesSongsIDs[this.currentRound];
       if (!this.currentTrackData) {
-        await this.fetchTrackData();
+        const data = await fetchTrackData(id);
+        this.currentTrackID = id;
+        this.currentTrackData = data;
+        this.coverImageUrl = data.album?.cover_medium || null;
       }
 
       if (!this.currentTrackData || !this.currentTrackData.preview) {
@@ -360,11 +254,7 @@ export const quizModel = {
         { shouldPlay: true }
       );
 
-      runInAction(() => {
-        this.sound = sound;
-      });
-
-      //console.log("Sound started.");
+      this.sound = sound;
     } catch (error) {
       console.error("Error playing sound:", error);
     }
