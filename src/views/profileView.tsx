@@ -2,10 +2,6 @@ import { SafeAreaView, View, Text, StyleSheet } from "react-native";
 import AppSecondaryButton from "../app/custom components/appSecondaryButton";
 import AppProfileBar from "../app/custom components/appProfileBar";
 export function ProfileView(props) {
-<<<<<<< HEAD
-  
-  
-=======
   console.log("profileivew",props.userData);
   function handleSignoutACB() {
     props.signOut();

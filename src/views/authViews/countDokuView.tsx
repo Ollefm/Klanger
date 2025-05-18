@@ -10,6 +10,7 @@ export function CountDokuView(props) {
           colors={['#004777', '#F7B801', '#A30000', '#A30000']}
           colorsTime={[3, 2, 1, 0]}
           onComplete={() => props.setIsPlaying(prev => !prev)}
+          strokeWidth = {1.5}
         >
           {({ remainingTime }) => <Text style={styles.bold}>{remainingTime}</Text>}
         </CountdownCircleTimer>
@@ -27,6 +28,7 @@ const styles = StyleSheet.create({
   },
   bold: {
     fontWeight: "bold",
+    textAlign: "center",
     fontSize: 40,
     color: "white",
   },

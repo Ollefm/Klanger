@@ -35,6 +35,7 @@ export const userModel = {
     error: null as Error | null,
   },
   gameId: "",
+<<<<<<< HEAD
   leaderboard: [] as any[],
 
   async getLeaderBoard() {
@@ -46,7 +47,48 @@ export const userModel = {
       console.error("Failed to fetch leaderboard:", error);
     }
   },
+=======
+  clickedGame: {},
+>>>>>>> 7f6823656451aa0a1fbfbe115a03046c849da0ce
 
+  setClickedGame(game){
+    this.clickedGame = game
+  },
+
+ async setGame(correctGuesses: number, guessesSongsIDs: string[]) { 
+    if (!this.clickedGame || !this.clickedGame.id) {
+      console.error(
+        "setGame failed: No game selected or clickedGame.id is missing."
+      );
+     
+      return;
+    }
+    if (!this.user || !this.user.uid) {
+      console.error("setGame failed: User is not logged in.");
+      return;
+    }
+
+    // Update local state of clickedGame
+    this.clickedGame.guessesSongsIDs = guessesSongsIDs;
+    const result = [this.user.uid, correctGuesses];
+    this.clickedGame.roundResults = result;
+    const indexOfOpponentId = this.clickedGame.playerIds.findIndex(userid => userid !== this.user.uid)
+    const opponentId = this.clickedGame.playerIds[indexOfOpponentId]
+    // Prepare the data payload for Firestore update
+    const gameDataToUpdate = {
+      guessesSongsIDs: this.clickedGame.guessesSongsIDs,
+      roundResults: this.clickedGame.roundResults,
+      currentTurn: opponentId
+    };
+
+    try {
+      // Call the service to update the game in Firestore
+      await firebaseGameService.updateGame(this.clickedGame.id, gameDataToUpdate);
+      console.log("Game progress saved to Firestore successfully!");
+    } catch (error) {
+      console.error("Failed to save game progress to Firestore:", error);
+    }
+  },
   setUserSearchQuery(query: string): void {
     this.userSearch = query;
   },

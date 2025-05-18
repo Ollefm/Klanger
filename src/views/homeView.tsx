@@ -35,13 +35,18 @@ export default function IndexPage(props) {
     props.declineChallenge(challenge);
   }
 
-
+function handleClickGame(game){
+  props.setClickedGame(game)
+}
+function handleInitGame(){
+  props.initGame()
+}
 return (
   <SafeAreaView style={styles.container}>
     <FlatList
       data={props.games}
       keyExtractor={(item, index) => item.id ?? index.toString()}
-      renderItem={({ item }) => <GamesView games={item} user = {props.user}/>}
+      renderItem={({ item }) => <GamesView initGame = {handleInitGame} setClickedGame = {handleClickGame} multiplayer = {props.multiplayer} setIsMultiplayer = {() => props.setIsMultiplayer()} games={item} user = {props.user}/>}
       ListHeaderComponent={
         <>
           <View style={{ alignItems: "center" }}>

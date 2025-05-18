@@ -49,8 +49,24 @@ const [lastAcceptedId, setLastAcceptedId] = useState<string | null>(null);
     props.userModel.declineChallenge(challenge);
   }
 
+  function handleMultiplayer(){
+    props.quizModel.isMultiplayer()
+  }
+
+  function handleClickedGame(game){
+    props.userModel.setClickedGame(game)
+  }
+
+  function handleInitGame(){
+    props.quizModel.initGame();
+  }
+
   return (
       <HomeView
+        initGame = {handleInitGame}
+        setClickedGame = {handleClickedGame}
+        multiplayer = {props.quizModel.multiplayer}
+        setIsMultiplayer = {handleMultiplayer}
         challenges={props.userModel.challenges}
         games = {props.userModel.games}
         user = {props.userModel.user}

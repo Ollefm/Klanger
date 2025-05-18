@@ -6,10 +6,12 @@ export default function NewGameView(props) {
   const router = useRouter();
   
   function goToSinglePlayerCB() {
+    props.setSinglePlayer()
     router.navigate("/(home)/instructions");
   }
 
   function goToMultiplayerCB() {
+    props.setMultiplayer()
     router.navigate("/(home)/searchUsers");
   }
   return (

@@ -11,6 +11,7 @@ import {
   addDoc,
   runTransaction,
   onSnapshot,
+  updateDoc,
   Timestamp,
 } from "firebase/firestore";
 
@@ -146,6 +147,17 @@ export const firebaseGameService = {
     } catch (error) {
       console.error("Error fetching incoming challenges:", error);
       return [];
+    }
+  },
+
+    async updateGame(gameId: string, gameDataToUpdate) { 
+    const gameRef = doc(db, COLLECTION_GAMES, gameId);
+    try {
+      await updateDoc(gameRef, gameDataToUpdate);
+      console.log("Game updated successfully in Firestore:", gameId);
+    } catch (error) {
+      console.error("Error updating game in Firestore:", error);
+      throw error; // Re-throw the error so the caller can handle it
     }
   },
 

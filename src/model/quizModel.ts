@@ -49,6 +49,7 @@ export const quizModel = {
   gameOver: false,
   lastPlayedTrackID: null,
   multiplayer: false,
+  multplayerGame: {},
 
   setGuessesSongsIDs() {
     const shuffledArray = [...rockBangers];
@@ -64,6 +65,12 @@ export const quizModel = {
 
     // Take the first 5 elements from the shuffled array.
     this.guessesSongsIDs = shuffledArray.slice(0, 5);
+  },
+   isMultiplayer(){
+    this.multiplayer = true
+  },
+  isSinglePlayer(){
+    this.multiplayer = false
   },
 
   initGame() {

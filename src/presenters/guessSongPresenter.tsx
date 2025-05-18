@@ -9,9 +9,11 @@ interface GuessSongPresenterProps {
     initGame;
     coverImageUrl: string;
     setCurrentTrackId;
+    guessesSongsIDs: string[];
     isCorrect: boolean;
     songTitle: string;
     gameOver: boolean;
+    correctGuesses: number;
     gameStatus: { round: number; score: number; isGameOver: boolean };
     playSound: () => Promise<any>;
     setToggleTimer: (onProgressUpdate: (percent: number) => void) => void;
@@ -21,7 +23,13 @@ interface GuessSongPresenterProps {
     nextRound;
     clearPlaySound: () => Promise<any>;
     playPause: (play: boolean) => Promise<any>;
+    multiplayer: boolean;
   };
+
+  userModel:{
+    clickedGame: Object;
+    setGame: (correctGuesses : number, songIds: string[]) => void;
+  }
 }
 
 export const GuessSongPresenter = observer(function GuessSongRender(
@@ -31,7 +39,7 @@ export const GuessSongPresenter = observer(function GuessSongRender(
   const [isPlaying, setIsPlaying] = useState(true);
   const [showResult, setShowResult] = useState(false);
   const [playPause, setPlayPause] = useState<boolean>(false);
-
+  
   const router = useRouter();
   function playPauseCB() {
     setPlayPause(!playPause);
@@ -85,6 +93,9 @@ export const GuessSongPresenter = observer(function GuessSongRender(
     setShowResult(true);
 
     if (props.quizModel.gameOver) {
+      if(props.quizModel.multiplayer){
+           props.userModel.setGame(props.quizModel.correctGuesses, props.quizModel.guessesSongsIDs)
+      }
       router.navigate("/(home)/gameOver");
     }
   }

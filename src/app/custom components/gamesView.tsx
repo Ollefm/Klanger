@@ -6,17 +6,19 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 
 export default function GamesView(props) {
   const router = useRouter();
 
-  function handleGoToGame() {
+  function handleGoToGame(game) {
+    props.setClickedGame(game)
+    props.setIsMultiplayer()
+    props.initGame()
     router.navigate("/(home)/guessSong");
   }
-const userNameIndex = props.games.players.findIndex(userid => userid.uid === props.user.uid);
+const userNameIndex = props.games.players.findIndex(userid => userid.uid !== props.user.uid);
 
   function getOpponentIndex(userIndex) {
     return userIndex === 0 ? 1 : 0;
@@ -26,7 +28,7 @@ const userNameIndex = props.games.players.findIndex(userid => userid.uid === pro
   const opponentIndex = getOpponentIndex(userNameIndex);
 
   return (
-    <TouchableOpacity onPress={handleGoToGame} disabled={props.games.currentTurn !== props.user.uid}>
+    <TouchableOpacity onPress={() => handleGoToGame(props.games)} disabled={props.games.currentTurn !== props.user.uid}>
       <View style={styles.gameItem}>
         <View style={styles.iconRow}>
           <View style={styles.textContainer}>
