@@ -7,17 +7,9 @@ import { BlurView } from "expo-blur";
 
 export function GuessSong(props) {
 
-  const [hasTrack, setHasTrack] = useState(false); // Add this state
-
-  function setTrackId() {
-    props.setTrack();
-    setHasTrack(true); // Set to true when track is set
-  }
-
   function playSoundHandlerACB() {
     props.playSound();
   }
-
 
   function setUserGuessType(e) {
     props.userGuess(e);
@@ -29,7 +21,7 @@ export function GuessSong(props) {
 
  function handleCloseModal() {
     props.setShowResult && props.setShowResult(false);
-    setTrackId();
+    props.nextSong();
   }
 
   
@@ -50,7 +42,7 @@ export function GuessSong(props) {
 
         />)}
       </View>
-
+        
      <Modal
         animationType="fade"
         transparent={true}

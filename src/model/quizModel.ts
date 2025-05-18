@@ -4,39 +4,77 @@ import { challengeUser } from "../services/firebaseGameModel";
 import { runInAction } from "mobx"; // Add this import
 import { TrackData } from "../types/user";
 
-const classicalBanger = ["9968843", "10375665", "6971327", "1038775132", "1904250027", "3135556", "2801558052", "630827242", "350107641", "44112901"];
-const rockBangers = ["92720046", "730866", "518458092", "13791930", "985745702", "1483825282", "136334560", "2263033", "63480990", "7818900", "7675130",]
+const classicalBanger = [
+  "9968843",
+  "10375665",
+  "6971327",
+  "1038775132",
+  "1904250027",
+  "3135556",
+  "2801558052",
+  "630827242",
+  "350107641",
+  "44112901",
+];
+const rockBangers = [
+  "92720046",
+  "730866",
+  "518458092",
+  "13791930",
+  "985745702",
+  "1483825282",
+  "136334560",
+  "2263033",
+  "63480990",
+  "7818900",
+  "7675130",
+];
+const MAXIMUM_ROUNDS = 5;
 
 export const quizModel = {
   currentTrackData: null as TrackData | null,
   currentTrackID: null,
   currentTrackPromiseState: {},
   coverImageUrl: null as string | null,
-  playlist: [],
+  guessesSongsIDs: [],
   personalHighScore: null,
   currentScore: null,
+  isCorrect: false,
+  songTitle: "",
   userGuess: "" as string,
   sound: null as Audio.Sound | null,
   timer: null as NodeJS.Timeout | null,
   elapsedSeconds: 0,
   currentRound: 0,
   correctGuesses: 0,
-  maxRounds: 5,
   gameOver: false,
   lastPlayedTrackID: null,
+  multiplayer: false,
 
+  setGuessesSongsIDs() {
+    const shuffledArray = [...rockBangers];
+
+    // Shuffle the array using the Fisher-Yates algoritgm.
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledArray[i], shuffledArray[j]] = [
+        shuffledArray[j],
+        shuffledArray[i],
+      ]; // Swap elements
+    }
+
+    // Take the first 5 elements from the shuffled array.
+    this.guessesSongsIDs = shuffledArray.slice(0, 5);
+  },
 
   async fetchTrackData(trackId?: string) {
     // Use provided trackId or the currently set one
     const id = trackId || this.currentTrackID;
-    if (!id) {
-      console.error("No track ID provided.");
-      return null;
-    }
-
+ 
     try {
       const data = await fetchData(`https://api.deezer.com/track/${id}`);
       runInAction(() => {
+        this.currentTrackID = id;
         this.currentTrackData = data;
         this.coverImageUrl = data.album?.cover_medium || null;
       });
@@ -50,118 +88,76 @@ export const quizModel = {
   },
 
   initGame() {
-    runInAction(() => {
+  
       this.currentRound = 0;
       this.correctGuesses = 0;
       this.currentScore = 0;
       this.gameOver = false;
-    });
-
-    console.log("in Init Game", this.currentRound)
+      this.userGuess = "";
+      this.setGuessesSongsIDs();
+ 
+    console.log("in Init Game", this.currentRound);
     // Start first round
-    return this.nextRound();
+    this.nextRound();
   },
 
   // Move to next round
   nextRound() {
-    if (this.currentRound >= this.maxRounds) {
-      runInAction(() => {
-        this.gameOver = true;
-      });
-      return { gameOver: true, score: this.currentScore };
+    if (this.currentRound >= MAXIMUM_ROUNDS) {
+      this.gameOver = true;
     }
-
-    runInAction(() => {
-      this.currentRound += 1;
-    });
-
-    console.log(`Starting round ${this.currentRound} of ${this.maxRounds}`);
-    return this.setCurrentTrackId();
+    this.currentRound += 1;
+    this.isCorrect = false;
+    this.songTitle = "";
+    this.userGuess = "";
+    console.log(this.guessesSongsIDs)
+    this.fetchTrackData(this.guessesSongsIDs[this.currentRound]);
   },
 
-  // Update to handle game progression
-  setCurrentTrackId() {
-    // Check if we've reached max rounds
-    if (this.gameOver || this.currentRound >= this.maxRounds) {
-      console.log("Game over! Maximum rounds reached.");
-      runInAction(() => {
-        this.gameOver = true;
-      });
-      return null;
+  compareAnswer() {
+    if (!this.currentTrackData || !this.userGuess) {
+      this.isCorrect = false;
+      this.songTitle = "";
+      this.userGuess = "";
     }
-
-    // If this is the first track and currentRound is 0, set it to 1
-    if (this.currentRound === 0) {
-      runInAction(() => {
-        this.currentRound = 1;
-      });
-    }
-
-    const songId = this.randomsong();
-    console.log(`Round ${this.currentRound}: Setting track ID: ${songId}`);
-
-    runInAction(() => {
-      this.currentTrackID = songId;
-    });
-
-    return this.fetchTrackData(songId);
-  },
-
-  compareAnswer(userGuess: string): { isCorrect: boolean, songTitle: string, gameStatus: { round: number, score: number, isGameOver: boolean } } {
-    if (!this.currentTrackData || !userGuess) {
-      return {
-        isCorrect: false,
-        songTitle: "",
-        gameStatus: {
-          round: this.currentRound,
-          score: this.currentScore,
-          isGameOver: this.gameOver
-        }
-      };
-    }
-
-    // Get the original song title
-    const originalTitle = this.currentTrackData.title;
 
     // Create a more lenient matching algorithm
-    const isCorrect = this.isLenientMatch(userGuess, originalTitle);
+    const originalTitle = this.currentTrackData.title;
+    const isCorrect = this.isLenientMatch();
 
     // Update score and correct guesses if answer is correct
     if (isCorrect) {
       runInAction(() => {
         this.correctGuesses += 1;
-        this.currentScore += 100;  // Award 100 points per correct guess
+        this.currentScore += 100; // Award 100 points per correct guess
       });
     }
-
     console.log("Answer comparison result:", isCorrect);
     console.log("Correct song title:", originalTitle);
-    console.log(`Round: ${this.currentRound}/${this.maxRounds}, Score: ${this.currentScore}`);
+    console.log(
+      `Round: ${this.currentRound}/${MAXIMUM_ROUNDS}, Score: ${this.currentScore}`
+    );
 
     // Check if this was the last round
-    const isLastRound = this.currentRound >= this.maxRounds;
+    const isLastRound = this.currentRound >= MAXIMUM_ROUNDS;
     if (isLastRound) {
       runInAction(() => {
         this.gameOver = true;
       });
     }
 
-    return {
-      isCorrect: isCorrect,
-      songTitle: originalTitle,
-      gameStatus: {
-        round: this.currentRound,
-        score: this.currentScore,
-        isGameOver: isLastRound || this.gameOver
-      }
-    };
+    (this.isCorrect = isCorrect),
+      (this.songTitle = originalTitle),
+      this.currentRound,
+      this.currentScore,
+      (this.gameOver = isLastRound || this.gameOver);
   },
 
   // Add this new helper method to your quizModel
-  isLenientMatch(guess: string, title: string): boolean {
+  isLenientMatch(): boolean {
     // Normalize both strings
-    const normalizedGuess = guess.trim().toLowerCase();
-    const normalizedTitle = title.trim().toLowerCase();
+    const normalizedGuess = this.userGuess.trim().toLowerCase();
+    const normalizedTitle = this.currentTrackData.title.trim().toLowerCase();
 
     // Check for exact match first (current behavior)
     if (normalizedGuess === normalizedTitle) {
@@ -169,22 +165,54 @@ export const quizModel = {
     }
 
     // Remove punctuation and special characters
-    const cleanGuess = normalizedGuess.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
-    const cleanTitle = normalizedTitle.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+    const cleanGuess = normalizedGuess.replace(
+      /[.,\/#!$%\^&\*;:{}=\-_`~()]/g,
+      ""
+    );
+    const cleanTitle = normalizedTitle.replace(
+      /[.,\/#!$%\^&\*;:{}=\-_`~()]/g,
+      ""
+    );
 
     // Split into words
-    const guessWords = cleanGuess.split(/\s+/).filter(word => word.length > 1);
-    const titleWords = cleanTitle.split(/\s+/).filter(word => word.length > 1);
+    const guessWords = cleanGuess
+      .split(/\s+/)
+      .filter((word) => word.length > 1);
+    const titleWords = cleanTitle
+      .split(/\s+/)
+      .filter((word) => word.length > 1);
 
     // Filter out common words that don't add meaning
-    const commonWords = ["the", "a", "an", "and", "or", "but", "of", "in", "on", "at", "to", "for"];
-    const importantGuessWords = guessWords.filter(word => !commonWords.includes(word));
-    const importantTitleWords = titleWords.filter(word => !commonWords.includes(word));
+    const commonWords = [
+      "the",
+      "a",
+      "an",
+      "and",
+      "or",
+      "but",
+      "of",
+      "in",
+      "on",
+      "at",
+      "to",
+      "for",
+    ];
+    const importantGuessWords = guessWords.filter(
+      (word) => !commonWords.includes(word)
+    );
+    const importantTitleWords = titleWords.filter(
+      (word) => !commonWords.includes(word)
+    );
 
     // Count how many important title words appear in the guess
     let matchingWords = 0;
     for (const titleWord of importantTitleWords) {
-      if (importantGuessWords.some(guessWord => guessWord.includes(titleWord) || titleWord.includes(guessWord))) {
+      if (
+        importantGuessWords.some(
+          (guessWord) =>
+            guessWord.includes(titleWord) || titleWord.includes(guessWord)
+        )
+      ) {
         matchingWords++;
       }
     }
@@ -196,17 +224,11 @@ export const quizModel = {
     // You can adjust this threshold based on desired difficulty
     const isMatch = matchPercentage >= 0.6;
 
-    console.log(`Match percentage: ${(matchPercentage * 100).toFixed(1)}% - Required: 60%`);
+    console.log(
+      `Match percentage: ${(matchPercentage * 100).toFixed(1)}% - Required: 60%`
+    );
 
     return isMatch;
-  },
-
-
-  /** Choosing song couple of functions */
-
-  randomsong() {
-    const randomIndex = Math.floor(Math.random() * rockBangers.length);
-    return rockBangers[randomIndex];
   },
 
   setUserGuess(userGuess: string) {
@@ -214,10 +236,9 @@ export const quizModel = {
     //console.log("userGuess", userGuess)
   },
 
-
   setToggleTimer(onProgressUpdate: (percent: number) => void) {
     if (!this.currentTrackID) {
-      return
+      return;
     }
 
     // Check if track has changed since last playback
@@ -293,7 +314,6 @@ export const quizModel = {
     }
   },
 
-
   async playSound() {
     if (!this.currentTrackID) {
       console.error("No track ID set.");
@@ -302,8 +322,6 @@ export const quizModel = {
 
     // Track ID has changed since last play, reset everything
     if (this.lastPlayedTrackID !== this.currentTrackID) {
-
-
     }
 
     // Update last played track ID
@@ -351,6 +369,4 @@ export const quizModel = {
       console.error("Error playing sound:", error);
     }
   },
-
-
 };

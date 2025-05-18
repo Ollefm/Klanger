@@ -20,9 +20,9 @@ export default function GameOverView(props){
         <Text style={styles.title}>Game Over!</Text>
         
         <View style={styles.Container2}>
-          <Text style={styles.scoreText}>Final Score: {props.result.score}</Text>
+          <Text style={styles.scoreText}>Final Score: {props.score}</Text>
           <Text style={styles.statsText}>
-            You got {props.result.correctGuesses} out of {props.result.totalRounds} songs correct!
+            You got {props.score || 0} out of 5 songs correct!
           </Text>
         </View>
         

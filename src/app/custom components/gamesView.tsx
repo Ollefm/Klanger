@@ -20,9 +20,16 @@ export default function GamesView(props) {
     <TouchableOpacity onPress={handleGoToGame}>
       <View style={styles.gameItem}>
         <View style={styles.iconRow}>
-          <Text style={styles.challengeText}>
-            Game against: {props.games.players[0].username}
-          </Text>
+          <View style={styles.textContainer}>
+            <Text style={styles.challengeText}>
+              Game against: {props.games.players[0].username}
+            </Text>
+            {props.games.currentTurn === props.user.uid ? (
+              <Text style={styles.turnText}>Your turn!</Text>
+            ) : (
+              <Text style={styles.turnText}>Waiting for other player...</Text>
+            )}
+          </View>
           <Ionicons name="chevron-forward-outline" size={28} color="white" />
         </View>
       </View>
@@ -34,6 +41,14 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "black",
     padding: 16,
+  },
+  textContainer: {
+    flexDirection: "column",
+  },
+
+  turnText: {
+    color: "gray",
+    fontSize: 16,
   },
   title: {
     color: "white",
@@ -47,7 +62,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: "#1A1A1A",
     borderWidth: 0.5,
-    width: 365,
     borderColor: "#5E5E5E",
   },
   challengeText: {
@@ -60,5 +74,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     gap: 16,
+    alignItems: "center",
   },
 });

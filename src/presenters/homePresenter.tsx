@@ -28,6 +28,7 @@ export default observer(function HomeRender(props) {
       <HomeView
         challenges={props.userModel.challenges}
         games = {props.userModel.games}
+        user = {props.userModel.user}
         update={handleUpdateACB}
         acceptChallenge={handleAcceptChallengeACB}
         declineChallenge={handleDeclineChallengeACB}

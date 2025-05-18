@@ -30,10 +30,12 @@ export function connectToPersistence(model, reactionFn) {
     }
 
     model.user = firebaseUser;
-
+    
     try {
       const appUser = await getUserData(firebaseUser.uid);
       model.userData = appUser;
+    //  model.listenForChallenges() REMOVE THE COMMENT WHEN READY FOR DEPOLOY
+    //  model.listenForGames() REMOVE THE COMMENT WHEN READY FOR DEPLOY
 
     } catch (error) {
       console.error("Error loading Firestore user data:", error);
@@ -48,7 +50,6 @@ export function connectToPersistence(model, reactionFn) {
 
   // Firebase listener for auth state changes
  onAuthStateChanged(auth, (firebaseUser) => {
-  console.log("onAuthStateChanged:", firebaseUser);
   handleUser(firebaseUser);
 });
 }

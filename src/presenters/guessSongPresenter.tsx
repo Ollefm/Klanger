@@ -9,6 +9,10 @@ interface GuessSongPresenterProps {
     initGame,
     coverImageUrl: string;
     setCurrentTrackId;
+    isCorrect: boolean;
+    songTitle: string;
+    gameOver: boolean;
+    gameStatus: {round: number, score: number, isGameOver : boolean};
     playSound: () => Promise<any>;
     setToggleTimer: (onProgressUpdate: (percent: number) => void) => void;
     setUserGuess: (userGuess: string) => void;
@@ -22,17 +26,10 @@ interface GuessSongPresenterProps {
 export const GuessSongPresenter = observer(function GuessSongRender(props: GuessSongPresenterProps) {
   const [progress, setProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [isCorrect, setIsCorrect] = useState(false);
-  const [songTitle, setSongTitle] = useState("");
   const [showResult, setShowResult] = useState(false);
   const [playPause, setPlayPause] = useState<boolean>(false);
   
   const router = useRouter();
-
-  useEffect(() => {
-    props.quizModel.initGame();
-  }, []);
-
   function playPauseCB(){
     setPlayPause(!playPause)
     console.log("playPause", playPause)
@@ -46,29 +43,20 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
     });
   }
 
-  function currentTrackIdHandlerACB() {
-    
-    props.quizModel.setCurrentTrackId();
-    if(showResult){
-      setShowResult(!showResult)
-    }
-    handleNextSong();
-  }
 
    function handleNextSong() {
     // Go to next round
-    const result = props.quizModel.nextRound();
+    props.quizModel.nextRound();
     
     // If game is over, show game over screen
-    if (result && result.gameOver) {
-      
+    if (props.quizModel.gameOver) {
+      props.quizModel.clearPlaySound();
+       setShowResult(false);
       return;
     }
     
     // Reset UI state for new round
     setShowResult(false);
-    setIsCorrect(false);
-    setSongTitle("");
     setProgress(0);
     
     props.quizModel.clearPlaySound();
@@ -90,23 +78,15 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
 
   // Compare answer function
   function handleUserGuessSubmitACB() {
-    // Get current guess from quizModel
-    const currentGuess = props.quizModel.userGuess;
-
     // Compare answer and get result object
-    const result = props.quizModel.compareAnswer(currentGuess);
+    props.quizModel.compareAnswer();
 
-    // Set state based on result
-    setIsCorrect(result.isCorrect);
-    setSongTitle(result.songTitle);
     setShowResult(true);
-    console.log(result.gameStatus.isGameOver)
-    if (result.gameStatus.isGameOver) {
+    
+    if (props.quizModel.gameOver) {
       router.navigate("/(home)/gameOver")
     }
     
-    return result;
-  
   }
 
   return (
@@ -115,15 +95,16 @@ export const GuessSongPresenter = observer(function GuessSongRender(props: Guess
         <CountDokuView isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
       )) || (
           <GuessSong
+            gameOver = {props.quizModel.gameOver}
             coverImage={props.quizModel.coverImageUrl}
             playSound={PlaySoundHandler}
-            setTrack={currentTrackIdHandlerACB}
+            nextSong={handleNextSong}
             progress={progress}
             quizModel={props.quizModel}
             userGuess={handleUserGuessACB}
             handleUserGuessSubmit={handleUserGuessSubmitACB}
-            isCorrect={isCorrect}
-            songTitle={songTitle}
+            isCorrect={props.quizModel.isCorrect}
+            songTitle={props.quizModel.songTitle}
             showResult={showResult}
             playPause={playPause}
           />

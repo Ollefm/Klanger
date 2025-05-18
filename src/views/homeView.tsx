@@ -41,7 +41,7 @@ return (
     <FlatList
       data={props.games}
       keyExtractor={(item, index) => item.id ?? index.toString()}
-      renderItem={({ item }) => <GamesView games={item} />}
+      renderItem={({ item }) => <GamesView games={item} user = {props.user}/>}
       ListHeaderComponent={
         <>
           <View style={{ alignItems: "center" }}>

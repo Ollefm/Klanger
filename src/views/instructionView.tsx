@@ -2,11 +2,13 @@ import { SafeAreaView, View, Text, StyleSheet, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import AppPrimaryButton from "../app/custom components/appPrimaryButton";
 
-export default function InstructionPage() {
+export default function InstructionPage(props) {
   const router = useRouter();
   
   function goToSinglePlayerCB() {
+    props.initGame()
     router.navigate("/(home)/guessSong");
+
   }
   
   return (
