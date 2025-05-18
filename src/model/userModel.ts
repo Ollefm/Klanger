@@ -1,47 +1,42 @@
-import { challengeUser, getChallengeIdsForCurrentUser, listenForChallenges } from "../services/firebaseGameModel";
-import { User as FirebaseUser, signOut } from "firebase/auth"; // Firebase Auth User type
+import { firebaseGameService } from "../services/firebaseGameModel"; // ✅ correct file
+import { User as FirebaseUser } from "firebase/auth";
 import {
   signInWithEmail,
   signUpWithEmail,
-  searchUsersByUsername,
   signOutUser
-} from "../services/firestoreUserModel";
+} from "../services/authService";
+import {searchUsersByUsername,} from "../services/firestoreUserModel"
 import { SignUpData, AppUser } from "../types/user";
 import { getUserFriendlyAuthErrorMessage } from "../utils/utils";
 
 export const userModel = {
   user: null as FirebaseUser | null,
   userData: null as AppUser | null,
+  challenges: [] as any[],
+  games: [] as any[],
   loginAndRegistrationPromiseState: {
-    isLoading: false as boolean,
-    error: null as any,
-  } as Object,
-  userSearch: "" as string,
+    isLoading: false,
+    error: null,
+  },
+
+  userSearch: "",
   userSearchPromiseState: {
-    isLoading: false as boolean,
+    isLoading: false,
     data: [] as AppUser[] | null[],
     error: null,
-  } as Object,
-  challenges: [],
-  challengeUserState : {
+  },
+
+  challengeUserState: {
     isSuccessful: false,
     loading: false,
     error: null as Error | null,
   },
-  challengedUsersId : [],
+  gameId: "",
 
   setUserSearchQuery(query: string): void {
     this.userSearch = query;
   },
-/*
- async setChallengedUserIds(){
-  try{
-    this.challengedUsersId = await getChallengeIdsForCurrentUser(this.user.uid)
-  }catch(error){
-    console.error("Error when setting challengedUsers: ", error)
-  }  
-  },
-*/
+
   async registerAccount(email: string, username: string, password: string) {
     this.loginAndRegistrationPromiseState.isLoading = true;
     try {
@@ -61,7 +56,6 @@ export const userModel = {
       await signInWithEmail(email, password);
       this.loginAndRegistrationPromiseState.error = null;
     } catch (error) {
-      this.isAuthenticated = false;
       this.loginAndRegistrationPromiseState.error =
         getUserFriendlyAuthErrorMessage(error);
       console.error("Login failed:", error);
@@ -70,11 +64,11 @@ export const userModel = {
     }
   },
 
-  async signOut(){
-    try{
-      await signOutUser()
-    }catch(error : any){
-      console.error("error signing otu:", error)
+  async signOut() {
+    try {
+      await signOutUser();
+    } catch (error: any) {
+      console.error("Error signing out:", error);
     }
   },
 
@@ -84,7 +78,6 @@ export const userModel = {
       const users = await searchUsersByUsername(this.userSearch);
       this.userSearchPromiseState.data = users;
       this.userSearchPromiseState.error = null;
-      this.challengedUsersId = await getChallengeIdsForCurrentUser(this.user.uid)
     } catch (error) {
       this.userSearchPromiseState.error = error;
       console.error("getUsers failed:", error);
@@ -93,34 +86,82 @@ export const userModel = {
     }
   },
 
-async challengeUser(toUser: { uid: string }) {
-  const toUserId = toUser.uid;
-  this.challengeUserState.loading = true;
-  this.challengeUserState.isSuccessful = false;
-  this.challengeUserState.error = null;
+  async challengeUser(toUser: { uid: string; username: string }) {
+    const toUserId = toUser.uid;
+    this.challengeUserState.loading = true;
+    this.challengeUserState.isSuccessful = false;
+    this.challengeUserState.error = null;
 
-  try {
-    await challengeUser(this.user.uid, toUserId, this.userData.username, toUser.username);
-    this.challengeUserState.isSuccessful = true;
-  } catch (error) {
-    this.challengeUserState.error = error;
-    console.error("Challenge failed:", error);
-  } finally {
-    this.challengeUserState.loading = false;
+    try {
+      await firebaseGameService.challengeUser(
+        this.user!.uid,
+        toUserId,
+        this.userData!.username,
+        toUser.username
+      );
+      this.challengeUserState.isSuccessful = true;
+    } catch (error) {
+      this.challengeUserState.error = error as Error;
+      console.error("Challenge failed:", error);
+    } finally {
+      this.challengeUserState.loading = false;
+    }
+  },
+
+async listenForChallenges() {
+  if (this.user.uid) {
+    try {
+      const challengeList = await firebaseGameService.fetchIncomingChallenges(this.user.uid);
+      console.log("Fetched challenges:", challengeList);
+      this.challenges = challengeList;
+    } catch (error) {
+      console.error("Failed to fetch challenges:", error);
+    }
   }
 },
 
-async listenForChallenges(){
-  
- this.challenges =  await listenForChallenges(this.user.uid)
-
+async listenForGames() {
+  if (this.user.uid) {
+    try {
+      const gameList = await firebaseGameService.fetchUserGames(this.user.uid);
+      this.games = gameList;
+      console.log("this is games: ", this.games)
+    } catch (error) {
+      console.error("Failed to fetch games:", error);
+    }
+  }
 },
 
-async acceptChallenge(){},
-  // WHEN A USER LOGS OUT
+  async acceptChallenge(challenge: any) {
+    try {
+      this.gameId = await firebaseGameService.acceptChallenge(
+        challenge.id,
+        this.user!.uid
+      );
+    } catch (error) {
+      console.error("Error accepting challenge:", error);
+    }
+  },
+
+  async declineChallenge(challengeId: string) {
+    try {
+      await firebaseGameService.declineChallenge(challengeId);
+    } catch (error) {
+      console.error("Error declining challenge:", error);
+    }
+  },
+
+  // Clear state on logout
   reset() {
-    this.user = undefined;
-    this.isAuthenticated = false;
+    this.user = null;
+    this.userData = null;
+    this.challenges = [];
+    this.games = [];
+    this.challengeUserState = {
+      isSuccessful: false,
+      loading: false,
+      error: null,
+    };
     this.loginAndRegistrationPromiseState = {
       isLoading: false,
       error: null,

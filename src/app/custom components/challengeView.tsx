@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,19 +5,23 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function ChallengeView(props) {
+  function handleAcceptACB(challenge){
+    props.acceptChallenge(challenge)
+  }
+  function handleDeclineACB(challenge){
+    props.declineChallenge(challenge)
+  }
+
   const renderItem = ({ item }) => (
     <View style={styles.challengeItem}>
       <Text style={styles.challengeText}>{item.fromUsername}</Text>
-      
-        <TouchableOpacity style={styles.ButtonAccept}>
+        <TouchableOpacity style={styles.ButtonAccept} onPress={() => handleAcceptACB(item)}>
           <Text style={styles.challengeText}>Accept</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.ButtonDecline}>
+        <TouchableOpacity style={styles.ButtonDecline} onPress={() => handleDeclineACB(item)}>
           <Text style={styles.challengeText}>Decline</Text>
         </TouchableOpacity>
       

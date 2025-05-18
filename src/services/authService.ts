@@ -22,6 +22,7 @@ const COLLECTION_NAME_USERS = "users";
 const readySemaphore = false;
 
 export function connectToPersistence(model, reactionFn) {
+
   async function handleUser(firebaseUser) {
     if (!firebaseUser) {
       model.reset();
@@ -34,85 +35,24 @@ export function connectToPersistence(model, reactionFn) {
       const appUser = await getUserData(firebaseUser.uid);
       model.userData = appUser;
 
-      if (typeof reactionFn === "function") {
-        reactionFn(checkACB, sideEffectACB);
-      }
-
-      function checkACB() {
-        return [model.dishes, model.preferences];
-      }
-
-      function sideEffectACB() {
-        if (model.user) {
-          saveToFirestore(model);
-        }
-      }
-
-      readFromFirestore(model)
-
     } catch (error) {
       console.error("Error loading Firestore user data:", error);
       model.userData = null;
     }
   }
 
-  // 1. Handle immediately if user is already signed in ( on reload)
+  // Immediate check 
   if (auth.currentUser) {
     handleUser(auth.currentUser);
   }
 
-  // 2. Listen to any future auth changes
-  onAuthStateChanged(auth, (firebaseUser) => {
-    handleUser(firebaseUser);
-  });
+  // Firebase listener for auth state changes
+ onAuthStateChanged(auth, (firebaseUser) => {
+  console.log("onAuthStateChanged:", firebaseUser);
+  handleUser(firebaseUser);
+});
 }
 
-async function saveToFirestore(model) {
-  model.ready = false;
-  try {
-    await setDoc(
-      doc(db, COLLECTION_NAME_USERS, model.user.uid),
-      {
-        uid: user.uid,
-        email: user.email,
-        username: username,
-        createdAt: new Date(),
-      },
-      { merge: true }
-    );
-  } catch (error: any) {
-    throw error;
-  } finally {
-    model.ready = true;
-  }
-}
-
-async function readFromFirestore(model) {
-  model.ready = false;
-  try {
-    const userDoc = await getDoc(
-      doc(db, COLLECTION_NAME_USERS, model.user.uid)
-    );
-    if (userDoc.exists()) {
-      const userData = userDoc.data();
-
-      const appUser: AppUser = {
-        uid: userData.uid,
-        email: userData.email ?? "",
-        username: userData.username || "",
-        createdAt: userData.createdAt,
-      };
-
-      return appUser;
-    } else {
-      throw new Error("User data not found in Firestore.");
-    }
-  } catch (error: any) {
-    throw error;
-  } finally {
-    model.ready = true;
-  }
-}
 
 export async function signUpWithEmail(
   email: string,

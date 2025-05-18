@@ -1,170 +1,172 @@
 import {
-  getFirestore,
+  collection,
   doc,
-  setDoc,
   getDoc,
+  getDocs,
   query,
   where,
-  collection,
-  addDoc,
-  getDocs,
   orderBy,
   limit,
-  runTransaction
+  setDoc,
+  addDoc,
+  runTransaction,
+  onSnapshot,
+  Timestamp,
 } from "firebase/firestore";
-import { AppUser, SignUpData } from "../types/user";
-import { db, auth } from "../firebaseConfig";
 
-// Initialize Firebase
-const COLLECTION_NAME_CHALLENGES = "challenges";
-const COLLECTION_NAME_USERS = "users";
+import { db } from "../firebaseConfig";
+import { AppUser } from "../types/user";
 
-export async function challengeUser(fromUid : string, toUid : string, fromUsername : string, toUsername : string) {
+const COLLECTION_USERS = "users";
+const COLLECTION_CHALLENGES = "challenges";
+const COLLECTION_GAMES = "games";
 
-    const challengeRef = collection(db, COLLECTION_NAME_CHALLENGES);
+export const firebaseGameService = {
+  //  Search users
+  async searchUsersByUsername(username: string): Promise<AppUser[]> {
+    const usersRef = collection(db, COLLECTION_USERS);
 
-    try {
-       await addDoc(challengeRef, {
-      from: fromUid,
-      to: toUid,
-      fromUsername: fromUsername,
-      toUsername: toUsername,
-      status: "pending",
-    });
-    }catch(error: any){
-      throw new Error("Failed to challenge user", error);
-    }
-   
-}
-
-export async function listenForChallenges(userId) {
-  const q = query(
-    collection(db, "challenges"),
-    where("to", "==", userId),
-    where("status", "==", "pending")
-  );
-
-
-  const querySnapshot = await getDocs(q);
-
-  if (querySnapshot.empty) {
-    console.log("No matching challenges found.");
-    return []; 
-  }
-
-  const challenges = [];
-
-  querySnapshot.forEach((challenge) => {
-    let challengeData = challenge.data();
-    challenges.push({
-      id: challenge.id,
-      ...challengeData
-    });
-  });
-  return challenges;
-
-}
-
-export async function acceptChallenge(challengeId: string, acceptingUserId: string) {
-  const challengeRef = doc(db, "challenges", challengeId);
-  const gamesRef = collection(db, "games");
-
-  const gameId = await runTransaction(db, async (transaction) => {
-    const challengeSnap = await transaction.get(challengeRef);
-
-    if (!challengeSnap.exists()) {
-      throw new Error("Challenge does not exist.");
-    }
-
-    const challengeData = challengeSnap.data();
-
-    if (challengeData.status !== "pending") {
-      throw new Error("Challenge is not pending.");
-    }
-
-    if (challengeData.to !== acceptingUserId) {
-      throw new Error("Not authorized to accept this challenge.");
-    }
-
-    // Create the game
-    const newGameRef = doc(gamesRef); // Manually create a new game ref
-    transaction.set(newGameRef, {
-      players: [challengeData.from, challengeData.to],
-      currentTurn: challengeData.from,
-      state: "in_progress",
-      moves: [],
-      createdAt: new Date(),
-    });
-
-    // Update the challenge document
-    transaction.set(challengeRef, {
-      ...challengeData,
-      status: "accepted",
-      acceptedAt: new Date(),
-      gameId: newGameRef.id,
-    });
-
-    return newGameRef.id;
-  });
-
-  return gameId;
-}
-
-
-export async function searchUsersByUsername(username: string) {
-  const usersRef = collection(db, COLLECTION_NAME_USERS);
-
-  const q = query(
-    usersRef,
-    where("username", ">=", username),
-    where("username", "<=", username + "\uf8ff"),
-    orderBy("username"),
-    limit(4)
-  );
-
-  const querySnapshot = await getDocs(q);
-
-  if (querySnapshot.empty) {
-    console.log("No matching users found.");
-    return []; // Return an empty array if no users are found
-  }
-
-  const users: AppUser[] = [];
-
-  querySnapshot.forEach((doc) => {
-    let userData = doc.data();
-    users.push({
-      uid: userData.uid,
-      email: userData.email ?? "",
-      username: userData.username || "",
-      createdAt: userData.createdAt,
-    });
-  });
-
-  return users;
-}
-
-export async function getChallengeIdsForCurrentUser(userId){
-    try {
     const q = query(
-      collection(db, "challenges"),
-      where("from", "==", userId),
-      where("status", "==", "pending")
+      usersRef,
+      where("username", ">=", username),
+      where("username", "<=", username + "\uf8ff"),
+      orderBy("username"),
+      limit(5)
     );
 
-    const querySnapshot = await getDocs(q);
+    const snapshot = await getDocs(q);
 
-    const ids: string[] = [];
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      if (data.to) {
-        ids.push(data.to);
-      }
+    return snapshot.docs.map((doc) => ({
+      uid: doc.data().uid,
+      username: doc.data().username,
+      email: doc.data().email,
+      createdAt: doc.data().createdAt,
+    }));
+  },
+
+  // Send a challenge
+  async challengeUser(
+    fromUid: string,
+    toUid: string,
+    fromUsername: string,
+    toUsername: string
+  ) {
+    await addDoc(collection(db, COLLECTION_CHALLENGES), {
+      from: fromUid,
+      to: toUid,
+      fromUsername,
+      toUsername,
+      status: "pending",
+      createdAt: Timestamp.now(),
+    });
+  },
+
+  // Accept a challenge and create a game
+  async acceptChallenge(
+    challengeId: string,
+    acceptingUserId: string
+  ): Promise<string> {
+    const challengeRef = doc(db, COLLECTION_CHALLENGES, challengeId);
+    const gamesRef = collection(db, COLLECTION_GAMES);
+
+    const gameId = await runTransaction(db, async (transaction) => {
+      const challengeSnap = await transaction.get(challengeRef);
+      if (!challengeSnap.exists()) throw new Error("Challenge not found.");
+
+      const challengeData = challengeSnap.data();
+      if (challengeData.status !== "pending")
+        throw new Error("Already responded.");
+      if (challengeData.to !== acceptingUserId)
+        throw new Error("Unauthorized.");
+
+      const newGameRef = doc(gamesRef);
+      transaction.set(newGameRef, {
+        playerIds: [challengeData.from, challengeData.to],
+        players: [
+          { uid: challengeData.from, username: challengeData.fromUsername },
+          { uid: challengeData.to, username: challengeData.toUsername },
+        ],
+        currentTurn: challengeData.from,
+        state: "in_progress",
+        roundResults: {
+          // Who won each round
+          1: null,
+          2: null,
+          3: null,
+        },
+        isFinished: false,
+        guessesSongsIDs: [],
+        createdAt: new Date(),
+      });
+
+      transaction.set(challengeRef, {
+        ...challengeData,
+        status: "accepted",
+        acceptedAt: new Date(),
+        gameId: newGameRef.id,
+      });
+
+      return newGameRef.id;
     });
 
-    return ids;
+    return gameId;
+  },
 
-  } catch (error) {
-    console.error("Failed to fetch challenged user IDs:", error);
-  }
-}
+  // Decline a challenge
+  async declineChallenge(challengeId: string) {
+    const challengeRef = doc(db, COLLECTION_CHALLENGES, challengeId);
+    const challengeSnap = await getDoc(challengeRef);
+
+    if (!challengeSnap.exists()) throw new Error("Challenge not found.");
+    const challengeData = challengeSnap.data();
+
+    await setDoc(challengeRef, {
+      ...challengeData,
+      status: "declined",
+      declinedAt: new Date(),
+    });
+  },
+
+  // Listen to incoming challenges (real-time)
+  async fetchIncomingChallenges(userId: string): Promise<any[]> {
+    try {
+      const q = query(
+        collection(db, COLLECTION_CHALLENGES),
+        where("to", "==", userId),
+        where("status", "==", "pending")
+      );
+
+      const snapshot = await getDocs(q);
+      const challenges = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      return challenges;
+    } catch (error) {
+      console.error("Error fetching incoming challenges:", error);
+      return [];
+    }
+  },
+
+  // Listen to user's games
+  async fetchUserGames(userId: string): Promise<any[]> {
+    try {
+      const q = query(
+        collection(db, COLLECTION_GAMES),
+        where("playerIds", "array-contains", userId)
+      );
+
+      const snapshot = await getDocs(q);
+      const games = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      console.log("this is snap", games)
+      return games;
+    } catch (error) {
+      console.error("Error fetching user games:", error);
+      return [];
+    }
+  },
+};

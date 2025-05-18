@@ -10,27 +10,15 @@ import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function GamesView(props) {
-  const renderItem = ({ item }) => (
+  return (
     <TouchableOpacity>
       <View style={styles.gameItem}>
       <View style={styles.iconRow}>
-          <Text style={styles.challengeText}>Game against: {item}</Text>
+          <Text style={styles.challengeText}>Game against: {props.games.players[0].username}</Text>
           <Ionicons name="chevron-forward-outline" size={28} color="white" />
         </View>
       </View>  
     </TouchableOpacity>
-  );
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Your Games</Text>
-      <FlatList
-        data={props.games}
-        keyExtractor={(item) => item}
-        renderItem={renderItem}
-        contentContainerStyle={{ paddingBottom: 20 }}
-      />
-    </View>
   );
 }
 
