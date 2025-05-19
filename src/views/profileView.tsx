@@ -3,16 +3,6 @@ import { LineChart } from "react-native-chart-kit";
 import AppSecondaryButton from "../app/custom components/appSecondaryButton";
 import AppProfileBar from "../app/custom components/appProfileBar";
 export function ProfileView(props) {
-  const data = {
-    labels: [],
-    datasets: [
-      {
-        data: props.scoreHistory,
-        color: (opacity = 1) => `rgba(77, 141, 218, ${opacity})`, // optional
-        strokeWidth: 3, // optional
-      },
-    ],
-  };
   return (
     <SafeAreaView style={styles.background}>
       <View>
@@ -54,28 +44,7 @@ export function ProfileView(props) {
         <View style={styles.headerContainer}>
           <Text style={styles.header}>Score history</Text>
         </View>
-        <View style={styles.Container2}>
-          <View style={{marginRight:50, marginBottom: -40}}>
-          <LineChart
-            data={data}
-            width={360}
-            height={280}
-            chartConfig={chartConfig}
-            segments={5}
-            formatYLabel={(value) => `${value.split(".")[0]}`}
-
-          />
-          </View>
-          <View style={{flexDirection: "row", justifyContent: "space-between", width: "100%"}}>
-          <Text style={styles.text2}>
-            score
-          </Text>
-          <Text style={styles.text2}>
-            newer results {"→"}
-          </Text>  
-          </View>
-          
-        </View>
+        <View style={styles.Container2}>{renderChart(props.scoreHistory)}</View>
       </View>
 
       <AppSecondaryButton
@@ -84,24 +53,67 @@ export function ProfileView(props) {
       ></AppSecondaryButton>
     </SafeAreaView>
   );
+
+  function renderChart(scoreHistory) {
+    if (!scoreHistory || scoreHistory.length === 0) {
+      return <Text style={styles.text}>You have not earned any score yet, play some quizes to earn score!</Text>;
+    }
+    const data = {
+      labels: [],
+      datasets: [
+        {
+          data: scoreHistory,
+          color: (opacity = 1) => `rgba(77, 141, 218, ${opacity})`, // optional
+          strokeWidth: 3, // optional
+        },
+      ],
+    };
+    const chartConfig = {
+      backgroundGradientFrom: "#1E2923",
+      backgroundGradientFromOpacity: 0,
+      backgroundGradientTo: "#08130D",
+      backgroundGradientToOpacity: 0.0,
+      color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+      propsForLabels: {
+        fontSize: 12,
+        fontWeight: "bold",
+        color: "white",
+      },
+    };
+    
+    var number = 0
+
+    return (
+      <View style={{alignItems: "center", justifyContent: "center"}}>
+        <View style={{ marginRight: 50, marginBottom: -40 }}>
+          <LineChart
+            data={data}
+            width={360}
+            height={260}
+            chartConfig={chartConfig}
+            segments={5}
+            formatYLabel={(value) => `${number++}`}
+          />
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "100%",
+            paddingHorizontal: 20,
+          }}
+        >
+          <Text style={styles.text2}>score</Text>
+          <Text style={styles.text2}>newer results {"→"}</Text>
+        </View>
+      </View>
+    );
+  }
+
   function handleSignoutACB() {
     props.signOut();
   }
 }
-
-const chartConfig = {
-  backgroundGradientFrom: "#1E2923",
-  backgroundGradientFromOpacity: 0,
-  backgroundGradientTo: "#08130D",
-  backgroundGradientToOpacity: 0.0,
-  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-  propsForLabels: {
-    fontSize: 12,
-    fontWeight: "bold",
-    color: "white",
-  },
-  
-};
 
 const styles = StyleSheet.create({
   background: {
@@ -174,8 +186,6 @@ const styles = StyleSheet.create({
     width: "100%",
     textAlign: "left",
   },
-
-
 
   bold: {
     fontWeight: "bold",
