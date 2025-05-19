@@ -29,6 +29,7 @@ interface GuessSongPresenterProps {
   userModel:{
     clickedGame: Object;
     setGame: (correctGuesses : number, songIds: string[]) => void;
+    updateUserLeaderBoardData: (score: number) => Promise<any>;
   }
 }
 
@@ -96,6 +97,7 @@ export const GuessSongPresenter = observer(function GuessSongRender(
       if(props.quizModel.multiplayer){
            props.userModel.setGame(props.quizModel.correctGuesses, props.quizModel.guessesSongsIDs)
       }
+      props.userModel.updateUserLeaderBoardData(props.quizModel.correctGuesses)
       router.navigate("/(home)/gameOver");
     }
   }
