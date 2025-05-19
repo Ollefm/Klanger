@@ -1,17 +1,36 @@
-import { FlatList, SafeAreaView, View, Text, StyleSheet } from "react-native";
+import {
+  FlatList,
+  SafeAreaView,
+  View,
+  Text,
+  StyleSheet,
+  RefreshControl,
+} from "react-native";
+import { useState } from "react";
 import LeaderBoard from "../app/custom components/leaderBoard";
 export function LeaderboardView(props) {
+  const [refreshing, setRefreshing] = useState(false);
+  async function handleRefresh() {
+    setRefreshing(true);
+    await props.update(); 
+    setRefreshing(false);
+  }
   return (
     <SafeAreaView style={styles.background}>
-      <LeaderBoard
-        data={props.leaderBoardData}
-        title={props.title}
-      />
-      {/*       <FlatList
-        data={props.leaderBoards.sort(descendingCB)}
+   
+      <FlatList
+        data={[props.leaderBoardData]}
+        renderItem={renderIngredientRowCB}
+        refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
+          colors={["white"]}
+          tintColor="white"
+        />
+      }
 
-        renderItem={renderIngredientRowCB} 
-        ></FlatList> */}
+        ></FlatList>
     </SafeAreaView>
   );
 
@@ -24,15 +43,15 @@ export function LeaderboardView(props) {
     }
     return 0;
   }
-
+  */
   function renderIngredientRowCB(element) {
     const leaderBoard = element.item
     return (
       <View>
-        <LeaderBoard data={leaderBoard.data} title={leaderBoard.genre} />
+        <LeaderBoard data={props.leaderBoardData} title={props.title} />
       </View>
     )
-  } */
+  }
 }
 
 const styles = StyleSheet.create({
