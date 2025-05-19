@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { GuessSong } from "../views/guessSongView";
-import { CountDokuView } from "../views/authViews/countDokuView";
+import { CountDokuView } from "../views/countDokuView";
 import { useRouter } from "expo-router";
 
 interface GuessSongPresenterProps {
