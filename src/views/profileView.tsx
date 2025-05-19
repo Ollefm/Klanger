@@ -38,7 +38,11 @@ export function ProfileView(props) {
                 <Text style={styles.text}>Klanger since:</Text>
               </View>
               <View style={{ width: "50%" }}>
-                <Text style={styles.text}>{"date"}</Text>
+                <Text style={styles.text}>
+                  {props.userData.createdAt
+                    ? props.userData.createdAt.toDate().toLocaleDateString()
+                    : "date"}
+                </Text>
               </View>
             </View>
           </View>
