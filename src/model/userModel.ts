@@ -39,6 +39,8 @@ export const userModel = {
   clickedGame: {},
   totalScore: 0,
   gamesPlayed: 0,
+  unsubscribeChallenges: null as null | (() => void),
+unsubscribeGames: null as null | (() => void),
 
   setClickedGame(game) {
     this.clickedGame = game;
@@ -89,23 +91,23 @@ export const userModel = {
       this.clickedGame.roundResults = [];
     }
 
-   
     this.clickedGame.roundResults.push({
       userId: this.user.uid,
       correctGuesses: correctGuesses,
     });
 
-     console.log(this.clickedGame.roundResults)
+    console.log(this.clickedGame.roundResults);
     if (this.clickedGame.roundResults.length > 1) {
+      this.clickedGame.isFinished = true;
       const winner = this.clickedGame.roundResults.reduce((max, current) => {
         return current.correctGuesses > max.correctGuesses ? current : max;
       });
       const winnerUsernameIndex = this.clickedGame.players.findIndex(
         (userid) => userid.uid === winner.userId
       );
-      const winnerUsername = this.clickedGame.players[winnerUsernameIndex].username;
-      this.clickedGame.state = `the winner is ${winnerUsername}`;
+       this.clickedGame.winner = this.clickedGame.players[winnerUsernameIndex].username;
     }
+
     const indexOfOpponentId = this.clickedGame.playerIds.findIndex(
       (userid) => userid !== this.user.uid
     );
@@ -115,7 +117,8 @@ export const userModel = {
       guessesSongsIDs: this.clickedGame.guessesSongsIDs,
       roundResults: this.clickedGame.roundResults,
       currentTurn: opponentId,
-      state: this.clickedGame.state,
+      isFinished: this.clickedGame.isFinished,
+      winner: this.clickedGame.winner || "",
     };
 
     try {
@@ -127,6 +130,14 @@ export const userModel = {
       console.log("Game progress saved to Firestore successfully!");
     } catch (error) {
       console.error("Failed to save game progress to Firestore:", error);
+    }
+  },
+
+  async removeGame(){
+    try{
+      firebaseGameService.removeGame(this.clickedGame.id)
+    }catch(error){
+      console.error("something went wrong when removing game", error)
     }
   },
 
@@ -205,35 +216,24 @@ export const userModel = {
     }
   },
 
-  async listenForChallenges() {
-    if (this.user.uid) {
-      try {
-        const challengeList = await firebaseGameService.fetchIncomingChallenges(
-          this.user.uid
-        );
-        console.log("Fetched challenges:", challengeList);
-        this.challenges = challengeList;
-        console.log("challengelist", challengeList);
-      } catch (error) {
-        console.error("Failed to fetch challenges:", error);
-      }
-    }
-  },
+listenForChallenges() {
+  if (this.user?.uid) {
+    firebaseGameService.listenToIncomingChallenges(this.user.uid, (challengeList) => {
+      this.challenges = challengeList;
+      console.log("Realtime challenges update:", challengeList);
+    });
+  }
+},
 
-  async listenForGames() {
-    if (this.user.uid) {
-      try {
-        const gameList = await firebaseGameService.fetchUserGames(
-          this.user.uid
-        );
-        this.games = gameList;
-        this.challengedUsersId = this.getOpponentIds();
-        console.log("Opponent IDs:", this.challengedUsersId);
-      } catch (error) {
-        console.error("Failed to fetch games:", error);
-      }
-    }
-  },
+listenForGames() {
+  if (this.user?.uid) {
+    firebaseGameService.listenToUserGames(this.user.uid, (gameList) => {
+      this.games = gameList;
+      this.challengedUsersId = this.getOpponentIds();
+      console.log("Realtime games update:", gameList);
+    });
+  }
+},
 
   getOpponentIds() {
     // Return empty array if no games or no user
@@ -285,6 +285,7 @@ export const userModel = {
 
   // Clear state on logout
   reset() {
+
     this.user = null;
     this.userData = null;
     this.challenges = [];
@@ -304,5 +305,7 @@ export const userModel = {
       data: [],
       error: null,
     };
+  if (this.unsubscribeChallenges) this.unsubscribeChallenges();
+  if (this.unsubscribeGames) this.unsubscribeGames();
   },
 };

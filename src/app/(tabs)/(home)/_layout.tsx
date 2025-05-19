@@ -18,6 +18,7 @@ export default observer(function HomeLayout() {
       <Stack.Screen name="guessSong" options={{ title: "Play time", headerBackVisible: false }} />
       <Stack.Screen name="newGame" options={{title: "New Game"}}></Stack.Screen>
       <Stack.Screen name="gameOver" options={{ title: "Game Over", headerBackVisible: false  }} />
+      <Stack.Screen name ="multiPlayerGameOverview" options={{ title: "Game result", headerBackVisible: false  }}></Stack.Screen>
     </Stack>
   );
 })

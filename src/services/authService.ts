@@ -55,8 +55,8 @@ export function connectToPersistence(model, reactionFn) {
       
       model.userData = appUser;
 
-    //  model.listenForChallenges() REMOVE THE COMMENT WHEN READY FOR DEPOLOY
-    //  model.listenForGames() REMOVE THE COMMENT WHEN READY FOR DEPLOY
+     model.listenForChallenges() 
+     model.listenForGames() 
 
     } catch (error) {
       console.error("Error loading Firestore user data:", error);

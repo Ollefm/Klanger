@@ -13,26 +13,39 @@ export default function GamesView(props) {
   const router = useRouter();
 
   function handleGoToGame(game) {
-    props.setClickedGame(game)
-    props.setIsMultiplayer()
-    props.initGame()
-    router.navigate("/(home)/guessSong");
+    props.setClickedGame(game);
+    if (props.games.isFinished) {
+      router.navigate("/(home)/multiPlayerGameOverview");
+    } else {
+      props.setIsMultiplayer();
+      props.initGame();
+      router.navigate("/(home)/guessSong");
+    }
   }
-const userNameIndex = props.games.players.findIndex(userid => userid.uid !== props.user.uid);
-
+  const userNameIndex = props.games.players.findIndex(
+    (userid) => userid.uid !== props.user.uid
+  );
 
   return (
-    <TouchableOpacity onPress={() => handleGoToGame(props.games)} disabled={props.games.currentTurn !== props.user.uid}>
+    <TouchableOpacity
+      onPress={() => handleGoToGame(props.games)}
+      disabled={!props.games.isFinished && props.games.currentTurn !== props.user.uid}
+    >
       <View style={styles.gameItem}>
         <View style={styles.iconRow}>
           <View style={styles.textContainer}>
             <Text style={styles.challengeText}>
-              Game against: {props.games.players[userNameIndex].username || "unkown user"}
+              Game against:{" "}
+              {props.games.players[userNameIndex].username || "unkown user"}
             </Text>
-            {props.games.currentTurn === props.user.uid ? (
-              <Text style={styles.turnText}>Your turn!</Text>
+            {!props.games.isFinished ? (
+              props.games.currentTurn === props.user.uid ? (
+                <Text style={styles.turnText}>Your turn!</Text>
+              ) : (
+                <Text style={styles.turnText}>Waiting for other player...</Text>
+              )
             ) : (
-              <Text style={styles.turnText}>Waiting for other player...</Text>
+              <Text style={styles.turnText}>Game finished see result!</Text>
             )}
           </View>
           <Ionicons name="chevron-forward-outline" size={28} color="white" />

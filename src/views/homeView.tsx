@@ -15,13 +15,6 @@ import { useState } from "react";
 
 export default function IndexPage(props) {
   const router = useRouter();
-  const [refreshing, setRefreshing] = useState(false);
-
-  async function handleRefresh() {
-    setRefreshing(true);
-    await props.update(); 
-    setRefreshing(false);
-  }
 
   function gotToNewGame() {
     router.navigate("/(home)/newGame");
@@ -63,14 +56,6 @@ return (
             succesChallenge={props.lastAcceptedId}
           />
         </>
-      }
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={handleRefresh}
-          colors={["white"]}
-          tintColor="white"
-        />
       }
       contentContainerStyle={{ paddingBottom: 80 }} 
     />

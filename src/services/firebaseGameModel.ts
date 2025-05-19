@@ -12,6 +12,7 @@ import {
   runTransaction,
   onSnapshot,
   updateDoc,
+  deleteDoc,
   Timestamp,
 } from "firebase/firestore";
 
@@ -46,109 +47,109 @@ export const firebaseGameService = {
   },
 
   // Send a challenge
-  async challengeUser(
-    fromUid: string,
-    toUid: string,
-    fromUsername: string,
-    toUsername: string
-  ) {
-    await addDoc(collection(db, COLLECTION_CHALLENGES), {
-      from: fromUid,
-      to: toUid,
-      fromUsername,
-      toUsername,
-      status: "pending",
-      createdAt: Timestamp.now(),
-    });
-  },
+async challengeUser(
+  fromUid: string,
+  toUid: string,
+  fromUsername: string,
+  toUsername: string
+) {
+  const challengesRef = collection(db, "challenges");
 
-  // Accept a challenge and create a game
-  async acceptChallenge(
-    challengeId: string,
-    acceptingUserId: string
-  ): Promise<string> {
-    const challengeRef = doc(db, COLLECTION_CHALLENGES, challengeId);
-    const gamesRef = collection(db, COLLECTION_GAMES);
+  // Check for an existing challenge in either direction
+  const q = query(
+    challengesRef,
+    where("from", "in", [fromUid, toUid]),
+    where("to", "in", [fromUid, toUid])
+  );
 
-    const gameId = await runTransaction(db, async (transaction) => {
-      const challengeSnap = await transaction.get(challengeRef);
-      if (!challengeSnap.exists()) throw new Error("Challenge not found.");
+  const existingSnap = await getDocs(q);
 
-      const challengeData = challengeSnap.data();
-      if (challengeData.status !== "pending")
-        throw new Error("Already responded.");
-      if (challengeData.to !== acceptingUserId)
-        throw new Error("Unauthorized.");
-
-      const newGameRef = doc(gamesRef);
-      transaction.set(newGameRef, {
-        playerIds: [challengeData.from, challengeData.to],
-        players: [
-          { uid: challengeData.from, username: challengeData.fromUsername },
-          { uid: challengeData.to, username: challengeData.toUsername },
-        ],
-        currentTurn: challengeData.from,
-        state: "in_progress",
-        roundResults: {
-          // Who won each round
-          1: null,
-          2: null,
-          3: null,
-        },
-        isFinished: false,
-        guessesSongsIDs: [],
-        createdAt: new Date(),
-      });
-
-      transaction.set(challengeRef, {
-        ...challengeData,
-        status: "accepted",
-        acceptedAt: new Date(),
-        gameId: newGameRef.id,
-      });
-
-      return newGameRef.id;
+  // If there’s already a challenge between them
+  if (!existingSnap.empty) {
+    const existing = existingSnap.docs.find((doc) => {
+      const data = doc.data();
+      return (
+        (data.from === fromUid && data.to === toUid) ||
+        (data.from === toUid && data.to === fromUid)
+      );
     });
 
-    return gameId;
-  },
+    if (existing) {
+      const challengeData = existing.data();
+
+      // If the another user already challenged this user, auto-accept it
+      if (challengeData.from === toUid && challengeData.to === fromUid) {
+        await this.acceptChallenge(existing.id, fromUid);
+        return;
+      }
+
+      // If current user already challenged
+      throw new Error("Challenge already exists.");
+    }
+  }
+
+  // No challenge exists in either direction, create a new one
+  await addDoc(challengesRef, {
+    from: fromUid,
+    to: toUid,
+    fromUsername,
+    toUsername,
+    createdAt: Timestamp.now(),
+  });
+},
+
+ // Accept a challenge and create a game
+async acceptChallenge(
+  challengeId: string,
+  acceptingUserId: string
+): Promise<string> {
+  const challengeRef = doc(db, COLLECTION_CHALLENGES, challengeId);
+  const gamesRef = collection(db, COLLECTION_GAMES);
+  
+  const gameId = await runTransaction(db, async (transaction) => {
+    const challengeSnap = await transaction.get(challengeRef);
+    if (!challengeSnap.exists()) throw new Error("Challenge not found.");
+
+    const challengeData = challengeSnap.data();
+    if (challengeData.to !== acceptingUserId)
+      throw new Error("Unauthorized.");
+
+    // Create new game document
+    const newGameRef = doc(gamesRef);
+    transaction.set(newGameRef, {
+      playerIds: [challengeData.from, challengeData.to],
+      players: [
+        { uid: challengeData.from, username: challengeData.fromUsername },
+        { uid: challengeData.to, username: challengeData.toUsername },
+      ],
+      currentTurn: challengeData.from,
+      roundResults: {},
+      isFinished: false,
+      guessesSongsIDs: [],
+      createdAt: new Date(),
+    });
+
+    // delete the challenge
+    transaction.delete(challengeRef);
+
+    return newGameRef.id;
+  });
+
+  
+
+  return gameId;
+},
 
   // Decline a challenge
-  async declineChallenge(challengeId: string) {
-    const challengeRef = doc(db, COLLECTION_CHALLENGES, challengeId);
-    const challengeSnap = await getDoc(challengeRef);
+async declineChallenge(challengeId: string) {
+  const challengeRef = doc(db, COLLECTION_CHALLENGES, challengeId);
+  const challengeSnap = await getDoc(challengeRef);
 
-    if (!challengeSnap.exists()) throw new Error("Challenge not found.");
-    const challengeData = challengeSnap.data();
+  if (!challengeSnap.exists()) throw new Error("Challenge not found.");
 
-    await setDoc(challengeRef, {
-      ...challengeData,
-      status: "declined",
-      declinedAt: new Date(),
-    });
-  },
-
-  // Listen to incoming challenges (real-time)
-  async fetchIncomingChallenges(userId: string): Promise<any[]> {
-    try {
-      const q = query(
-        collection(db, COLLECTION_CHALLENGES),
-        where("to", "==", userId),
-        where("status", "==", "pending")
-      );
-
-      const snapshot = await getDocs(q);
-      const challenges = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-      return challenges;
-    } catch (error) {
-      console.error("Error fetching incoming challenges:", error);
-      return [];
-    }
-  },
+  // Just delete it 
+  await deleteDoc(challengeRef);
+},
 
     async updateGame(gameId: string, gameDataToUpdate) { 
     const gameRef = doc(db, COLLECTION_GAMES, gameId);
@@ -161,24 +162,45 @@ export const firebaseGameService = {
     }
   },
 
-  // Listen to user's games
-  async fetchUserGames(userId: string): Promise<any[]> {
-    try {
-      const q = query(
-        collection(db, COLLECTION_GAMES),
-        where("playerIds", "array-contains", userId)
-      );
+ async removeGame(gameId: string) {
+  try {
+    const gameRef = doc(db, COLLECTION_GAMES, gameId);
+    await deleteDoc(gameRef);
+    console.log(`Game ${gameId} deleted successfully.`);
+  } catch (error) {
+    console.error("Failed to delete game:", error);
+    throw error;
+  }
+},
 
-      const snapshot = await getDocs(q);
+  listenToIncomingChallenges(userId: string, callback: (challenges: any[]) => void) {
+    const q = query(
+      collection(db, COLLECTION_CHALLENGES),
+      where("to", "==", userId)
+    );
+
+    return onSnapshot(q, (snapshot) => {
+      const challenges = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      callback(challenges);
+    });
+  },
+
+  listenToUserGames(userId: string, callback: (games: any[]) => void) {
+    const q = query(
+      collection(db, COLLECTION_GAMES),
+      where("playerIds", "array-contains", userId)
+    );
+
+    return onSnapshot(q, (snapshot) => {
       const games = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-      console.log("this is snap", games)
-      return games;
-    } catch (error) {
-      console.error("Error fetching user games:", error);
-      return [];
-    }
+      callback(games);
+    });
   },
+
 };
