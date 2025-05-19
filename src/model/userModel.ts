@@ -245,21 +245,19 @@ listenForGames() {
   },
 
   getChallengeOpponents() {
-  // Return empty array if no challenges or no user
+
   if (!this.challengeList?.length || !this.user) {
     return [];
   }
 
-  // Create Map to store unique opponent data (using Map instead of Set to store additional data)
   const opponentMap = new Map();
 
-  // Process all challenges
   this.challengeList.forEach((challenge) => {
     const opponentId = challenge.direction === "outgoing" 
       ? challenge.to 
       : challenge.from;
     
-    // Store opponent with direction (if same opponent has multiple challenges, keep the latest)
+
     opponentMap.set(opponentId, {
       opponentId: opponentId,
       direction: challenge.direction,
@@ -267,24 +265,20 @@ listenForGames() {
     });
   });
 
-  // Convert Map values to Array
+
   return Array.from(opponentMap.values());
 },
 
   getOpponentIds() {
-    // Return empty array if no games or no user
+
     if (!this.games.length || !this.user) {
       return [];
     }
 
-    // Create a Set to store unique opponent IDs
     const opponentIds = new Set();
 
-    // Loop through all games
     this.games.forEach((game) => {
-      // Check if playerIds exist and is an array
       if (game.playerIds && Array.isArray(game.playerIds)) {
-        // Add all player IDs except the current user's ID
         game.playerIds.forEach((playerId) => {
           if (playerId !== this.user.uid) {
             opponentIds.add(playerId);
@@ -293,7 +287,6 @@ listenForGames() {
       }
     });
 
-    // Convert Set to Array and return
     return Array.from(opponentIds);
   },
 

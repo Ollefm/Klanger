@@ -127,18 +127,15 @@ export const quizModel = {
       this.userGuess = "";
     }
 
-    // Create a more lenient matching algorithm
     const isCorrect = isLenientMatch(
       this.userGuess,
       this.currentTrackData.title
     );
 
-    // Update score and correct guesses if answer is correct
     if (isCorrect) {
       this.correctGuesses += 1;
     }
  
-    // Check if this was the last round
     const isLastRound = this.currentRound >= MAXIMUM_ROUNDS;
     if (isLastRound) {
       this.gameOver = true;
@@ -158,7 +155,6 @@ export const quizModel = {
       return;
     }
 
-    // Check if track has changed since last playback
     const trackChanged = this.lastPlayedTrackID !== this.currentTrackID;
     if (trackChanged) {
       this.elapsedSeconds = 0;
@@ -245,7 +241,6 @@ export const quizModel = {
     
 
     try {
-      // Ensure we have track data
       const id = this.guessesSongsIDs[this.currentRound];
       if (!this.currentTrackData) {
         const data = await fetchTrackData(id);

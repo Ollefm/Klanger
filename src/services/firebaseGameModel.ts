@@ -154,7 +154,6 @@ async declineChallenge(challengeId: string) {
 
   async listenForChallenges(userId: string): Promise<any[]> {
      try {
-    // Query for challenges where user is the recipient
     const toQuery = query(
       collection(db, COLLECTION_CHALLENGES),
       where("to", "==", userId),
@@ -162,7 +161,6 @@ async declineChallenge(challengeId: string) {
     );
     const toSnapshot = await getDocs(toQuery);
     
-    // Query for challenges where user is the sender
     const fromQuery = query(
       collection(db, COLLECTION_CHALLENGES),
       where("from", "==", userId),
@@ -170,17 +168,16 @@ async declineChallenge(challengeId: string) {
     );
     const fromSnapshot = await getDocs(fromQuery);
     
-    // Combine and map the results
     const challenges = [
       ...toSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-        direction: "incoming" // Add flag to indicate this is an incoming challenge
+        direction: "incoming" 
       })),
       ...fromSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-        direction: "outgoing" // Add flag to indicate this is an outgoing challenge
+        direction: "outgoing" 
       }))
     ];
     
