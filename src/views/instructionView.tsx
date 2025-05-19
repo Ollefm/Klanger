@@ -41,7 +41,7 @@ export default function InstructionPage(props) {
           
           <View style={styles.ruleItem}>
             <Text style={styles.bulletPoint}>•</Text>
-            <Text style={styles.ruleText}>Try to beat your high score!</Text>
+            <Text style={styles.ruleText}>Climb the leaderboard!</Text>
           </View>
         </View>
         

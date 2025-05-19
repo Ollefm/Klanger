@@ -14,7 +14,6 @@ export default function SearchUsersView(props) {
   //console.log("searchView props", props.userData.uid);
   function handleChallengeUser(user) {
     props.challengeUser(user);
-    console.log(`Add friend: ${user}`);
   }
 
   function handleSearch() {
