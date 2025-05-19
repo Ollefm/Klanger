@@ -29,7 +29,7 @@ export const userModel = {
     data: [] as AppUser[] | null[],
     error: null,
   },
-
+challengedOpponents: [] as {opponentId: string, direction: string}[],
   challengeUserState: {
     isSuccessful: false,
     loading: false,
@@ -41,6 +41,8 @@ export const userModel = {
   gamesPlayed: 0,
   unsubscribeChallenges: null as null | (() => void),
 unsubscribeGames: null as null | (() => void),
+  scoreHistory: [] as number[],
+  leaderboard: [] as any[],
 
   setClickedGame(game) {
     this.clickedGame = game;
@@ -59,13 +61,15 @@ unsubscribeGames: null as null | (() => void),
   async updateUserLeaderBoardData(score: number) {
     this.totalScore += score;
     this.gamesPlayed += 1;
+    this.scoreHistory.push(score);
 
     try {
       await updateUserLBData(
         this.userData.uid,
         this.userData.username,
         this.totalScore,
-        this.gamesPlayed
+        this.gamesPlayed,
+        this.scoreHistory
       );
     } catch (error) {
       console.error("Error updating user data:", error);
@@ -233,6 +237,47 @@ listenForGames() {
       console.log("Realtime games update:", gameList);
     });
   }
+},
+
+
+  async listenForChallengesStatus(){
+    if (this.user.uid) {
+      try {
+        const challengeList = await firebaseGameService.listenForChallenges(this.user.uid);
+        this.challengeList = challengeList;
+        this.pendingChallengeIds = this.getChallengeOpponents();
+        console.log("challenge list in new function", this.pendingChallengeIds);
+      } catch (error) {
+        console.error("Failed to fetch games:", error);
+      }
+    }
+  },
+
+  getChallengeOpponents() {
+  // Return empty array if no challenges or no user
+  if (!this.challengeList?.length || !this.user) {
+    return [];
+  }
+
+  // Create Map to store unique opponent data (using Map instead of Set to store additional data)
+  const opponentMap = new Map();
+
+  // Process all challenges
+  this.challengeList.forEach((challenge) => {
+    const opponentId = challenge.direction === "outgoing" 
+      ? challenge.to 
+      : challenge.from;
+    
+    // Store opponent with direction (if same opponent has multiple challenges, keep the latest)
+    opponentMap.set(opponentId, {
+      opponentId: opponentId,
+      direction: challenge.direction,
+      status: challenge.status
+    });
+  });
+
+  // Convert Map values to Array
+  return Array.from(opponentMap.values());
 },
 
   getOpponentIds() {

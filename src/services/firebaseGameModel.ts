@@ -151,6 +151,46 @@ async declineChallenge(challengeId: string) {
   await deleteDoc(challengeRef);
 },
 
+  async listenForChallenges(userId: string): Promise<any[]> {
+     try {
+    // Query for challenges where user is the recipient
+    const toQuery = query(
+      collection(db, COLLECTION_CHALLENGES),
+      where("to", "==", userId),
+      where("status", "==", "pending")
+    );
+    const toSnapshot = await getDocs(toQuery);
+    
+    // Query for challenges where user is the sender
+    const fromQuery = query(
+      collection(db, COLLECTION_CHALLENGES),
+      where("from", "==", userId),
+      where("status", "==", "pending")
+    );
+    const fromSnapshot = await getDocs(fromQuery);
+    
+    // Combine and map the results
+    const challenges = [
+      ...toSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+        direction: "incoming" // Add flag to indicate this is an incoming challenge
+      })),
+      ...fromSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+        direction: "outgoing" // Add flag to indicate this is an outgoing challenge
+      }))
+    ];
+    
+    //console.log(`Found ${challenges.length} challenges (${toSnapshot.size} incoming, ${fromSnapshot.size} outgoing)`);
+    return challenges;
+  } catch (error) {
+    console.error("Error fetching challenges:", error);
+    return [];
+  }
+  },
+
     async updateGame(gameId: string, gameDataToUpdate) { 
     const gameRef = doc(db, COLLECTION_GAMES, gameId);
     try {

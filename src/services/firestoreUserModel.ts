@@ -36,7 +36,7 @@ export async function getUserData(userId) {
   }
 }
 
-export async function updateUserLBData(userId, username, score, gamesPlayed) {
+export async function updateUserLBData(userId, username, score, gamesPlayed, scoreHistory) {
   try {
     const userDocRef = doc(db, COLLECTION_NAME_LEADERBOARD, userId);
     await setDoc(userDocRef, {
@@ -44,6 +44,7 @@ export async function updateUserLBData(userId, username, score, gamesPlayed) {
       username: username,
       totalScore: score,
       gamesPlayed: gamesPlayed,
+      scoreHistory: scoreHistory,
     },{ merge: true });
   } catch (error) {
     console.error("Error updating user data:", error);
@@ -66,6 +67,7 @@ export async function getLBData() {
         username: userData.username || "",
         totalScore: userData.totalScore,
         gamesPlayed: userData.gamesPlayed,
+        scoreHistory: userData.scoreHistory || [],
       });
     });
 
