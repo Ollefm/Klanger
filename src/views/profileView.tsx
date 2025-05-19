@@ -1,62 +1,72 @@
-import { SafeAreaView, View, Text, StyleSheet } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, ScrollView } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import AppSecondaryButton from "../app/custom components/appSecondaryButton";
 import AppProfileBar from "../app/custom components/appProfileBar";
 export function ProfileView(props) {
   return (
     <SafeAreaView style={styles.background}>
-      <View>
-        <AppProfileBar
-          username={props.userData.username}
-          totalScore={props.score}
-          gamesPlayed={props.gamesPlayed}
-        ></AppProfileBar>
-        <View style={styles.Container2}>
-          <View style={styles.row}>
-            <View style={{ width: "50%" }}>
-              <Text style={styles.text}>Username:</Text>
+      <ScrollView>
+        <View>
+          <AppProfileBar
+            username={props.userData.username}
+            totalScore={props.score}
+            gamesPlayed={props.gamesPlayed}
+            ></AppProfileBar>
+          <View style={styles.Container2}>
+            <View style={styles.row}>
+              <View style={{ width: "50%" }}>
+                <Text style={styles.text}>Username:</Text>
+              </View>
+              <View style={{ width: "50%" }}>
+                <Text style={styles.text}>
+                  {props.userData.username || "username"}
+                </Text>
+              </View>
             </View>
-            <View style={{ width: "50%" }}>
-              <Text style={styles.text}>
-                {props.userData.username || "username"}
-              </Text>
+            <View style={styles.row2}>
+              <View style={{ width: "50%" }}>
+                <Text style={styles.text}>E-mail:</Text>
+              </View>
+              <View style={{ width: "50%" }}>
+                <Text style={styles.text}>
+                  {props.userData.email || "email"}
+                </Text>
+              </View>
             </View>
-          </View>
-          <View style={styles.row2}>
-            <View style={{ width: "50%" }}>
-              <Text style={styles.text}>E-mail:</Text>
-            </View>
-            <View style={{ width: "50%" }}>
-              <Text style={styles.text}>{props.userData.email || "email"}</Text>
-            </View>
-          </View>
-          <View style={styles.row}>
-            <View style={{ width: "50%" }}>
-              <Text style={styles.text}>Klanger since:</Text>
-            </View>
-            <View style={{ width: "50%" }}>
-              <Text style={styles.text}>{"date"}</Text>
+            <View style={styles.row}>
+              <View style={{ width: "50%" }}>
+                <Text style={styles.text}>Klanger since:</Text>
+              </View>
+              <View style={{ width: "50%" }}>
+                <Text style={styles.text}>{"date"}</Text>
+              </View>
             </View>
           </View>
         </View>
-      </View>
-      <View style={{ height: "50%" }}>
-        <View style={styles.headerContainer}>
-          <Text style={styles.header}>Score history</Text>
+        <View style={{ height: "50%" }}>
+          <View style={styles.headerContainer}>
+            <Text style={styles.header}>Score history</Text>
+          </View>
+          <View style={styles.Container2}>
+            {renderChart(props.scoreHistory)}
+          </View>
         </View>
-        <View style={styles.Container2}>{renderChart(props.scoreHistory)}</View>
-      </View>
 
-      <AppSecondaryButton
-        title="Sign out"
-        onPress={handleSignoutACB}
-      ></AppSecondaryButton>
+        <AppSecondaryButton
+          title="Sign out"
+          onPress={handleSignoutACB}
+        ></AppSecondaryButton>
+      </ScrollView>
     </SafeAreaView>
   );
 
   function renderChart(scoreHistory) {
     if (!scoreHistory || scoreHistory.length === 0) {
-      return <Text style={styles.text}>You have not earned any score yet, play some quizes to earn score!</Text>;
+      return (
+        <Text style={styles.text}>
+          You have not earned any score yet, play some quizes to earn score!
+        </Text>
+      );
     }
     const data = {
       labels: [],
@@ -80,11 +90,11 @@ export function ProfileView(props) {
         color: "white",
       },
     };
-    
-    var number = 0
+
+    var number = 0;
 
     return (
-      <View style={{alignItems: "center", justifyContent: "center"}}>
+      <View style={{ alignItems: "center", justifyContent: "center" }}>
         <View style={{ marginRight: 50, marginBottom: -40 }}>
           <LineChart
             data={data}
