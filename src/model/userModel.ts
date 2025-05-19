@@ -76,7 +76,7 @@ unsubscribeGames: null as null | (() => void),
     }
   },
 
-  async setGame(correctGuesses: number, guessesSongsIDs: string[]) {
+  async setGame(correctGuesses: number) {
     if (!this.clickedGame || !this.clickedGame.id) {
       console.error(
         "setGame failed: No game selected or clickedGame.id is missing."
@@ -88,9 +88,7 @@ unsubscribeGames: null as null | (() => void),
       console.error("setGame failed: User is not logged in.");
       return;
     }
-
-    // Update local state of clickedGame
-    this.clickedGame.guessesSongsIDs = guessesSongsIDs;
+  
     if (!Array.isArray(this.clickedGame.roundResults)) {
       this.clickedGame.roundResults = [];
     }
@@ -118,7 +116,6 @@ unsubscribeGames: null as null | (() => void),
     const opponentId = this.clickedGame.playerIds[indexOfOpponentId];
     // Prepare the data payload for Firestore update
     const gameDataToUpdate = {
-      guessesSongsIDs: this.clickedGame.guessesSongsIDs,
       roundResults: this.clickedGame.roundResults,
       currentTurn: opponentId,
       isFinished: this.clickedGame.isFinished,

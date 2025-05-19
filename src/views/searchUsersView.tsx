@@ -43,19 +43,6 @@ export default function SearchUsersView(props) {
       >
         Find your opponent
       </Text>
-      {props.promiseChallengeState.isSuccessful && (
-        <Text
-          style={{
-            color: "white",
-            paddingHorizontal: 20,
-            paddingVertical: 10,
-            fontWeight: 700,
-            fontSize: 20,
-          }}
-        >
-          Succesfully challenge the user
-        </Text>
-      )}
       {props.promiseChallengeState.error && (
         <Text>props.promiseState.error</Text>
       )}

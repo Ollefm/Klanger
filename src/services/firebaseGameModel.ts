@@ -94,6 +94,7 @@ async challengeUser(
     to: toUid,
     fromUsername,
     toUsername,
+    status: "pending",
     createdAt: Timestamp.now(),
   });
 },

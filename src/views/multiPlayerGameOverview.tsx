@@ -7,7 +7,9 @@ import { useRouter } from "expo-router";
 export default function MultiplayerGameOverview({ game, challengeAgain, winner, removeGame }) {
   const router = useRouter();
 
-  const results = game?.roundResults || [];
+  const results = Array.isArray(game?.roundResults)
+  ? game.roundResults
+  : Object.values(game?.roundResults || {});
   const players = game?.players || [];
 
   function getUsernameById(uid) {
