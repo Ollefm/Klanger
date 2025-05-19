@@ -46,7 +46,9 @@ export function getUserFriendlyAuthErrorMessage(error: any): string {
 export function isLenientMatch(userGuess: string, songTitle : string): boolean {
   // Normalize both strings
     const normalizedGuess = userGuess.trim().toLowerCase();
-    const normalizedTitle = songTitle.trim().toLowerCase();
+    
+  const titleWithoutParentheses = songTitle.replace(/\s*\([^)]*\)\s*/g, " ").trim();
+  const normalizedTitle = titleWithoutParentheses.toLowerCase();
 
     // Check for exact match first (current behavior)
     if (normalizedGuess === normalizedTitle) {
