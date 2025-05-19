@@ -5,13 +5,14 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function ChallengeView(props) {
   function handleAcceptACB(challenge) {
-    props.acceptChallenge(challenge)
+    props.acceptChallenge(challenge);
   }
   function handleDeclineACB(challenge) {
-    props.declineChallenge(challenge)
+    props.declineChallenge(challenge);
   }
 
   const renderItem = ({ item }) => {
@@ -23,21 +24,33 @@ export default function ChallengeView(props) {
       </View>
     ) : (
       <View style={styles.challengeItem}>
-        <Text style={styles.challengeText}>{item.fromUsername}</Text>
-        <TouchableOpacity style={styles.ButtonAccept} onPress={() => handleAcceptACB(item)}>
-          <Text style={styles.challengeText}>Accept</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <Ionicons name="person-outline" size={20} color="#ffffff" />
+          <Text style={styles.challengeText}>{item.fromUsername}</Text>
+        </View>
 
-        <TouchableOpacity style={styles.ButtonDecline} onPress={() => handleDeclineACB(item)}>
-          <Text style={styles.challengeText}>Decline</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.ButtonAccept}
+            onPress={() => handleAcceptACB(item)}
+          >
+            <Text style={styles.challengeText}>Accept</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.ButtonDecline}
+            onPress={() => handleDeclineACB(item)}
+          >
+            <Text style={styles.challengeText}>Decline</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Pending Challenges</Text>
+      <Text style={styles.title}>Pending challenges</Text>
       <FlatList
         data={props.challenges}
         keyExtractor={(item) => item}
@@ -51,25 +64,27 @@ export default function ChallengeView(props) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "black",
-    paddingHorizontal: 16,
+    paddingHorizontal: 10,
+    alignContent: "center",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    gap: 10,
   },
   title: {
-    color: "white",
+    color: "gray",
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 12,
+    marginLeft: 10,
   },
   challengeItem: {
-    padding: 20,
-    marginVertical: 8,
+    marginVertical: 20,
+    marginLeft: 10,
     borderRadius: 12,
-    backgroundColor: "#1A1A1A",
-    borderWidth: 0.5,
-    width: 365,
-    borderColor: "#5E5E5E",
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
   },
   successContainer: {
     padding: 20,
@@ -80,7 +95,7 @@ const styles = StyleSheet.create({
     width: 365,
     borderColor: "#5E5E5E",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   challengeText: {
     color: "white",
