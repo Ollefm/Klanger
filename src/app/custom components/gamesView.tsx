@@ -20,12 +20,6 @@ export default function GamesView(props) {
   }
 const userNameIndex = props.games.players.findIndex(userid => userid.uid !== props.user.uid);
 
-  function getOpponentIndex(userIndex) {
-    return userIndex === 0 ? 1 : 0;
-  }
-  
-  // Get the opponent's index
-  const opponentIndex = getOpponentIndex(userNameIndex);
 
   return (
     <TouchableOpacity onPress={() => handleGoToGame(props.games)} disabled={props.games.currentTurn !== props.user.uid}>
@@ -33,7 +27,7 @@ const userNameIndex = props.games.players.findIndex(userid => userid.uid !== pro
         <View style={styles.iconRow}>
           <View style={styles.textContainer}>
             <Text style={styles.challengeText}>
-              Game against: {props.games.players[opponentIndex].username || "unkown user"}
+              Game against: {props.games.players[userNameIndex].username || "unkown user"}
             </Text>
             {props.games.currentTurn === props.user.uid ? (
               <Text style={styles.turnText}>Your turn!</Text>
