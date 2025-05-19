@@ -11,7 +11,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Image } from "expo-image";
 
 export default function SearchUsersView(props) {
-  //console.log("searchView props", props.userData.uid);
+  console.log("searchView props", props.pendingChallenges);
   function handleChallengeUser(user) {
     props.challengeUser(user);
   }
@@ -25,7 +25,10 @@ export default function SearchUsersView(props) {
     props.setSearchText(query);
   }
 
-  
+  function handleRefreshChallenges() {
+    props.refreshChallenges();
+  }
+
 
   return (
     <SafeAreaView style={styles.background}>
@@ -50,7 +53,7 @@ export default function SearchUsersView(props) {
             fontSize: 20,
           }}
         >
-          Succesfully added user
+          Succesfully challenge the user
         </Text>
       )}
       {props.promiseChallengeState.error && (
@@ -87,7 +90,12 @@ export default function SearchUsersView(props) {
 
             const isMyself = item.uid === props.userData.uid;
             const alreadyChallenged = props.challengedUsers?.includes(item.uid);
-            console.log("alreadychallenged result", alreadyChallenged)
+            const challenge = props.pendingChallenges?.find(
+              challenge => challenge.opponentId === item.uid
+            );
+            const isIncoming = challenge?.direction === "incoming";
+            const isOutgoing = challenge?.direction === "outgoing";
+            console.log("alreadychallenged result", challenge)
             return (
               <View style={styles.userItem}>
                 <View style={styles.userInfo}>
@@ -102,10 +110,10 @@ export default function SearchUsersView(props) {
                 <TouchableOpacity
                   style={[
                     styles.addButton,
-                    (alreadyChallenged || isMyself) && { backgroundColor: "transparent", borderWidth: 1, borderColor: "white" },
+                    (alreadyChallenged || isMyself || isIncoming || isOutgoing) && { backgroundColor: "transparent", borderWidth: 1, borderColor: "white" },
                   ]}
                   onPress={() => handleChallengeUser(item)}
-                  disabled={alreadyChallenged || isMyself}
+                  disabled={alreadyChallenged || isMyself || isIncoming || isOutgoing}
                 >
                   <Ionicons
                     name="musical-notes-outline"
@@ -113,7 +121,11 @@ export default function SearchUsersView(props) {
                     color="#ffffff"
                   />
                   <Text style={styles.addButtonText}>
-                    {isMyself ? "It's a me Mario" : alreadyChallenged ? "pending" : "Challenge"}
+                    {isMyself ? "It's a me Mario" :
+                    alreadyChallenged ? "already in match" :
+                      isIncoming ? "Respond to Challenge" :
+                        isOutgoing ? "Challenge Sent" :
+                          "Challenge"}
                   </Text>
                 </TouchableOpacity>
               </View>

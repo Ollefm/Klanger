@@ -29,7 +29,7 @@ export const userModel = {
     data: [] as AppUser[] | null[],
     error: null,
   },
-
+challengedOpponents: [] as {opponentId: string, direction: string}[],
   challengeUserState: {
     isSuccessful: false,
     loading: false,
@@ -212,24 +212,58 @@ export const userModel = {
   async listenForChallenges() {
     if (this.user.uid) {
       try {
-        const challengeList = await firebaseGameService.fetchIncomingChallenges(
-          this.user.uid
-        );
-        console.log("Fetched challenges:", challengeList);
+        const challengeList = await firebaseGameService.fetchIncomingChallenges(this.user.uid);
         this.challenges = challengeList;
-        console.log("challengelist", challengeList);
       } catch (error) {
         console.error("Failed to fetch challenges:", error);
       }
     }
   },
 
+  async listenForChallengesStatus(){
+    if (this.user.uid) {
+      try {
+        const challengeList = await firebaseGameService.listenForChallenges(this.user.uid);
+        this.challengeList = challengeList;
+        this.pendingChallengeIds = this.getChallengeOpponents();
+        console.log("challenge list in new function", this.pendingChallengeIds);
+      } catch (error) {
+        console.error("Failed to fetch games:", error);
+      }
+    }
+  },
+
+  getChallengeOpponents() {
+  // Return empty array if no challenges or no user
+  if (!this.challengeList?.length || !this.user) {
+    return [];
+  }
+
+  // Create Map to store unique opponent data (using Map instead of Set to store additional data)
+  const opponentMap = new Map();
+
+  // Process all challenges
+  this.challengeList.forEach((challenge) => {
+    const opponentId = challenge.direction === "outgoing" 
+      ? challenge.to 
+      : challenge.from;
+    
+    // Store opponent with direction (if same opponent has multiple challenges, keep the latest)
+    opponentMap.set(opponentId, {
+      opponentId: opponentId,
+      direction: challenge.direction,
+      status: challenge.status
+    });
+  });
+
+  // Convert Map values to Array
+  return Array.from(opponentMap.values());
+},
+
   async listenForGames() {
     if (this.user.uid) {
       try {
-        const gameList = await firebaseGameService.fetchUserGames(
-          this.user.uid
-        );
+        const gameList = await firebaseGameService.fetchUserGames(this.user.uid);
         this.games = gameList;
         this.challengedUsersId = this.getOpponentIds();
         console.log("Opponent IDs:", this.challengedUsersId);

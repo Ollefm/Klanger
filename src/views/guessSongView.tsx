@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SafeAreaView, View, Text, StyleSheet, Modal, Image, TouchableOpacity } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, Modal, Image, TouchableOpacity, Platform } from "react-native";
 import PlayPreviewContainer from "../app/custom components/playPreviewContainer";
 import AppTextInput from "../app/custom components/appInput";
 import AppPrimaryButton from "../app/custom components/appPrimaryButton";
@@ -37,12 +37,16 @@ export function GuessSong(props) {
           style={styles.coverImage}
           resizeMode="cover"
         />
-      {!props.showResult && (
-        <BlurView
-          intensity={70}
-          style={StyleSheet.absoluteFill}
-
-        />)}
+       {!props.showResult && (
+          <BlurView
+            intensity={Platform.OS === 'ios' ? 70 : 100}
+            tint="dark"
+            style={[
+              StyleSheet.absoluteFill,
+              { borderRadius: 20 }
+            ]}
+          />
+        )}
       </View>
         
      <Modal
