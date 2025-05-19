@@ -9,7 +9,7 @@ import {
   getDocs,
   orderBy,
   limit,
-} from "firebase/firestore";
+} from "@firebase/firestore";
 
 import { AppUser, UserLBData } from "../types/user";
 import { db, auth } from "../firebaseConfig";

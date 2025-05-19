@@ -14,7 +14,7 @@ import {
   updateDoc,
   deleteDoc,
   Timestamp,
-} from "firebase/firestore";
+} from "@firebase/firestore";
 
 import { db } from "../firebaseConfig";
 import { AppUser } from "../types/user";

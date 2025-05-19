@@ -8,13 +8,13 @@ import {
   getDocs,
   orderBy,
   limit,
-} from "firebase/firestore";
+} from "@firebase/firestore";
 import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-} from "firebase/auth";
+} from "@firebase/auth";
 import { AppUser } from "../types/user";
 import { db, auth } from "../firebaseConfig";
 import { getLBData } from "./firestoreUserModel";
