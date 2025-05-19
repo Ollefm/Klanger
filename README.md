@@ -15,19 +15,19 @@
 - **Leaderboard:** Compare your score with others and climb the global rankings.
 - **User Profile:**
   - View past performances and total score.
-  - Analyze progress with performance graphs and statistics.
+  - Present progress with performance graphs and statistics.
 
 ###  Cross-Platform Support
-- Fully functional on **iOS and Android**.
+- Functional on **iOS and Android**.
 - Primarily optimized for **iOS devices**.
 
 ---
 
 ##  Deployment & Running the App
 
-The application is deployed on **[Stackblitz]**. Follow these steps to run the app:
+The application is deployed on **Stackblitz**. Follow these steps to run the app:
 
-1. Visit: **[https://stackblitz.com/edit/tv1ndoh4-49mhsyhe?file=README.md]**
+1. Visit: **https://stackblitz.com/edit/tv1ndoh4-49mhsyhe?file=README.md**
 2. Wait for all dependencies to install. A **QR code** will appear in the StackBlitz terminal once it's ready.
 
    > If the install fails:
@@ -36,7 +36,6 @@ The application is deployed on **[Stackblitz]**. Follow these steps to run the a
    >   ```bash
    >   npm install && npm run dev
    >   ```
-   > - Or reload the page.
 
 3. Download the **Expo Go** app from the App Store or Google Play.
 4. Scan the QR code using your phone’s camera.
