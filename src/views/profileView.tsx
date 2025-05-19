@@ -107,6 +107,7 @@ export function ProfileView(props) {
             chartConfig={chartConfig}
             segments={5}
             formatYLabel={(value) => `${number++}`}
+            fromZero={true}
           />
         </View>
         <View
