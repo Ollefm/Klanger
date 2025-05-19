@@ -28,7 +28,6 @@ type SearchUsersProps = {
 
 export default observer(function SearchUsers(props: SearchUsersProps) {
 
-  //console.log("in the presenter", props.userModel.pendingChallengeIds)
    useEffect(() => {
     async function fetchInitialData() {
       await props.userModel.listenForGames();
@@ -39,7 +38,6 @@ export default observer(function SearchUsers(props: SearchUsersProps) {
   }, []);
 
   async function refreshChallengesACB() {
-    console.log("Refreshing challenges...");
     await props.userModel.listenForChallengesStatus();
   }
   async function handleUserSearchACB() {

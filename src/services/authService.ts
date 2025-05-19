@@ -130,7 +130,6 @@ export async function signInWithEmail(
   email: string,
   password: string
 ): Promise<void> {
-  console.log(email, password);
   try {
     await signInWithEmailAndPassword(auth, email, password);
   } catch (error: any) {
@@ -154,7 +153,6 @@ export async function getUserData(userId) {
     if (userSnapshot.exists()) {
       return userSnapshot.data();
     } else {
-      console.log("User not found.");
       return null;
     }
   } catch (error) {
@@ -169,7 +167,6 @@ export async function getUserLBData(userId) {
     if (userSnapshot.exists()) {
       return userSnapshot.data();
     } else {
-      console.log("User not found.");
       return null;
     }
   } catch (error) {

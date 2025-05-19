@@ -27,7 +27,7 @@ export async function getUserData(userId) {
     if (userSnapshot.exists()) {
       return userSnapshot.data();
     } else {
-      console.log("User not found.");
+      // User not found
       return null;
     }
   } catch (error) {
@@ -95,7 +95,6 @@ export async function searchUsersByUsername(username: string) {
   const querySnapshot = await getDocs(q);
 
   if (querySnapshot.empty) {
-    console.log("No matching users found.");
     return []; // Return an empty array if no users are found
   }
 

@@ -184,7 +184,6 @@ async declineChallenge(challengeId: string) {
       }))
     ];
     
-    //console.log(`Found ${challenges.length} challenges (${toSnapshot.size} incoming, ${fromSnapshot.size} outgoing)`);
     return challenges;
   } catch (error) {
     console.error("Error fetching challenges:", error);
@@ -196,10 +195,9 @@ async declineChallenge(challengeId: string) {
     const gameRef = doc(db, COLLECTION_GAMES, gameId);
     try {
       await updateDoc(gameRef, gameDataToUpdate);
-      console.log("Game updated successfully in Firestore:", gameId);
     } catch (error) {
       console.error("Error updating game in Firestore:", error);
-      throw error; // Re-throw the error so the caller can handle it
+      throw error;
     }
   },
 
@@ -207,7 +205,6 @@ async declineChallenge(challengeId: string) {
   try {
     const gameRef = doc(db, COLLECTION_GAMES, gameId);
     await deleteDoc(gameRef);
-    console.log(`Game ${gameId} deleted successfully.`);
   } catch (error) {
     console.error("Failed to delete game:", error);
     throw error;

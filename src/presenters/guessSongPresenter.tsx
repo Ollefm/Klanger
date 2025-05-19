@@ -44,7 +44,6 @@ export const GuessSongPresenter = observer(function GuessSongRender(
   const router = useRouter();
   function playPauseCB() {
     setPlayPause(!playPause);
-    console.log("playPause", playPause);
   }
 
   function handleToggleTimer() {

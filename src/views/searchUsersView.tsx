@@ -11,7 +11,6 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Image } from "expo-image";
 
 export default function SearchUsersView(props) {
-  console.log("searchView props", props.pendingChallenges);
   function handleChallengeUser(user) {
     props.challengeUser(user);
   }
@@ -21,7 +20,6 @@ export default function SearchUsersView(props) {
   }
 
   function setSearchText(query: string) {
-    console.log(query);
     props.setSearchText(query);
   }
 
@@ -72,9 +70,7 @@ export default function SearchUsersView(props) {
           data={props.users}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => {
-            //console.log("Current item UID:", item.uid);
-            //console.log("Challenged Users array:", props.challengedUsers);
-
+  
             const isMyself = item.uid === props.userData.uid;
             const alreadyChallenged = props.challengedUsers?.includes(item.uid);
             const challenge = props.pendingChallenges?.find(
@@ -82,7 +78,6 @@ export default function SearchUsersView(props) {
             );
             const isIncoming = challenge?.direction === "incoming";
             const isOutgoing = challenge?.direction === "outgoing";
-            console.log("alreadychallenged result", challenge)
             return (
               <View style={styles.userItem}>
                 <View style={styles.userInfo}>

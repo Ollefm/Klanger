@@ -96,7 +96,6 @@ export const quizModel = {
     this.userGuess = "";
     this.setGuessesSongsIDs();
 
-    console.log("in Init Game", this.currentRound);
     // Start first round
     this.nextRound();
   },
@@ -138,12 +137,7 @@ export const quizModel = {
     if (isCorrect) {
       this.correctGuesses += 1;
     }
-    console.log("Answer comparison result:", isCorrect);
-    console.log("Correct song title:", this.currentTrackData.title);
-    console.log(
-      `Round: ${this.currentRound}/${MAXIMUM_ROUNDS}, Score: ${this.correctGuesses}`
-    );
-
+ 
     // Check if this was the last round
     const isLastRound = this.currentRound >= MAXIMUM_ROUNDS;
     if (isLastRound) {
@@ -157,7 +151,6 @@ export const quizModel = {
 
   setUserGuess(userGuess: string) {
     this.userGuess = userGuess;
-    //console.log("userGuess", userGuess)
   },
 
   setToggleTimer(onProgressUpdate: (percent: number) => void) {
@@ -167,7 +160,6 @@ export const quizModel = {
 
     // Check if track has changed since last playback
     const trackChanged = this.lastPlayedTrackID !== this.currentTrackID;
-    //console.log("lastPlayedTrackID", this.lastPlayedTrackID)
     if (trackChanged) {
       this.elapsedSeconds = 0;
       this.lastPlayedTrackID = this.currentTrackID;
@@ -205,7 +197,6 @@ export const quizModel = {
 
             this.sound = null;
 
-            console.log("Sound stopped.");
           } catch (error) {
             console.error("Error stopping sound:", error);
           }
@@ -218,7 +209,6 @@ export const quizModel = {
   },
 
   async clearPlaySound() {
-    console.log("Track changed, stopping current playback");
     if (this.sound) {
       try {
         await this.sound.stopAsync();
@@ -247,7 +237,6 @@ export const quizModel = {
 
         this.sound = null;
 
-        console.log("Sound stopped.");
       } catch (error) {
         console.error("Error stopping sound:", error);
       }

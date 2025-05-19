@@ -1,13 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
 import AppPrimaryButton from '../app/custom components/appPrimaryButton';
-import { observer } from "mobx-react-lite";
 import { useRouter } from 'expo-router';
 
 
 export default function GameOverView(props){
-
-    console.log(props);
 
     const router = useRouter();
 

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { StyleSheet, TouchableOpacity, Text, View, Button } from "react-native";
 import styled from "styled-components/native";
 import Ionicons from "@expo/vector-icons/Ionicons";

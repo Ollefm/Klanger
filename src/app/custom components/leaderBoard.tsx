@@ -26,17 +26,7 @@ export default function LeaderBoard(props) {
       </View>
     </View>
   );
-  /* 
-  function descendingCB(a, b) {
-    if (a.highScore > b.highScore) {
-      return -1;
-    }
-    if (a.highScore < b.highScore) {
-      return 1;
-    }
-    return 0;
-  }
- */
+
   function renderIngredientRowCB(element) {
     const user = element.item
     return (

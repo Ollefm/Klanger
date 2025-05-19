@@ -51,7 +51,6 @@ unsubscribeGames: null as null | (() => void),
   async getLeaderboard() {
     try {
       const leaderboardData = await getLBData();
-      console.log("Fetched leaderboard:", leaderboardData);
       this.leaderboard = leaderboardData;
     } catch (error) {
       console.error("Failed to fetch leaderboard:", error);
@@ -98,7 +97,6 @@ unsubscribeGames: null as null | (() => void),
       correctGuesses: correctGuesses,
     });
 
-    console.log(this.clickedGame.roundResults);
     if (this.clickedGame.roundResults.length > 1) {
       this.clickedGame.isFinished = true;
       const winner = this.clickedGame.roundResults.reduce((max, current) => {
@@ -128,7 +126,6 @@ unsubscribeGames: null as null | (() => void),
         this.clickedGame.id,
         gameDataToUpdate
       );
-      console.log("Game progress saved to Firestore successfully!");
     } catch (error) {
       console.error("Failed to save game progress to Firestore:", error);
     }
@@ -221,7 +218,6 @@ listenForChallenges() {
   if (this.user?.uid) {
     firebaseGameService.listenToIncomingChallenges(this.user.uid, (challengeList) => {
       this.challenges = challengeList;
-      console.log("Realtime challenges update:", challengeList);
     });
   }
 },
@@ -231,7 +227,6 @@ listenForGames() {
     firebaseGameService.listenToUserGames(this.user.uid, (gameList) => {
       this.games = gameList;
       this.challengedUsersId = this.getOpponentIds();
-      console.log("Realtime games update:", gameList);
     });
   }
 },
@@ -243,7 +238,6 @@ listenForGames() {
         const challengeList = await firebaseGameService.listenForChallenges(this.user.uid);
         this.challengeList = challengeList;
         this.pendingChallengeIds = this.getChallengeOpponents();
-        console.log("challenge list in new function", this.pendingChallengeIds);
       } catch (error) {
         console.error("Failed to fetch games: din lilla korv", error);
       }
