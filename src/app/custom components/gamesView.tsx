@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
   gameItem: {
     padding: 18,
     marginVertical: 8,
+    marginHorizontal: 10,
     borderRadius: 12,
     backgroundColor: "#1A1A1A",
     borderWidth: 0.5,
