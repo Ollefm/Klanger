@@ -248,7 +248,7 @@ listenForGames() {
         this.pendingChallengeIds = this.getChallengeOpponents();
         console.log("challenge list in new function", this.pendingChallengeIds);
       } catch (error) {
-        console.error("Failed to fetch games:", error);
+        console.error("Failed to fetch games: din lilla korv", error);
       }
     }
   },
