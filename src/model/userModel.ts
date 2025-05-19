@@ -39,6 +39,8 @@ export const userModel = {
   clickedGame: {},
   totalScore: 0,
   gamesPlayed: 0,
+  scoreHistory: [] as number[],
+  leaderboard: [] as any[],
 
   setClickedGame(game) {
     this.clickedGame = game;
@@ -57,13 +59,15 @@ export const userModel = {
   async updateUserLeaderBoardData(score: number) {
     this.totalScore += score;
     this.gamesPlayed += 1;
+    this.scoreHistory.push(score);
 
     try {
       await updateUserLBData(
         this.userData.uid,
         this.userData.username,
         this.totalScore,
-        this.gamesPlayed
+        this.gamesPlayed,
+        this.scoreHistory
       );
     } catch (error) {
       console.error("Error updating user data:", error);

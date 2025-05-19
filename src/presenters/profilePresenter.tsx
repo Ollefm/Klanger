@@ -6,6 +6,7 @@ type ProfileProps = {
     userData: any;
     totalScore: number;
     gamesPlayed: number;
+    scoreHistory: number[];
   };
 };
 
@@ -16,6 +17,7 @@ export const Profile = observer(function ProfileRender(props: ProfileProps) {
       score ={props.userModel.totalScore}
       gamesPlayed={props.userModel.gamesPlayed}
       userData={props.userModel.userData}
+      scoreHistory={props.userModel.scoreHistory}
     />
   );
   function handleSignoutACB() {

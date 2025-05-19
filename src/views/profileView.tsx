@@ -1,7 +1,18 @@
 import { SafeAreaView, View, Text, StyleSheet } from "react-native";
+import { LineChart } from "react-native-chart-kit";
 import AppSecondaryButton from "../app/custom components/appSecondaryButton";
 import AppProfileBar from "../app/custom components/appProfileBar";
 export function ProfileView(props) {
+  const data = {
+    labels: [],
+    datasets: [
+      {
+        data: props.scoreHistory,
+        color: (opacity = 1) => `rgba(77, 141, 218, ${opacity})`, // optional
+        strokeWidth: 3, // optional
+      },
+    ],
+  };
   return (
     <SafeAreaView style={styles.background}>
       <View>
@@ -16,7 +27,9 @@ export function ProfileView(props) {
               <Text style={styles.text}>Username:</Text>
             </View>
             <View style={{ width: "50%" }}>
-              <Text style={styles.text}>{props.userData.username || "username"}</Text>
+              <Text style={styles.text}>
+                {props.userData.username || "username"}
+              </Text>
             </View>
           </View>
           <View style={styles.row2}>
@@ -37,27 +50,58 @@ export function ProfileView(props) {
           </View>
         </View>
       </View>
-      <View style={{height:"40%"}}>
+      <View style={{ height: "50%" }}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.header}>Score history</Text>
+        </View>
+        <View style={styles.Container2}>
+          <View style={{marginRight:50, marginBottom: -40}}>
+          <LineChart
+            data={data}
+            width={360}
+            height={280}
+            chartConfig={chartConfig}
+            segments={5}
+            formatYLabel={(value) => `${value.split(".")[0]}`}
 
-      <View style={styles.headerContainer}>
-        <Text style={styles.header}>Latest games</Text>
+          />
+          </View>
+          <View style={{flexDirection: "row", justifyContent: "space-between", width: "100%"}}>
+          <Text style={styles.text2}>
+            score
+          </Text>
+          <Text style={styles.text2}>
+            newer results {"→"}
+          </Text>  
+          </View>
+          
+        </View>
       </View>
-      <View style={styles.Container2}></View>
-      </View>
- 
+
       <AppSecondaryButton
         title="Sign out"
         onPress={handleSignoutACB}
-        ></AppSecondaryButton>
+      ></AppSecondaryButton>
     </SafeAreaView>
   );
   function handleSignoutACB() {
     props.signOut();
   }
-
-
-
 }
+
+const chartConfig = {
+  backgroundGradientFrom: "#1E2923",
+  backgroundGradientFromOpacity: 0,
+  backgroundGradientTo: "#08130D",
+  backgroundGradientToOpacity: 0.0,
+  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+  propsForLabels: {
+    fontSize: 12,
+    fontWeight: "bold",
+    color: "white",
+  },
+  
+};
 
 const styles = StyleSheet.create({
   background: {
@@ -96,7 +140,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: "#1A1A1A",
     borderWidth: 0.5,
-    borderColor: "#5E5E5E"
+    borderColor: "#5E5E5E",
+    alignItems: "center",
   },
   info: {
     flexDirection: "column",
@@ -119,6 +164,18 @@ const styles = StyleSheet.create({
     color: "white",
     width: "100%",
   },
+  text2: {
+    fontSize: 12,
+    color: "lightgray",
+  },
+  text3: {
+    fontSize: 12,
+    color: "lightgray",
+    width: "100%",
+    textAlign: "left",
+  },
+
+
 
   bold: {
     fontWeight: "bold",

@@ -10,6 +10,7 @@ export type UserLBData = {
   username: string;
   totalScore: number;
   gamesPlayed: number;
+  scoreHistory: number [];
 };
 
 

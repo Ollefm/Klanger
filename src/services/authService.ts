@@ -48,9 +48,11 @@ export function connectToPersistence(model, reactionFn) {
       if (userLBData) {
         model.totalScore = userLBData.totalScore;
         model.gamesPlayed = userLBData.gamesPlayed;
+        model.scoreHistory = userLBData.scoreHistory;
       } else {
         model.totalScore = 0;
         model.gamesPlayed = 0;
+        model.scoreHistory = [];
       }
       
       model.userData = appUser;
