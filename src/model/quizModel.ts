@@ -27,6 +27,21 @@ const rockBangers = [
   "63480990",
   "7818900",
   "7675130",
+  "44112901", // jag kommer 
+  "77472317", // slå mig hårt i ansiktet
+  "9793245", //kung för en dag
+  "664107", // take on me
+  "1179329002", //somebody i used to know
+  "4619466", // i got a feeling
+  "144389048", // lush life 
+  "14383880", // levels 
+  "63510358", // radioactive
+  "62376284", // diamonds
+  "63034985", // pompeii
+  "61424044", // can't hold us
+  "70403437", //royals 
+  "99976952", //stressed out
+
 ];
 const MAXIMUM_ROUNDS = 5;
 
