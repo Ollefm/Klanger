@@ -44,7 +44,7 @@ export const userModel = {
     this.clickedGame = game;
   },
 
-  async getLeaderBoard() {
+  async getLeaderboard() {
     try {
       const leaderboardData = await getLBData();
       console.log("Fetched leaderboard:", leaderboardData);

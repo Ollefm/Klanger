@@ -1,8 +1,6 @@
 import { FlatList, View, Text, StyleSheet } from "react-native";
 export default function LeaderBoard(props) {
-  console.log("leaderboard", props.data);
-  
-  var rank = 1
+    var rank = 1
   return (
     <View>
       <View style={styles.headerContainer}>
