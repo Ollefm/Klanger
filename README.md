@@ -20,7 +20,10 @@
 ###  Cross-Platform Support
 - Functional on **iOS and Android**.
 - Primarily optimized for **iOS devices**.
-
+- 
+### Third-party components (user-visible)
+- react-native-chart-kit https://github.com/indiespirit/react-native-chart-kit - visibe in `src/views/profileView`
+- react-countdown-circle-timer https://github.com/indiespirit/react-native-chart-kit - visible in `src/views/countDokuView.tsx`
 ---
 
 ##  Deployment & Running the App
