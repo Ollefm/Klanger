@@ -54,13 +54,11 @@ export function isLenientMatch(userGuess: string, songTitle : string): boolean {
     }
 
     // Remove punctuation and special characters
-    const cleanGuess = normalizedGuess.replace(
-      /[.,\/#!$%\^&\*;:{}=\-_`~()]/g,
-      ""
-    );
+    const cleanGuess = normalizedGuess.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()\']/g, "");
+
     const cleanTitle = normalizedTitle.replace(
-      /[.,\/#!$%\^&\*;:{}=\-_`~()]/g,
-      ""
+      /[.,\/#!$%\^&\*;:{}=\-_`~()\']/g,
+    ""
     );
 
     // Split into words
