@@ -21,17 +21,13 @@
 - Fully functional on **iOS and Android**.
 - Primarily optimized for **iOS devices**.
 
-###  Persistence
-- **Authentication persistence:** Stay logged in across sessions.
-- **Game state persistence:** Saves game progress and pending challenges/invites.
-
 ---
 
 ##  Deployment & Running the App
 
-The application is deployed on **[Insert Hosting Platform Name]**. Follow these steps to run the app:
+The application is deployed on **[Stackblitz]**. Follow these steps to run the app:
 
-1. Visit: **[Insert Deployment URL]**
+1. Visit: **[https://stackblitz.com/edit/tv1ndoh4-49mhsyhe?file=README.md]**
 2. Wait for all dependencies to install. A **QR code** will appear in the StackBlitz terminal once it's ready.
 
    > If the install fails:
@@ -58,3 +54,34 @@ The process of prototyping and conducting formative evaluations with users is do
 [🔗 View the Document](https://docs.google.com/document/d/1jDcA647Fq_FcGBDwmr9Y7sFzARihf6lnSfkAALm5D3g/edit?usp=sharing)
 
 ---
+
+##Playthrough 
+
+1. The user registers or logs in to the applicaiton
+2. Pending challenges shows the current games 
+3. In new game the user can choose multiplayer or single player 
+- for the multplyaer after the opponent accepts the challenge can be seen in the Pending challenges View 
+- the user gets feedback if it the user turn or the opponent 
+- after the game the results can be seen (bug on android, if pressing the home button when observing the results, will restult into an white screen) 
+
+---
+
+## Playthrough
+
+1. **Register or Log In**  
+   The user starts by registering or logging in to the application.
+
+2. **Pending Challenges**  
+   After logging in, the **Pending Challenges** view displays all current games the user is involved in.
+
+3. **Start a New Game**  
+   From the **New Game** view, the user can choose between:
+   - **Single Player:** Start guessing songs immediately.
+   - **Multiplayer:** Challenge another player.
+
+     - Once the opponent accepts, the challenge appears under **Pending Challenges**.
+     - The user is informed whether it’s their turn or the opponent's.
+     - After the game concludes, the results are shown to both players.
+
+> **Note for Android users:**  
+If you press the **Home** button while viewing results, a bug may cause a white screen to appear. This issue is specific to Android.
