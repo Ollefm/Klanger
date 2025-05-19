@@ -11,7 +11,7 @@ type LeaderboardProps = {
 export default observer(function Leaderboard(props: LeaderboardProps) {
   return (
     <LeaderboardView
-      title={"Rock"}
+      title={"Score earned"}
       leaderBoardData={props.userModel.leaderboard}
       update={handleUpdateACB}
     />
