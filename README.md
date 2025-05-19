@@ -55,17 +55,6 @@ The process of prototyping and conducting formative evaluations with users is do
 
 ---
 
-##Playthrough 
-
-1. The user registers or logs in to the applicaiton
-2. Pending challenges shows the current games 
-3. In new game the user can choose multiplayer or single player 
-- for the multplyaer after the opponent accepts the challenge can be seen in the Pending challenges View 
-- the user gets feedback if it the user turn or the opponent 
-- after the game the results can be seen (bug on android, if pressing the home button when observing the results, will restult into an white screen) 
-
----
-
 ## Playthrough
 
 1. **Register or Log In**  
